@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import FilterBar from './FilterBar';
 import FilterBarBlog from './FilterBarBlog';
 import Sidebar from '../../components/Sidebar/Sidebar';
@@ -101,49 +101,47 @@ const blogPosts = [
   ];
 
 const BrandList: React.FC = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const toggleSidebar = () => setSidebarOpen(prev => !prev);
+
   return (
-    <div className="dashboard">
-      <div className="dashboard-content">
-        <Sidebar />
-        <div className="main-content">
-          <Header />
-          <div className="dashboard-body p-6">
-            <div className="max-w-[1140px] mx-auto space-y-4">
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
+      <div className={`transition-all duration-300 ${sidebarOpen ? 'w-[240px]' : 'w-0 overflow-hidden'}`}>
+        {sidebarOpen && <Sidebar />}
+      </div>
 
-              {/* Header + Button */}
-              <div className="flex justify-between items-center">
-                <h1 className="text-3xl font-bold text-neutral-800">Brand Lists</h1>
-                <button className="bg-blue-500 text-white px-5 py-2 rounded-md">
-                  Add New Brand
-                </button>
-              </div>
-
-              {/* FilterBar để lọc Brand */}
-              <FilterBar />
-
-              {/* Brand Table */}
-              <BrandTable items={brands as BrandItem[]} />
-
-              <div className="flex justify-between items-center">
-                <h1 className="text-3xl font-bold text-neutral-800">Blog Lists</h1>
-                <button className="px-4 py-2 border rounded-md bg-red-500 text-white hover:bg-red-600">
-                  Delete All
-                </button>
-              </div>
-
-              {/* FilterBarBlog để lọc Blog */}
-              <FilterBarBlog />
-
-              {/* Blog List */}
-              <BlogList blogPosts={blogPosts} />
-
-              
+      {/* Main content */}
+      <div className="flex-1">
+        <Header toggleSidebar={toggleSidebar} />
+        <div className="dashboard-body p-6">
+          <div className="max-w-[1140px] mx-auto space-y-4">
+            
+            {/* Header + Button */}
+            <div className="flex justify-between items-center">
+              <h1 className="text-2xl font-bold text-neutral-800">Brand Lists</h1>
+              <button className="bg-blue-500 text-white px-5 py-2 rounded-md">
+                Add New Brand
+              </button>
             </div>
+
+            <FilterBar />
+            <BrandTable items={brands} />
+
+            <div className="flex justify-between items-center">
+              <h1 className="text-2xl font-bold text-neutral-800">Blog Lists</h1>
+              <button className="px-4 py-2 border rounded-md bg-red-500 text-white hover:bg-red-600">
+                Delete All
+              </button>
+            </div>
+
+            <FilterBarBlog />
+            <BlogList blogPosts={blogPosts} />
           </div>
         </div>
       </div>
     </div>
   );
 };
-
+  
 export default BrandList;

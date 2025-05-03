@@ -1,23 +1,46 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
+import { FaBell } from 'react-icons/fa6';
+import { Menu } from 'lucide-react';
+
 import SearchBar from './SearchBar';
 import LanguageSelector from './LanguageSelector';
 import UserProfile from './UserProfile';
 
-interface HeaderProps {}
+interface HeaderProps {
+  toggleSidebar?: () => void; 
+}
 
-const Header: React.FC<HeaderProps> = () => {
+const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
+  const [showMenu, setShowMenu] = useState<string>('');
+
+  const handleSelectLangClick = () => {
+    setShowMenu('login');
+  };
+
   return (
     <header className="flex flex-col text-sm whitespace-nowrap">
-      <div className="flex relative gap-8 justify-between items-center px-8 py-3.5 w-full min-h-[70px] max-md:px-5 max-md:max-w-full bg-white">
-        <SearchBar />
-        <div className="flex z-0 gap-7 items-center self-stretch my-auto min-w-[240px]">
-          <img
-            loading="lazy"
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/d18fe2d8d8aaceef3b347de2a8684b836bb51d3d7c97e214e4cb7adfb74e7ffc?placeholderIfAbsent=true&apiKey=482c75c84bdb4c88a7a67a7f2dd73013"
-            className="object-contain shrink-0 self-stretch my-auto rounded-none aspect-[0.94] w-[30px]"
-            alt=""
+      <div className="flex items-center justify-between px-8 py-3.5 w-full min-h-[70px] max-md:px-5 bg-white">
+        
+        {/* LEFT: Menu + Search (gộp lại trong 1 div) */}
+        <div className="flex items-center gap-4">
+          {toggleSidebar && (
+            <button className="block focus:outline-none" onClick={toggleSidebar}>
+              <Menu className="w-6 h-6" />
+            </button>
+          )}
+          <SearchBar />
+        </div>
+
+        {/* RIGHT: Bell + Language + Profile */}
+        <div className="flex gap-7 items-center min-w-[240px]">
+          <FaBell className="w-6 h-6" />
+          <LanguageSelector
+            handleClick={handleSelectLangClick}
+            showMenu={showMenu}
+            setShowMenu={setShowMenu}
           />
-          <LanguageSelector />
           <UserProfile />
         </div>
       </div>

@@ -1,6 +1,8 @@
+import { IconType } from 'react-icons';
+
 export interface SidebarItem {
     name: string;
-    icon: string;
+    icon: IconType;
     link: string;
     isActive?: boolean;
   }

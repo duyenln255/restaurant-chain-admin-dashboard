@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import FilterBar from './FilterBar';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import Header from '../../components/Header/Header';
@@ -15,32 +15,39 @@ const reservations: ReservationItem[] = [
   { id: "00007", fullName: "Maggie Sullivan", email: "test5@gmail.com", phoneNumber: "077-XXX-XXXX", dateTime: "11/08/2023 16:30 AM", location: "Sài Gòn 123 Âu Cơ", people: 3, inOutdoor: "INDOOR", status: "Active" },
   { id: "00008", fullName: "Rosie Todd", email: "test6@gmail.com", phoneNumber: "077-XXX-XXXX", dateTime: "11/08/2023 17:30 AM", location: "Sài Gòn 123 Âu Cơ", people: 1, inOutdoor: "INDOOR", status: "Active" },
   { id: "00009", fullName: "Dollie Hines", email: "test7@gmail.com", phoneNumber: "077-XXX-XXXX", dateTime: "11/08/2023 18:30 AM", location: "Sài Gòn 123 Âu Cơ", people: 1, inOutdoor: "INDOOR", status: "Cancel" },
-  ];
+];
 
 const ReservationList: React.FC = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const toggleSidebar = () => setSidebarOpen(prev => !prev);
+
   return (
-    <div className="dashboard">
-      <div className="dashboard-content">
-        <Sidebar />
-        <div className="main-content">
-          <Header />
-          <div className="dashboard-body p-6">
-            <div className="max-w-[1140px] mx-auto space-y-4">
-              
-              {/* Header + Button */}
-              <div className="flex justify-between items-center">
-                <h1 className="text-3xl font-bold text-neutral-800">Order Lists</h1>
-                <button className="bg-blue-500 text-white px-5 py-2 rounded-md">
-                  Add New Order
-                </button>
-              </div>
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
+      <div className={`transition-all duration-300 ${sidebarOpen ? 'w-[240px]' : 'w-0 overflow-hidden'}`}>
+        {sidebarOpen && <Sidebar />}
+      </div>
 
-              {/* FilterBar với Dropdown Order Type */}
-              <FilterBar />
-
-              {/* Order Table */}
-              <ReservationTable items={reservations as ReservationItem[]} />
+      {/* Main Content */}
+      <div className="flex-1">
+        <Header toggleSidebar={toggleSidebar} />
+        
+        <div className="dashboard-body p-6">
+          <div className="max-w-[1140px] mx-auto space-y-4">
+            
+            {/* Header + Button */}
+            <div className="flex justify-between items-center">
+              <h1 className="text-2xl font-bold text-neutral-800">Reservation Lists</h1>
+              <button className="bg-blue-500 text-white px-5 py-2 rounded-md">
+                Add New Reservation
+              </button>
             </div>
+
+            {/* FilterBar */}
+            <FilterBar />
+
+            {/* Reservation Table */}
+            <ReservationTable items={reservations} />
           </div>
         </div>
       </div>

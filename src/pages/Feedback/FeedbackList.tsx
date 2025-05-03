@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import FilterBar from './FilterBar';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import Header from '../../components/Header/Header';
@@ -39,29 +39,35 @@ const feedbacks: FeedbackItem[] = [
 ];
 
 const FeedbackList: React.FC = () => {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const toggleSidebar = () => setSidebarOpen(prev => !prev);
+
   return (
-    <div className="dashboard">
-      <div className="dashboard-content">
-        <Sidebar />
-        <div className="main-content">
-          <Header />
-          <div className="dashboard-body p-6">
-            <div className="max-w-[1140px] mx-auto space-y-4">
-              
-              {/* Header + Button */}
-              <div className="flex justify-between items-center">
-                <h1 className="text-3xl font-bold text-neutral-800">Feedback Lists</h1>
-                <button className="bg-blue-500 text-white px-5 py-2 rounded-md">
-                  Add New Feedback
-                </button>
-              </div>
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
+      <div className={`transition-all duration-300 ${sidebarOpen ? 'w-[240px]' : 'w-0 overflow-hidden'}`}>
+        {sidebarOpen && <Sidebar />}
+      </div>
 
-              {/* FilterBar với Dropdown Feedback Type */}
-              <FilterBar />
-
-              {/* Feedback Table */}
-              <FeedbackTable items={feedbacks as FeedbackItem[]} />
+      {/* Main Content */}
+      <div className="flex-1">
+        <Header toggleSidebar={toggleSidebar} />
+        <div className="dashboard-body p-6">
+          <div className="max-w-[1140px] mx-auto space-y-4">
+            
+            {/* Header + Button */}
+            <div className="flex justify-between items-center">
+              <h1 className="text-2xl font-bold text-neutral-800">Feedback Lists</h1>
+              <button className="bg-blue-500 text-white px-5 py-2 rounded-md">
+                Add New Feedback
+              </button>
             </div>
+
+            {/* FilterBar */}
+            <FilterBar />
+
+            {/* Feedback Table */}
+            <FeedbackTable items={feedbacks} />
           </div>
         </div>
       </div>

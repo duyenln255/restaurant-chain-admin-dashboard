@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, BrowserRouter as Router, Routes } from "react-router";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import CustomerList from "./pages/Customer/CustomerList";
 import './styles/global.css';
@@ -13,12 +13,17 @@ import VoucherList from "./pages/Voucher/VoucherList";
 import BrandList from "./pages/Brand/BrandList";
 import ProductPage from "./pages/Product/ProductPage";
 import EmployeeList from "./pages/Employee/EmployeeList";
+import LandingPage from "./pages/LandingPage/LandingPage";
+import Login from "./pages/Login/Login";
+
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        {/* <Route path="/" element={<Dashboard />} /> */}
+        <Route path="/" element={<LandingPage />} />     
+        <Route path="/login" element={<Login />} /> 
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/customer" element={<CustomerList />} />
         <Route path="/order-list" element={<OrderList />} />

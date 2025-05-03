@@ -1,54 +1,77 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { SidebarItem } from '../../types/SidebarItem';
 import './Sidebar.css';
+import {
+  Home,
+  List,
+  User,
+  BookOpen,
+  MessageSquare,
+  Package,
+  LayoutGrid,
+  Share2,
+  Users,
+  Ticket,
+  LogOut
+} from 'lucide-react';
 
-const sidebarItems: SidebarItem[] = [
-  { name: 'Dashboard', icon: '/assets/icons/dashboard.png', link: '/dashboard' },
-  { name: 'Order List', icon: '/assets/icons/order-list.png', link: '/order-list' },
-  { name: 'Customer', icon: '/assets/icons/customer.png', link: '/customer' },
-  { name: 'Reservation', icon: '/assets/icons/reservation.png', link: '/reservation' },
-  { name: 'Feedback', icon: '/assets/icons/feedback.png', link: '/feedback' },
-  { name: 'Product', icon: '/assets/icons/product.png', link: '/product' },
-  { name: 'Brand', icon: '/assets/icons/brand.png', link: '/brand' },
-  { name: 'Branch', icon: '/assets/icons/branch.png', link: '/branch' },
-  { name: 'Employee', icon: '/assets/icons/employee.png', link: '/employee' },
-  { name: 'Voucher', icon: '/assets/icons/voucher.png', link: '/voucher' },
+const sidebarItems = [
+  { name: 'Dashboard', icon: Home, link: '/dashboard' },
+  { name: 'Order List', icon: List, link: '/order-list' },
+  { name: 'Customer', icon: User, link: '/customer' },
+  { name: 'Reservation', icon: BookOpen, link: '/reservation' },
+  { name: 'Feedback', icon: MessageSquare, link: '/feedback' },
+  { name: 'Product', icon: Package, link: '/product' },
+  { name: 'Brand', icon: LayoutGrid, link: '/brand' },
+  { name: 'Branch', icon: Share2, link: '/branch' },
+  { name: 'Employee', icon: Users, link: '/employee' },
+  { name: 'Voucher', icon: Ticket, link: '/voucher' },
 ];
 
 const Sidebar: React.FC = () => {
-  const location = useLocation(); // Lấy route hiện tại
+  const location = useLocation();
 
   return (
-    <div className="sidebar">
+    <div className="sidebar h-screen bg-white flex flex-col justify-between overflow-y-auto fixed top-0 left-0 z-40">
       <div className="sidebar-content">
-        <div className="logo">
-          UTO<span>PIA</span>
-        </div>
+      <div className="logo-wrapper flex items-center gap-2 mb-6 px-6">
+  <img src="/utopia_logo.svg" alt="Utopia Logo" className="w-8 h-8 object-contain" />
+  <h1 className="text-xl font-bold leading-none flex items-center">
+    <span className="text-[#4A75FF]">UTO</span>
+    <span className="text-[#4B5563]">PIA</span>
+  </h1>
+</div>
+
+
         <nav className="sidebar-nav">
-          {sidebarItems.map((item, index) => (
-            <Link
-              key={index}
-              to={item.link}
-              className={`sidebar-item ${location.pathname === item.link ? 'active' : ''}`} // 👈 Kiểm tra nếu route khớp, đặt active
-            >
-              <div className="sidebar-item-indicator" />
-              <div className="sidebar-item-content">
-                <img src={item.icon} alt={item.name} />
-                <span>{item.name}</span>
-              </div>
-            </Link>
-          ))}
+          {sidebarItems.map((item, index) => {
+            const Icon = item.icon;
+            return (
+              <Link
+                key={index}
+                to={item.link}
+                className={`sidebar-item ${location.pathname === item.link ? 'active' : ''}`}
+              >
+                <div className="sidebar-item-indicator" />
+                <div className="sidebar-item-content flex items-center gap-2">
+                  <Icon className="sidebar-icon w-5 h-5" strokeWidth={2} />
+                  <span>{item.name}</span>
+                </div>
+              </Link>
+            );
+          })}
         </nav>
       </div>
-      <div className="logout-section">
-        <Link to="/logout" className="logout-button">
-          <img src="/assets/icons/logout.png" alt="Logout" />
+  
+      <div className="logout-section p-4">
+        <Link to="/logout" className="logout-button flex items-center gap-2 text-sm">
+          <LogOut className="sidebar-icon w-5 h-5" />
           <span>Logout</span>
         </Link>
       </div>
     </div>
   );
+  
 };
 
 export default Sidebar;

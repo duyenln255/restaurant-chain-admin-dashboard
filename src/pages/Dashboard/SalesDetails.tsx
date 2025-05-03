@@ -1,13 +1,16 @@
 import React from 'react';
 import './SalesDetails.css';
+import { useTranslation } from 'react-i18next';
 
 const SalesDetails: React.FC = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="sales-details">
       <div className="sales-details-header">
-        <h2>Sales Details</h2>
+        <h2>{t('dashboard.sales_details')}</h2>
         <div className="month-selector">
-          <span>October</span>
+          <span>{t('dashboard.month.oct')}</span>
           <img src="/assets/icons/chevron-down.png" alt="Calendar" />
         </div>
       </div>
@@ -20,8 +23,16 @@ const SalesDetails: React.FC = () => {
           <div>20%</div>
         </div>
         <div className="chart-content">
-          <img src="/assets/images/sales-graph-bg.png" alt="Sales graph background" className="chart-background" />
-          <img src="/assets/images/sales-graph.png" alt="Sales graph" className="chart-line" />
+          <img
+            src="/assets/images/sales-graph-bg.png"
+            alt="Sales graph background"
+            className="chart-background"
+          />
+          <img
+            src="/assets/images/sales-graph.png"
+            alt="Sales graph"
+            className="chart-line"
+          />
         </div>
       </div>
       <div className="chart-x-axis">
