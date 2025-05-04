@@ -2,13 +2,24 @@ import * as React from 'react';
 import { LoginForm } from './LoginForm';
 import { SocialAuth } from './SocialAuth';
 import { LoginFormData } from '../../types/AuthType';
+import { useNavigate } from "react-router-dom";
+import { login } from "../../services/auth.service";
 
 export const LoginContainer: React.FC = () => {
+  const navigate = useNavigate(); // hook chuyển trang
+
   const handleLogin = async (data: LoginFormData) => {
     try {
-      console.log('Login attempt with:', data);
+      console.log("Login attempt with:", data);
+      const result = await login(data.username, data.password);
+
+      console.log("Login success:", result);
+
+      // Chuyển trang
+      navigate("/dashboard");
     } catch (error) {
-      console.error('Login failed:', error);
+      console.error("Login failed:", error);
+      alert("Login failed. Please check username/password.");
     }
   };
 

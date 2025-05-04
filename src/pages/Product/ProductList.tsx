@@ -18,14 +18,14 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
 
   return (
     <div className="max-w-[1140px] mx-auto space-y-6">
-      <div className="flex flex-wrap gap-4">
+      {/* GRID LIST */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {paginatedProducts.map((product) => (
-          <div key={product.id} className="w-[32%] min-w-[280px]">
-            <ProductCard product={product} />
-          </div>
+          <ProductCard key={product.id} product={product} />
         ))}
       </div>
 
+      {/* PAGINATION */}
       {products.length > itemsPerPage && (
         <div className="flex justify-between items-center mt-6 bg-gray-100 p-4 rounded-md">
           <p className="text-gray-600 text-sm">

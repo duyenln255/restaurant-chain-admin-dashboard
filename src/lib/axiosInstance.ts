@@ -3,7 +3,7 @@ import config from '../constants/config';
 
 const axiosInstance = axios.create({
   baseURL: config.BASE_API_URL,
-  timeout: 60000, // 10 giây timeout (tuỳ chỉnh theo nhu cầu)
+  timeout: 10000, // 10 giây timeout (tuỳ chỉnh theo nhu cầu)
   headers: {
     'Content-Type': 'application/json'
   }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Sidebar from '../../components/Sidebar/Sidebar';
@@ -10,13 +10,27 @@ import StatCard from './StatCard';
 import { StatCardProps } from '../../types/StatCardProps';
 import { DealItem } from '../../types/DealItem';
 
+import { useLoading } from '../../contexts/LoadingContext';
+
 const Dashboard: React.FC = () => {
   const { t } = useTranslation();
-  const [sidebarOpen, setSidebarOpen] = useState(true); 
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { setLoading } = useLoading();
+
+  // Bật loading khi vào trang
+  useEffect(() => {
+    setLoading(true);
+    const timeout = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
+    return () => clearTimeout(timeout);
+  }, []);
+
   const toggleSidebar = () => {
-    console.log("Clicked sidebar toggle");
     setSidebarOpen(prev => !prev);
   };
+
   const statCards: StatCardProps[] = [
     {
       title: t('dashboard.total_customers'),
@@ -66,24 +80,16 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar with transition */}
-      <div
-        className={`transition-all duration-300 ${
-          sidebarOpen ? 'w-[240px]' : 'w-0 overflow-hidden'
-        }`}
-      >
-      {sidebarOpen && <Sidebar />}
-    </div>
+      <div className={`transition-all duration-300 ${sidebarOpen ? 'w-[240px]' : 'w-0 overflow-hidden'}`}>
+        {sidebarOpen && <Sidebar />}
+      </div>
 
-      {/* Main content */}
       <div className="flex-1">
-      <Header toggleSidebar={toggleSidebar} />        
+        <Header toggleSidebar={toggleSidebar} />
         <div className="dashboard-body p-6">
           <div className="max-w-[1140px] mx-auto space-y-4">
             <div className="flex justify-between items-center">
-              <h1 className="text-2xl font-bold text-neutral-800">
-                {t('dashboard.title')}
-              </h1>
+              <h1 className="text-2xl font-bold text-neutral-800">{t('dashboard.title')}</h1>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 mb-5">

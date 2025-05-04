@@ -17,9 +17,10 @@ export interface Product {
  * Lấy danh sách tất cả sản phẩm
  */
 export const getAllProducts = async (): Promise<Product[]> => {
-  const response = await axiosInstance.get<Product[]>('/product');
-  return response.data;
+  const response = await axiosInstance.get<{ product: Product[] }>('/product');
+  return response.data.product;  // chỉ lấy mảng product ra thôi
 };
+
 
 /**
  * [GET] /product/:id

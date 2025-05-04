@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Sidebar.css';
 import {
   Home,
@@ -14,6 +14,8 @@ import {
   Ticket,
   LogOut
 } from 'lucide-react';
+
+import { logout } from "../../services/auth.service";
 
 const sidebarItems = [
   { name: 'Dashboard', icon: Home, link: '/dashboard' },
@@ -30,18 +32,23 @@ const sidebarItems = [
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout(); // Xóa token
+    navigate("/"); // Điều hướng về Login page
+  };
 
   return (
     <div className="sidebar h-screen bg-white flex flex-col justify-between overflow-y-auto fixed top-0 left-0 z-40">
       <div className="sidebar-content">
-      <div className="logo-wrapper flex items-center gap-2 mb-6 px-6">
-  <img src="/utopia_logo.svg" alt="Utopia Logo" className="w-8 h-8 object-contain" />
-  <h1 className="text-xl font-bold leading-none flex items-center">
-    <span className="text-[#4A75FF]">UTO</span>
-    <span className="text-[#4B5563]">PIA</span>
-  </h1>
-</div>
-
+        <div className="logo-wrapper flex items-center gap-2 mb-6 px-6">
+          <img src="/utopia_logo.svg" alt="Utopia Logo" className="w-8 h-8 object-contain" />
+          <h1 className="text-xl font-bold leading-none flex items-center">
+            <span className="text-[#4A75FF]">UTO</span>
+            <span className="text-[#4B5563]">PIA</span>
+          </h1>
+        </div>
 
         <nav className="sidebar-nav">
           {sidebarItems.map((item, index) => {
@@ -62,16 +69,18 @@ const Sidebar: React.FC = () => {
           })}
         </nav>
       </div>
-  
+
       <div className="logout-section p-4">
-        <Link to="/logout" className="logout-button flex items-center gap-2 text-sm">
+        <button
+          onClick={handleLogout}
+          className="logout-button flex items-center gap-2 text-sm text-gray-700 hover:text-red-500"
+        >
           <LogOut className="sidebar-icon w-5 h-5" />
           <span>Logout</span>
-        </Link>
+        </button>
       </div>
     </div>
   );
-  
 };
 
 export default Sidebar;

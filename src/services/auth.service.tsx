@@ -1,32 +1,43 @@
 import axiosInstance from "../lib/axiosInstance";
 
+export interface LoginResponse {
+  message: string;
+  token: string;
+  user: {
+    id: string;
+    username: string;
+    full_name: string;
+    role: string;
+    brand_id: string | null;
+    rcms_id: string;
+  };
+}
+
 // API: Login
-export const login = async (username: string, password: string) => {
-  const response = await axiosInstance.post("/auth/login", {
+export const login = async (username: string, password: string): Promise<LoginResponse> => {
+  const response = await axiosInstance.post("/login", {
     username,
     password,
   });
 
-  // Lưu token vào localStorage (hoặc sessionStorage tùy nhu cầu)
   if (response.data?.token) {
     localStorage.setItem("token", response.data.token);
+    localStorage.setItem("user", JSON.stringify(response.data.user)); // Lưu thêm user nếu cần
   }
 
   return response.data;
 };
 
-// API: Logout
 export const logout = () => {
-  // Xóa token khỏi localStorage
   localStorage.removeItem("token");
-
-  // Optional: Redirect về trang login sau logout
-  window.location.href = "/login";
+  localStorage.removeItem("user");
 };
 
-// API: Get Profile
 export const getProfile = async () => {
-  const response = await axiosInstance.get("/auth/profile"); // hoặc "/user/profile" tùy backend
-
+  const response = await axiosInstance.get("/auth/profile");
   return response.data;
+};
+
+export const getToken = (): string | null => {
+  return localStorage.getItem("token");
 };

@@ -27,15 +27,16 @@ const ProductPage: React.FC = () => {
   // Mapping product từ API -> UI ProductItem
   const mapApiProductToProductItem = (product: Product): ProductItem => ({
     id: product.id,
-    imageUrl: product.photo, // API trả về là photo
+    imageUrl: product.photo || "",  // fallback nếu null
     name: product.name,
-    price: product.price.toLocaleString() + " đ", // Format tiền
+    price: product.price.toLocaleString() + " đ",
     description: product.description,
-    stock: 0, // Không có → mặc định
-    reviews: 0, // Không có → mặc định
-    brand: product.brand_id ?? "Unknown",
-    brandLogo: "", // Không có → để trống
+    stock: 0, // backend không có -> mặc định
+    reviews: 0, // backend không có -> mặc định
+    brand: product.brand_id || "Unknown",
+    brandLogo: "", // backend không có -> để trống
   });
+  
 
   useEffect(() => {
     const fetchProducts = async () => {

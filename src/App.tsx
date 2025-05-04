@@ -15,36 +15,39 @@ import ProductPage from "./pages/Product/ProductPage";
 import EmployeeList from "./pages/Employee/EmployeeList";
 import LandingPage from "./pages/LandingPage/LandingPage";
 import Login from "./pages/Login/Login";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import { LoadingProvider, useLoading } from './contexts/LoadingContext'
+import Loading from './components/Loading/Loading'
 
+// Tạo component LoadingWrapper để lấy trạng thái loading từ context
+function LoadingWrapper() {
+  const { isLoading } = useLoading();
+  return <Loading visible={isLoading} />;
+}
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        {/* <Route path="/" element={<Dashboard />} /> */}
-        <Route path="/" element={<LandingPage />} />     
-        <Route path="/login" element={<Login />} /> 
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/customer" element={<CustomerList />} />
-        <Route path="/order-list" element={<OrderList />} />
-        <Route path="/feedback" element={<FeedbackList />} />
-        <Route path="/branch" element={<BranchList />} />
-        <Route path="/reservation" element={<ReservationList />} />
-        <Route path="/voucher" element={<VoucherList />} />
-        <Route path="/brand" element={<BrandList />} />
-        <Route path="/product" element={<ProductPage />} />
-        <Route path="/employee" element={<EmployeeList />} />
-        {/* <Route path="/order-list" element={<OrderList />} />
-        <Route path="/customer" element={<Customer />} />
-        <Route path="/reservation" element={<Reservation />} />
-        <Route path="/feedback" element={<Feedback />} />
-        <Route path="/product" element={<Product />} />
-        <Route path="/brand" element={<Brand />} />
-        <Route path="/branch" element={<Branch />} />
-        <Route path="/employee" element={<Employee />} />
-        <Route path="/voucher" element={<Voucher />} /> */}
-      </Routes>
-    </Router>
+    <LoadingProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />     
+          <Route path="/login" element={<Login />} /> 
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/customer" element={<ProtectedRoute><CustomerList /></ProtectedRoute>} />
+          <Route path="/order-list" element={<ProtectedRoute><OrderList /></ProtectedRoute>} />
+          <Route path="/feedback" element={<ProtectedRoute><FeedbackList /></ProtectedRoute>} />
+          <Route path="/branch" element={<ProtectedRoute><BranchList /></ProtectedRoute>} />
+          <Route path="/reservation" element={<ProtectedRoute><ReservationList /></ProtectedRoute>} />
+          <Route path="/voucher" element={<ProtectedRoute><VoucherList /></ProtectedRoute>} />
+          <Route path="/brand" element={<ProtectedRoute><BrandList /></ProtectedRoute>} />
+          <Route path="/product" element={<ProtectedRoute><ProductPage /></ProtectedRoute>} />
+          <Route path="/employee" element={<ProtectedRoute><EmployeeList /></ProtectedRoute>} />
+        </Routes>
+
+        {/* Global Loading */}
+        <LoadingWrapper />
+      </Router>
+    </LoadingProvider>
   );
 }
 

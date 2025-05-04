@@ -20,11 +20,15 @@ const ProductCard: React.FC<{ product: ProductItem }> = ({ product }) => {
   return (
     <div className="w-full flex flex-col bg-white rounded-lg shadow-md overflow-hidden border border-gray-200">
       <div className="relative w-full aspect-[4/3] flex justify-center items-center bg-gray-100">
-        <img
-          src={product.imageUrl ? `/assets/images/${product.imageUrl}` : "/assets/images/no-image.png"}
-          alt={product.name}
-          className="w-full h-full object-cover"
-        />
+      <img
+        src={product.imageUrl || "/assets/images/no-image.png"}
+        alt={product.name}
+        onError={(e) => {
+          e.currentTarget.src = "/assets/images/no-image.png";
+        }}
+        className="absolute top-0 left-0 w-full h-full object-cover transition-transform hover:scale-105"
+      />
+
         {product.brandLogo && (
           <img
             src={`/assets/images/${product.brandLogo}`}
