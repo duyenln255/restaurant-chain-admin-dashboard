@@ -1,0 +1,14 @@
+{
+    "dashboard": {
+      "title": "Bảng điều khiển",
+      "total_customers": "Tổng khách hàng",
+      "total_orders": "Tổng đơn hàng",
+      "total_sales": "Doanh thu",
+      "total_staff": "Tổng nhân viên",
+      "up_from_yesterday": "Tăng so với hôm qua",
+      "up_from_last_week": "Tăng so với tuần trước",
+      "down_from_yesterday": "Giảm so với hôm qua",
+      "sales_details": "Chi tiết doanh số"
+
+    }
+  }

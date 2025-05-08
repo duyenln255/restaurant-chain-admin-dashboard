@@ -1,0 +1,11 @@
+export interface ReservationItem {
+    id: string;
+    fullName: string;
+    email: string;
+    phoneNumber: string;
+    dateTime: string;
+    location: string;
+    people: number;
+    inOutdoor: string;
+    status: string;
+  }

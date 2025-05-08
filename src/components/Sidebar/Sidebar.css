@@ -1,0 +1,108 @@
+.sidebar {
+  width: 260px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 16px;
+  border-right: 1px solid #e5e7eb;
+}
+
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #e5e7eb;
+  gap: 24px; /* Khoảng cách logo và nav */
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.logo span {
+  color: #4B5563;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Thêm gap cho từng nav item */
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #374151;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.sidebar-item:hover {
+  background-color: #f3f4f6;
+  color: #1d4ed8;
+}
+
+.sidebar-item.active {
+  background-color: #e0e7ff;
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
+.sidebar-item-indicator {
+  width: 4px;
+  height: 100%;
+  background-color: #1d4ed8;
+  margin-right: 12px;
+  border-radius: 4px;
+  visibility: hidden;
+}
+
+.sidebar-item.active .sidebar-item-indicator {
+  visibility: visible;
+}
+
+.sidebar-item-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sidebar-item img, 
+.sidebar-icon {
+  width: 20px;
+  height: 20px;
+  transition: filter 0.3s ease;
+}
+
+.sidebar-item.active img, 
+.sidebar-item.active .sidebar-icon {
+  filter: invert(1);
+}
+
+.logout-section {
+  padding: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.logout-button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #ef4444;
+  font-weight: 500;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.logout-button:hover {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
