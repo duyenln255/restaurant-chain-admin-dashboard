@@ -3,25 +3,8 @@ import type { PayloadAction, ActionReducerMapBuilder } from '@reduxjs/toolkit';
 
 import { fetchAllOrdersApi } from '../../services/order.service';
 import type { APIOrderResponse } from '../../services/order.service';
+import type { OrderItem } from '../../types/OrderItem';
 
-// ✅ Update lại OrderItem --> Thêm cart (giống dữ liệu thực tế)
-export interface OrderItem {
-  id: string;
-  name: string;
-  address: string;
-  date: string;
-  orderType: 'AT STORE' | 'ONLINE';
-  status: 'Completed' | 'Processing' | 'Rejected' | 'On Hold' | 'In Transit';
-
-  // Thêm cart
-  cart?: {
-    items: {
-      id: string;
-      name: string;
-      quantity: number;
-    }[];
-  };
-}
 
 interface OrdersState {
   items: OrderItem[];

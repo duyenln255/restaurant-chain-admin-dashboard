@@ -29,7 +29,7 @@ const GenericTable = <T extends Record<string, any>>({ items, columns, itemsPerP
                 <th
                   key={col.key as string}
                   className={`p-4 ${
-                    ['quantity', 'amount', 'status', 'totalOrder', 'totalReservation', 'action', 'people', 'discountType', 'discountValue'].includes(col.key as string)
+                    ['quantity', 'amount', 'status', 'totalOrder', 'totalReservation', 'action', 'people', 'discountType', 'discountValue', 'logo'].includes(col.key as string)
                       ? 'text-center'
                       : 'text-left'
                   }`}
@@ -59,14 +59,14 @@ const GenericTable = <T extends Record<string, any>>({ items, columns, itemsPerP
                         <span
                           className={`px-2 py-1 text-xs font-semibold rounded-md ${
                             ['completed', 'done', 'active'].includes((item[col.key] as string).toLowerCase())
-                              ? 'bg-green-200 text-green-800'
+                              ? 'bg-green-100 text-green-800'
                               : ['processing', 'verify'].includes((item[col.key] as string).toLowerCase())
-                              ? 'bg-blue-200 text-blue-800'
+                              ? 'bg-blue-100 text-blue-800'
                               : ['rejected', 'cancel', 'inactive', 'stop'].includes((item[col.key] as string).toLowerCase())
-                              ? 'bg-red-200 text-red-800'
+                              ? 'bg-red-100 text-red-800'
                               : ['on hold', 'pending',  'prepare', 'waiting', 'expired'].includes((item[col.key] as string).toLowerCase())
-                              ? 'bg-yellow-200 text-yellow-800'
-                              : 'bg-purple-200 text-purple-800'
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : 'bg-purple-100 text-purple-800'
                           }`}
                         >
                           {String(item[col.key])}
@@ -76,8 +76,8 @@ const GenericTable = <T extends Record<string, any>>({ items, columns, itemsPerP
                       <span
                         className={`px-2 py-1 text-xs font-semibold rounded-md ${
                           (item[col.key] as string).toLowerCase() === 'at store'
-                            ? 'bg-blue-200 text-blue-800'
-                            : 'bg-purple-200 text-purple-800'
+                            ? 'bg-blue-100 text-blue-800'
+                            : 'bg-purple-100 text-purple-800'
                         }`}
                       >
                         {String(item[col.key])}
@@ -86,8 +86,8 @@ const GenericTable = <T extends Record<string, any>>({ items, columns, itemsPerP
                       <span
                         className={`px-2 py-1 text-xs font-semibold rounded-md ${
                           (item[col.key] as string).toLowerCase() === 'indoor'
-                            ? 'bg-blue-200 text-blue-800'
-                            : 'bg-purple-200 text-purple-800'
+                            ? 'bg-blue-100 text-blue-800'
+                            : 'bg-purple-100 text-purple-800'
                         }`}
                       >
                         {String(item[col.key])}
@@ -137,8 +137,8 @@ const GenericTable = <T extends Record<string, any>>({ items, columns, itemsPerP
           </span>
           <div className="flex space-x-2">
             <button
-              className={`px-3 py-1 border rounded-md ${
-                currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'bg-gray-200 hover:bg-gray-300'
+              className={`px-3 py-1 border border-neutral-300 rounded-md ${
+                currentPage === 1 ? 'opacity-50 cursor-not-allowed' : 'bg-gray-100 hover:bg-gray-300'
               }`}
               disabled={currentPage === 1}
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -148,8 +148,8 @@ const GenericTable = <T extends Record<string, any>>({ items, columns, itemsPerP
             {Array.from({ length: totalPages }, (_, i) => (
               <button
                 key={i}
-                className={`px-3 py-1 border rounded-md ${
-                  currentPage === i + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200 hover:bg-gray-300'
+                className={`px-3 py-1 border border-neutral-300 rounded-md ${
+                  currentPage === i + 1 ? 'bg-blue-500 text-white' : 'bg-gray-100 hover:bg-gray-300'
                 }`}
                 onClick={() => setCurrentPage(i + 1)}
               >
@@ -157,8 +157,8 @@ const GenericTable = <T extends Record<string, any>>({ items, columns, itemsPerP
               </button>
             ))}
             <button
-              className={`px-3 py-1 border rounded-md ${
-                currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'bg-gray-200 hover:bg-gray-300'
+              className={`px-3 py-1 border border-neutral-300 rounded-md ${
+                currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : 'bg-gray-100 hover:bg-gray-300'
               }`}
               disabled={currentPage === totalPages}
               onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}

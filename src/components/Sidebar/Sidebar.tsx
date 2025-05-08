@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import './Sidebar.css';
+import { FaTimes } from 'react-icons/fa';
 import {
   Home,
   List,
@@ -30,52 +30,75 @@ const sidebarItems = [
   { name: 'Voucher', icon: Ticket, link: '/voucher' },
 ];
 
-const Sidebar: React.FC = () => {
+interface SidebarProps {
+  onClose?: () => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const isMobile = !!onClose;
 
   const handleLogout = () => {
-    logout(); // Xóa token
-    navigate("/"); // Điều hướng về Login page
+    logout();
+    navigate("/");
   };
 
   return (
-    <div className="sidebar h-screen bg-white flex flex-col justify-between overflow-y-auto fixed top-0 left-0 z-40">
-      <div className="sidebar-content">
-        <div className="logo-wrapper flex items-center gap-2 mb-6 px-6">
-          <img src="/utopia_logo.svg" alt="Utopia Logo" className="w-8 h-8 object-contain" />
-          <h1 className="text-xl font-bold leading-none flex items-center">
-            <span className="text-[#4A75FF]">UTO</span>
+    <div className={`fixed top-0 left-0 z-40 h-screen bg-white flex flex-col overflow-y-auto
+      ${isMobile ? 'w-full' : 'w-64'} p-6 border-r border-gray-200`}>
+      
+      {/* Logo + Close */}
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2 ml-5 mt-1 mb-7">
+          <img src="/utopia_logo.svg" alt="Utopia Logo" className="object-contain w-8 h-8 md:w-8 md:h-8 sm:w-10 sm:h-10" />
+          <h1 className="font-bold leading-none flex items-center text-xl md:text-xl sm:text-2xl">
+            <span className="text-blue-600">UTO</span>
             <span className="text-[#4B5563]">PIA</span>
           </h1>
         </div>
-
-        <nav className="sidebar-nav">
-          {sidebarItems.map((item, index) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={index}
-                to={item.link}
-                className={`sidebar-item ${location.pathname === item.link ? 'active' : ''}`}
-              >
-                <div className="sidebar-item-indicator" />
-                <div className="sidebar-item-content flex items-center gap-2">
-                  <Icon className="sidebar-icon w-5 h-5" strokeWidth={2} />
-                  <span>{item.name}</span>
-                </div>
-              </Link>
-            );
-          })}
-        </nav>
+        {onClose && (
+          <button onClick={onClose} className="md:hidden text-gray-600 hover:text-black">
+            <FaTimes className="w-5 h-5" />
+          </button>
+        )}
       </div>
 
-      <div className="logout-section p-4">
+      {/* Sidebar Item */}
+      <nav className="flex flex-col items-start gap-3 pb-6 flex-grow">
+        {sidebarItems.map((item, index) => {
+          const Icon = item.icon;
+          const isActive = location.pathname === item.link;
+          return (
+            <Link
+              key={index}
+              to={item.link}
+              onClick={onClose}
+              className={`flex items-center w-full rounded-md transition-all px-3 md:px-3 sm:px-4 py-2 md:py-2 sm:py-3 text-sm sm:text-base ${
+                isActive
+                  ? 'bg-blue-100 text-blue-700 font-semibold'
+                  : 'text-gray-700 hover:bg-gray-100 hover:text-blue-700'
+              }`}
+            >
+              <div
+                className={`w-1 h-5 rounded bg-blue-600 mr-3 ${
+                  isActive ? 'block' : 'invisible'
+                }`}
+              ></div>
+              <Icon className="w-4 h-4 sm:w-5 sm:h-5 mr-3" strokeWidth={2} />
+              <span>{item.name}</span>
+            </Link>
+          );
+        })}
+      </nav>
+
+      {/* Logout */}
+      <div className="pt-4 border-t border-gray-200">
         <button
           onClick={handleLogout}
-          className="logout-button flex items-center gap-2 text-sm text-gray-700 hover:text-red-500"
+          className="flex items-center gap-3 text-sm sm:text-lg px-3 md:px-3 sm:px-4 py-2 md:py-2 sm:py-3 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-md transition-all"
         >
-          <LogOut className="sidebar-icon w-5 h-5" />
+          <LogOut className="w-5 h-5 sm:w-6 sm:h-6" />
           <span>Logout</span>
         </button>
       </div>

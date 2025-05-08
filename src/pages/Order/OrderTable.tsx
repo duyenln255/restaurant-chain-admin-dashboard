@@ -53,7 +53,6 @@ const OrderTable: React.FC<OrderTableProps> = ({ items }) => {
     {
       key: '_index',
       label: 'No.',
-      width: '60px',
       align: 'center',
       render: (item) => <span className="text-gray-600 text-sm">{items.findIndex(i => i.id === item.id) + 1}</span>,
     },
@@ -132,7 +131,6 @@ const OrderTable: React.FC<OrderTableProps> = ({ items }) => {
     {
       key: 'action',
       label: 'Action',
-      width: '100px',
       align: 'center',
       render: (item) => (
         <div className="flex justify-center space-x-4">

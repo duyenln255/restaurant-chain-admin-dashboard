@@ -7,13 +7,14 @@ const BlogCard: React.FC<{ post: BlogCardItem }> = ({ post }) => {
       className={`flex flex-col bg-white rounded-xl shadow-md overflow-hidden w-full min-h-[500px] transition-transform duration-300 ${
         post.status === "inactive" ? "opacity-50" : "hover:scale-105"
       }`}
+      
       onClick={() => console.log(`Editing blog: ${post.title}`)} // ✅ Vẫn có thể bấm để vào edit
     >
       {/* Hình ảnh với padding trên 16px, dưới 8px, border-radius 4px */}
       <div className="pt-4 px-4 pb-2">
         <img
           loading="lazy"
-          src={post.imageUrl}
+          src={post.photoUrl}
           alt="Blog post cover"
           className="w-full h-[200px] object-cover rounded-md"
         />
@@ -28,11 +29,11 @@ const BlogCard: React.FC<{ post: BlogCardItem }> = ({ post }) => {
           >
             READ MORE
           </button>
-          <img
+          {/* <img
             src={post.authorImageUrl}
             alt="Author"
             className="w-10 h-10 rounded-full object-cover"
-          />
+          /> */}
         </div>
       </div>
     </div>

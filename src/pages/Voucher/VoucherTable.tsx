@@ -1,13 +1,13 @@
 import React from 'react';
 import type { VoucherItem } from '../../types/VoucherItem';
 import GenericTable from '../../components/Table/GenericTable';
-import { faPen } from "@fortawesome/free-solid-svg-icons";  // Regular icon
-import { faTrash } from "@fortawesome/free-solid-svg-icons"; // Solid icon
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 interface VoucherTableProps {
   items: VoucherItem[];
 }
+
 const VoucherTable: React.FC<VoucherTableProps> = ({ items }) => {
   const handleEdit = (item: VoucherItem) => {
     console.log('Edit:', item);
@@ -16,55 +16,148 @@ const VoucherTable: React.FC<VoucherTableProps> = ({ items }) => {
   const handleDelete = (item: VoucherItem) => {
     console.log('Delete:', item);
   };
-  
-  const columns: { key: keyof VoucherItem | 'action'; label: string; width?: string; render?: (item: VoucherItem) => React.ReactNode }[] = [
-    { key: "id", label: "ID", width: "80px" },
-    { key: "type", label: "TYPE", width: "120px" },
-    { key: "title", label: "TITLE", width: "250px" },
-    { key: "code", label: "CODE (COUPON)", width: "180px", render: (item: VoucherItem) => (item.code ? item.code : <span className="text-gray-400 italic">N/A</span>), },
-    { key: "brand", label: "BRAND", width: "200px" },
-    { key: "description", label: "DESCRIPTION", width: "400x" },
-    { key: "discountType", label: "DISCOUNT_TYPE", width: "150px", render: (item: VoucherItem) => (
-      <span
-        className={`px-2 py-1 text-xs font-semibold rounded-md ${
-          item.discountType.toLowerCase() === "percentage"
-            ? "bg-green-200 text-green-800"
-            : item.discountType.toLowerCase() === "fixed amount"
-            ? "bg-red-200 text-red-800"
-            : "bg-blue-200 text-blue-800"
-        }`}
-      >
-        {item.discountType}
+
+  const renderStatus = (status: VoucherItem['status']) => {
+    const colorMap: Record<string, string> = {
+      Active: 'bg-green-100 text-green-700',
+      Expired: 'bg-gray-200 text-gray-600',
+      Inactive: 'bg-yellow-100 text-yellow-700',
+    };
+
+    return (
+      <span className={`inline-block px-3 py-1 rounded-full text-sm ${colorMap[status] || 'bg-gray-100 text-gray-500'} whitespace-nowrap`}>
+        {status}
       </span>
-    ),},
-    { key: "discountValue", label: "DISCOUNT_VALUE", width: "100px"},
-    { key: "startDate", label: "START DATE", width: "150px" },
-    { key: "endDate", label: "END DATE", width: "150px" },
-    { key: 'status', label: 'Status' }, // Trạng thái đơn hàng
-    { 
-          key: 'action', 
-          label: 'Action', 
-          width: '100px', 
-          render: (item: VoucherItem) => (
-            <div className="flex justify-center space-x-4">
-              <button onClick={() => handleEdit(item)} className="text-blue-500 hover:text-blue-700">
-              <FontAwesomeIcon icon={faPen} size="lg" />
-            </button>
-            <button onClick={() => handleDelete(item)} className="text-red-500 hover:text-red-700">
-              <FontAwesomeIcon icon={faTrash} size="lg" />
-            </button>
-    
-            </div>
-          )
-        }
+    );
+  };
+
+  const columns: {
+    key: keyof VoucherItem | 'action' | '_index';
+    label: string;
+    align?: 'center' | 'left' | 'right';
+    render?: (item: VoucherItem) => React.ReactNode;
+  }[] = [
+    {
+      key: '_index',
+      label: 'No.',
+      align: 'center',
+      render: (item) => <span className="text-gray-600 text-sm">{items.findIndex(i => i.id === item.id) + 1}</span>,
+    },
+    {
+      key: "id",
+      label: "ID",
+      render: (item) => (
+        <div className="max-w-20 font-medium text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.id}>
+          {item.id}
+        </div>
+      ),
+    },
+    {
+      key: "type",
+      label: "Type",
+      render: (item) => (
+        <span className="inline-block px-2 py-1 text-xs font-semibold rounded-md bg-blue-100 text-blue-700 whitespace-nowrap">
+          {item.type}
+        </span>
+      ),
+    },
+    {
+      key: "title",
+      label: "Title",
+      render: (item) => (
+        <div className="text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.title}>
+          {item.title}
+        </div>
+      ),
+    },
+    {
+      key: "code",
+      label: "Code (Coupon)",
+      render: (item) => (
+        <span className="text-sm">{item.code ? item.code : <span className="text-gray-400 italic">N/A</span>}</span>
+      ),
+    },
+    {
+      key: "brand",
+      label: "Brand",
+      render: (item) => (
+        <div className="max-w-28 text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.brand}>
+          {item.brand}
+        </div>
+      ),
+    },
+    {
+      key: "description",
+      label: "Description",
+      render: (item) => (
+        <div className="text-sm overflow-hidden text-ellipsis" title={item.description}>
+          {item.description}
+        </div>
+      ),
+    },
+    {
+      key: "discountType",
+      label: "Discount Type",
+      render: (item) => (
+        <span
+          className={`inline-block px-2 py-1 text-xs font-semibold rounded-md ${
+            item.discountType.toLowerCase() === "drink"
+              ? "bg-green-100 text-green-700"
+              : item.discountType.toLowerCase() === "food"
+              ? "bg-yellow-100 text-yellow-700"
+              : "bg-blue-100 text-blue-700"
+          }`}
+        >
+          {item.discountType}
+        </span>
+      ),
+    },
+    {
+      key: "discountValue",
+      label: "Discount",
+      render: (item) => (
+        <span className="text-sm">{item.discountValue}</span>
+      ),
+    },
+    {
+      key: "startDate",
+      label: "Start Date",
+      render: (item) => (
+        <span className="text-sm">{item.startDate}</span>
+      ),
+    },
+    {
+      key: "endDate",
+      label: "End Date",
+      render: (item) => (
+        <span className="text-sm">{item.endDate}</span>
+      ),
+    },
+    {
+      key: "status",
+      label: "Status",
+      render: (item) => renderStatus(item.status),
+    },
+    {
+      key: 'action',
+      label: 'Action',
+      align: "center",
+      render: (item) => (
+        <div className="flex justify-center space-x-4">
+          <button onClick={() => handleEdit(item)} className="text-blue-500 hover:text-blue-700">
+            <FontAwesomeIcon icon={faPen} size="sm" />
+          </button>
+          <button onClick={() => handleDelete(item)} className="text-red-500 hover:text-red-700">
+            <FontAwesomeIcon icon={faTrash} size="sm" />
+          </button>
+        </div>
+      ),
+    },
   ];
 
   return (
     <div className="space-y-4">
-      {/* <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold">Customer List</h2>
-      </div> */}
-      <GenericTable<VoucherItem> items={items} columns={columns} itemsPerPage={10} />
+      <GenericTable<VoucherItem> items={items} columns={columns} itemsPerPage={5} />
     </div>
   );
 };

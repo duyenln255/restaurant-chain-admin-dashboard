@@ -1,13 +1,13 @@
 import React from 'react';
 import type { ReservationItem } from '../../types/ReservationItem';
 import GenericTable from '../../components/Table/GenericTable';
-import { faPen } from "@fortawesome/free-solid-svg-icons";  // Regular icon
-import { faTrash } from "@fortawesome/free-solid-svg-icons"; // Solid icon
+import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface ReservationTableProps {
   items: ReservationItem[];
 }
+
 const ReservationTable: React.FC<ReservationTableProps> = ({ items }) => {
   const handleEdit = (item: ReservationItem) => {
     console.log('Edit:', item);
@@ -16,40 +16,116 @@ const ReservationTable: React.FC<ReservationTableProps> = ({ items }) => {
   const handleDelete = (item: ReservationItem) => {
     console.log('Delete:', item);
   };
-  
-  const columns: { key: keyof ReservationItem | 'action'; label: string; width?: string; render?: (item: ReservationItem) => React.ReactNode }[] = [
-    { key: "id", label: "ID", width: "80px" },
-    { key: "fullName", label: "FULL NAME", width: "200px" },
-    { key: "email", label: "EMAIL", width: "250px" },
-    { key: "phoneNumber", label: "PHONE NUMBER", width: "180px" },
-    { key: "dateTime", label: "DATETIME", width: "200px" },
-    { key: "location", label: "LOCATION", width: "200px" },
-    { key: "people", label: "PEOPLE", width: "100px"},
-    { key: "inOutdoor", label: "IN/OUTDOOR"},
-    { key: 'status', label: 'Status' }, // Trạng thái đơn hàng
-    { 
-          key: 'action', 
-          label: 'Action', 
-          width: '100px', 
-          render: (item: ReservationItem) => (
-            <div className="flex justify-center space-x-4">
-              <button onClick={() => handleEdit(item)} className="text-blue-500 hover:text-blue-700">
-              <FontAwesomeIcon icon={faPen} size="lg" />
-            </button>
-            <button onClick={() => handleDelete(item)} className="text-red-500 hover:text-red-700">
-              <FontAwesomeIcon icon={faTrash} size="lg" />
-            </button>
-    
-            </div>
-          )
-        }
+
+  const renderStatus = (status: ReservationItem['status']) => {
+    const colorMap: Record<ReservationItem['status'], string> = {
+      Waiting: 'bg-yellow-100 text-yellow-700',
+      Confirmed: 'bg-sky-100 text-blue-700',
+      Completed: 'bg-green-100 text-green-700',
+      Cancelled: 'bg-red-100 text-red-700',
+      Active: 'bg-sky-100 text-blue-700',
+      Cancel: 'bg-gray-300 text-gray-600',
+    };
+
+    return (
+      <span className={`inline-block px-3 py-1 rounded-full text-sm ${colorMap[status]} whitespace-nowrap`}>
+        {status}
+      </span>
+    );
+  };
+
+  const columns: {
+    key: keyof ReservationItem | 'action' | '_index';
+    label: string;
+    width?: string;
+    align?: 'center' | 'left' | 'right';
+    render?: (item: ReservationItem) => React.ReactNode;
+  }[] = [
+    {
+      key: '_index',
+      label: 'No.',
+      align: 'center',
+      render: (item) => <span className="text-gray-600 text-sm">{items.findIndex(i => i.id === item.id) + 1}</span>,
+    },
+    {
+      key: "id",
+      label: "ID",
+      render: (item) => (
+        <div className="max-w-20 font-semibold text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.id}>
+          {item.id}
+        </div>
+      ),
+    },
+    {
+      key: "fullName",
+      label: "Full Name",
+      render: (item) => (
+        <div className="max-w-28 font-semibold text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.fullName}>
+          {item.fullName}
+        </div>
+      ),
+    },
+    {
+      key: "phoneNumber",
+      label: "Phone Number",
+      render: (item) => (
+        <div className="text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.phoneNumber}>
+          {item.phoneNumber}
+        </div>
+      ),
+    },
+    {
+      key: "dateTime",
+      label: "Date Time",
+      render: (item) => (
+        <div className="text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.dateTime}>
+          {item.dateTime}
+        </div>
+      ),
+    },
+    {
+      key: "location",
+      label: "Location",
+      render: (item) => (
+        <div className="max-w-40 text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.location}>
+          {item.location}
+        </div>
+      ),
+    },
+    {
+      key: "people",
+      label: "People",
+    },
+    {
+      key: "inOutdoor",
+      label: "In/Outdoor",
+      align: "center",
+    },
+    {
+      key: "status",
+      label: "Status",
+      align: "center",
+      render: (item) => renderStatus(item.status),
+    },
+    {
+      key: "action",
+      label: "Action",
+      align: "center",
+      render: (item) => (
+        <div className="flex justify-center space-x-4">
+          <button onClick={() => handleEdit(item)} className="text-blue-500 hover:text-blue-700">
+            <FontAwesomeIcon icon={faPen} size="sm" />
+          </button>
+          <button onClick={() => handleDelete(item)} className="text-red-500 hover:text-red-700">
+            <FontAwesomeIcon icon={faTrash} size="sm" />
+          </button>
+        </div>
+      ),
+    },
   ];
 
   return (
     <div className="space-y-4">
-      {/* <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold">Customer List</h2>
-      </div> */}
       <GenericTable<ReservationItem> items={items} columns={columns} itemsPerPage={10} />
     </div>
   );

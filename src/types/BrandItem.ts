@@ -5,5 +5,7 @@ export interface BrandItem {
     link: string;
     description: string;
     status: string;
+    opening_hours: string;
+    closed_hours: string;
   }
   

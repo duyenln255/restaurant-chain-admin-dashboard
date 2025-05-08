@@ -4,13 +4,12 @@ export interface FeedbackItem {
   fullName: string;
   email: string;
   phoneNumber: string;
-  responsible: {
-    branchResponsible?: string;
+  responsible?: {
+    branchResponsible: string;
     employeeResponsible?: string;
   };
   feedback: string;
   createAt: string;
-  updateAt: string;
-  updatedBy?: string; // Thêm trường này để lưu thông tin người cập nhật
+  updateAt?: string;
   status: string;
 }

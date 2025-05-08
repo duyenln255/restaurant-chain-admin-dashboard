@@ -37,7 +37,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
             <button
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              className="px-3 py-1 border rounded-md bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+              className="px-3 py-1 border border-neutral-300 rounded-md bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
             >
               ◀
             </button>
@@ -46,7 +46,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
               <button
                 key={i}
                 onClick={() => setCurrentPage(i + 1)}
-                className={`px-3 py-1 border rounded-md ${
+                className={`px-3 py-1 border border-neutral-300 rounded-md ${
                   currentPage === i + 1
                     ? "bg-blue-500 text-white"
                     : "bg-gray-200 hover:bg-gray-300"
@@ -59,7 +59,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
             <button
               onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
               disabled={currentPage === totalPages}
-              className="px-3 py-1 border rounded-md bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+              className="px-3 py-1 border border-neutral-300 rounded-md bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
             >
               ▶
             </button>

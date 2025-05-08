@@ -1,8 +1,7 @@
 import React from 'react';
 import type { CustomerItem } from '../../types/CustomerItem';
 import GenericTable from '../../components/Table/GenericTable';
-import { faPen } from "@fortawesome/free-solid-svg-icons";  // Regular icon
-import { faTrash } from "@fortawesome/free-solid-svg-icons"; // Solid icon
+import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 interface CustomerTableProps {
@@ -12,37 +11,113 @@ interface CustomerTableProps {
 const CustomerTable: React.FC<CustomerTableProps> = ({ items }) => {
 
   const handleEdit = (item: CustomerItem) => {
-      console.log('Edit:', item);
+    console.log('Edit:', item);
+  };
+
+  const handleDelete = (item: CustomerItem) => {
+    console.log('Delete:', item);
+  };
+
+  const renderStatus = (status: CustomerItem['status']) => {
+    const colorMap: Record<CustomerItem['status'], string> = {
+      Completed: 'bg-green-100 text-green-700',
+      Inactive: 'bg-gray-200 text-gray-600',
+      Active: 'bg-green-100 text-green-700',
     };
-  
-    const handleDelete = (item: CustomerItem) => {
-      console.log('Delete:', item);
-    };
-    
-    const columns: { key: keyof CustomerItem | 'action'; label: string; width?: string; render?: (item: CustomerItem) => React.ReactNode }[] = [
-    { key: 'id', label: 'ID' },
-    { key: 'fullName', label: 'Full Name' },
-    { key: 'email', label: 'Email' },
-    { key: 'dateJoined', label: 'Date Joined' },
-    { key: 'totalOrder', label: 'Total Order' },
-    { key: 'totalReservation', label: 'Total Reservation' },
-    { key: 'status', label: 'Status' },
-    { 
-              key: 'action', 
-              label: 'Action', 
-              width: '100px', 
-              render: (item: CustomerItem) => (
-                <div className="flex justify-center space-x-4">
-                  <button onClick={() => handleEdit(item)} className="text-blue-500 hover:text-blue-700">
-                  <FontAwesomeIcon icon={faPen} size="lg" />
-                </button>
-                <button onClick={() => handleDelete(item)} className="text-red-500 hover:text-red-700">
-                  <FontAwesomeIcon icon={faTrash} size="lg" />
-                </button>
-        
-                </div>
-              )
-            }
+
+    return (
+      <span className={`inline-block px-3 py-1 rounded-full text-sm ${colorMap[status]} whitespace-nowrap`}>
+        {status}
+      </span>
+    );
+  };
+
+  const columns: {
+    key: keyof CustomerItem | 'action' | '_index' | 'phone';
+    label: string;
+    width?: string;
+    align?: 'center' | 'left' | 'right';
+    render?: (item: CustomerItem) => React.ReactNode;
+  }[] = [
+    {
+      key: '_index',
+      label: 'No.',
+      align: 'center',
+      render: (item) => <span className="text-gray-600 text-sm">{items.findIndex(i => i.id === item.id) + 1}</span>,
+    },
+    {
+      key: 'id',
+      label: 'ID',
+      render: (item) => (
+        <div className="max-w-20 font-semibold text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.id}>
+          {item.id}
+        </div>
+      ),
+    },
+    {
+      key: 'fullName',
+      label: 'Full Name',
+      render: (item) => (
+        <div className="max-w-28 font-semibold text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.fullName}>
+          {item.fullName}
+        </div>
+      ),
+    },
+    {
+      key: 'email',
+      label: 'Email',
+      render: (item) => (
+        <div className="max-w-40 text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.email}>
+          {item.email}
+        </div>
+      ),
+    },
+    {
+      key: 'phone',
+      label: 'Phone',
+      render: (item) => (
+        <div className="text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.phone}>
+          {item.phone}
+        </div>
+      ),
+    },
+    {
+      key: 'dateJoined',
+      label: 'Date Joined',
+      render: (item) => (
+        <div className="text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.dateJoined}>
+          {item.dateJoined}
+        </div>
+      ),
+    },
+    {
+      key: 'totalOrder',
+      label: 'Total Order',
+    },
+    {
+      key: 'totalReservation',
+      label: 'Total Reservation',
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      render: (item) => renderStatus(item.status),
+    },
+    {
+      key: 'action',
+      label: 'Action',
+      align: 'center',
+      render: (item) => (
+        <div className="flex justify-center space-x-4">
+          <button onClick={() => handleEdit(item)} className="text-blue-500 hover:text-blue-700">
+            <FontAwesomeIcon icon={faPen} size="sm" />
+          </button>
+          <button onClick={() => handleDelete(item)} className="text-red-500 hover:text-red-700">
+            <FontAwesomeIcon icon={faTrash} size="sm" />
+          </button>
+        </div>
+      ),
+    },
   ];
 
   return (

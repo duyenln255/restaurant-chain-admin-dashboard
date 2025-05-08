@@ -1,123 +1,51 @@
-import React, { useState } from 'react';
-import FilterBar from './FilterBar';
-import FilterBarBlog from './FilterBarBlog';
+import React, { useState, useEffect, useMemo } from 'react';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import Header from '../../components/Header/Header';
-import BlogList from './BlogList';
-import type { BrandItem } from '../../types/BrandItem';
+import FilterBar from './FilterBar';
+import FilterBarBlog from './FilterBarBlog';
 import BrandTable from './BrandTable';
-
-const brands: BrandItem[] = [
-  {
-    id: "001",
-    logo: "https://cdn.builder.io/api/v1/image/assets/TEMP/logo1.png",
-    name: "Starbucks Coffee",
-    link: "https://starbucks.com",
-    description: "Starbucks Coffee Company - providing high-quality coffee worldwide.",
-    status: "Active",
-  },
-  {
-    id: "002",
-    logo: "https://cdn.builder.io/api/v1/image/assets/TEMP/logo2.png",
-    name: "Highland Coffee",
-    link: "https://highlandcoffee.com",
-    description: "A premium coffee brand with rich flavors and traditions.",
-    status: "Inactive",
-  },
-  {
-    id: "003",
-    logo: "https://cdn.builder.io/api/v1/image/assets/TEMP/logo3.png",
-    name: "The Coffee House",
-    link: "https://thecoffeehouse.com",
-    description: "Your go-to place for the best coffee experiences.",
-    status: "Active",
-  },
-];
-
-const blogPosts = [
-    {
-      id: "001",
-      title: "Coffee Connoisseur",
-      content: "I'm Kev Lewis, a coffee enthusiast based in the North West of England. I'm the founder, author, and chief brewer behind coffeeblog.co.uk, The Coffeeworks.",
-      date: "28/12/2024 00:29:10",
-      imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/6bac088269fb9c7a6c32e676f6c6816b1fa31a35be6ae0f8a57b57e8d29644a7?placeholderIfAbsent=true&apiKey=482c75c84bdb4c88a7a67a7f2dd73013",
-      authorImageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/2cbda30af462a3673eb282aa69c60528143b48f0a0ed9c3c2504e4b317e98447?placeholderIfAbsent=true&apiKey=482c75c84bdb4c88a7a67a7f2dd73013",
-      status: 'active'
-    },
-    {
-      id: "002",
-      title: "Coffee Connoisseur",
-      content: "I'm Kev Lewis, a coffee enthusiast based in the North West of England. I'm the founder, author, and chief brewer behind coffeeblog.co.uk, The Coffeeworks.",
-      date: "28/12/2024 00:29:10",
-      imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/6bac088269fb9c7a6c32e676f6c6816b1fa31a35be6ae0f8a57b57e8d29644a7?placeholderIfAbsent=true&apiKey=482c75c84bdb4c88a7a67a7f2dd73013",
-      authorImageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/c7ffcba4ae83db1f3a0e9573895a05d13fafe6d6cefbebf17610277a5c56a0e9?placeholderIfAbsent=true&apiKey=482c75c84bdb4c88a7a67a7f2dd73013",
-      status: 'inactive'
-    },
-    {
-      id: "003",
-      title: "Coffee Connoisseur",
-      content: "I'm Kev Lewis, a coffee enthusiast based in the North West of England. I'm the founder, author, and chief brewer behind coffeeblog.co.uk, The Coffeeworks.",
-      date: "28/12/2024 00:29:10",
-      imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/6bac088269fb9c7a6c32e676f6c6816b1fa31a35be6ae0f8a57b57e8d29644a7?placeholderIfAbsent=true&apiKey=482c75c84bdb4c88a7a67a7f2dd73013",
-      authorImageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/8fe522368a252715acdfb408dfbb9c11df2ec26f7cacb7af3a07fbd5acd6371c?placeholderIfAbsent=true&apiKey=482c75c84bdb4c88a7a67a7f2dd73013",
-      status: 'active'
-    },
-    {
-      id: "004",
-      title: "Coffee Connoisseur",
-      content: "I'm Kev Lewis, a coffee enthusiast based in the North West of England. I'm the founder, author, and chief brewer behind coffeeblog.co.uk, The Coffeeworks.",
-      date: "28/12/2024 00:29:10",
-      imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/6bac088269fb9c7a6c32e676f6c6816b1fa31a35be6ae0f8a57b57e8d29644a7?placeholderIfAbsent=true&apiKey=482c75c84bdb4c88a7a67a7f2dd73013",
-      authorImageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/2cbda30af462a3673eb282aa69c60528143b48f0a0ed9c3c2504e4b317e98447?placeholderIfAbsent=true&apiKey=482c75c84bdb4c88a7a67a7f2dd73013",
-      status: 'active'
-    },
-    {
-      id: "005",
-      title: "Coffee Connoisseur",
-      content: "I'm Kev Lewis, a coffee enthusiast based in the North West of England. I'm the founder, author, and chief brewer behind coffeeblog.co.uk, The Coffeeworks.",
-      date: "28/12/2024 00:29:10",
-      imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/6bac088269fb9c7a6c32e676f6c6816b1fa31a35be6ae0f8a57b57e8d29644a7?placeholderIfAbsent=true&apiKey=482c75c84bdb4c88a7a67a7f2dd73013",
-      authorImageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/c7ffcba4ae83db1f3a0e9573895a05d13fafe6d6cefbebf17610277a5c56a0e9?placeholderIfAbsent=true&apiKey=482c75c84bdb4c88a7a67a7f2dd73013",
-      status: 'inactive',
-    },
-    {
-      id: "006",
-      title: "Coffee Connoisseur",
-      content: "I'm Kev Lewis, a coffee enthusiast based in the North West of England. I'm the founder, author, and chief brewer behind coffeeblog.co.uk, The Coffeeworks.",
-      date: "28/12/2024 00:29:10",
-      imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/6bac088269fb9c7a6c32e676f6c6816b1fa31a35be6ae0f8a57b57e8d29644a7?placeholderIfAbsent=true&apiKey=482c75c84bdb4c88a7a67a7f2dd73013",
-      authorImageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/8fe522368a252715acdfb408dfbb9c11df2ec26f7cacb7af3a07fbd5acd6371c?placeholderIfAbsent=true&apiKey=482c75c84bdb4c88a7a67a7f2dd73013",
-      status: 'active',
-    },
-    {
-      id: "007",
-      title: "Coffee Connoisseur",
-      content: "I'm Kev Lewis, a coffee enthusiast based in the North West of England. I'm the founder, author, and chief brewer behind coffeeblog.co.uk, The Coffeeworks.",
-      date: "28/12/2024 00:29:10",
-      imageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/6bac088269fb9c7a6c32e676f6c6816b1fa31a35be6ae0f8a57b57e8d29644a7?placeholderIfAbsent=true&apiKey=482c75c84bdb4c88a7a67a7f2dd73013",
-      authorImageUrl: "https://cdn.builder.io/api/v1/image/assets/TEMP/8fe522368a252715acdfb408dfbb9c11df2ec26f7cacb7af3a07fbd5acd6371c?placeholderIfAbsent=true&apiKey=482c75c84bdb4c88a7a67a7f2dd73013",
-      status: 'active',
-    }
-  ];
+import BlogList from './BlogList';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { fetchBrands } from '../../redux/slices/brandSlice';
+import type { RootState } from '../../redux/store';
+import type { BrandItem } from '../../types/BrandItem';
 
 const BrandList: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { items: rawBrands, loading, error } = useAppSelector((state: RootState) => state.brands);
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const toggleSidebar = () => setSidebarOpen(prev => !prev);
 
+  const brands = useMemo<BrandItem[]>(
+    () =>
+      rawBrands.map((b) => ({
+        id: b.id,
+        logo: b.logo_url,
+        name: b.name,
+        link: b.website_url,
+        description: b.description,
+        status: b.status,
+        opening_hours: b.opening_hours,
+        closed_hours: b.closed_hours
+      })),
+    [rawBrands]
+  );
+
+  useEffect(() => {
+    dispatch(fetchBrands());
+  }, [dispatch]);
+
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar */}
       <div className={`transition-all duration-300 ${sidebarOpen ? 'w-[240px]' : 'w-0 overflow-hidden'}`}>
         {sidebarOpen && <Sidebar />}
       </div>
 
-      {/* Main content */}
       <div className="flex-1">
         <Header toggleSidebar={toggleSidebar} />
         <div className="dashboard-body p-6">
           <div className="max-w-[1140px] mx-auto space-y-4">
-            
-            {/* Header + Button */}
             <div className="flex justify-between items-center">
               <h1 className="text-2xl font-bold text-neutral-800">Brand Lists</h1>
               <button className="bg-blue-500 text-white px-5 py-2 rounded-md">
@@ -126,9 +54,15 @@ const BrandList: React.FC = () => {
             </div>
 
             <FilterBar />
+
+            {loading && <p>Loading brands...</p>}
+            {error && <p className="text-red-500">{error}</p>}
+            {!loading && brands.length === 0 && <p>No brands found.</p>}
+
             <BrandTable items={brands} />
 
-            <div className="flex justify-between items-center">
+            {/* Blog (nguyên như cũ) */}
+            <div className="flex justify-between items-center mt-10">
               <h1 className="text-2xl font-bold text-neutral-800">Blog Lists</h1>
               <button className="px-4 py-2 border border-neutral-300 rounded-md bg-red-500 text-white hover:bg-red-600">
                 Delete All
@@ -136,12 +70,12 @@ const BrandList: React.FC = () => {
             </div>
 
             <FilterBarBlog />
-            <BlogList blogPosts={blogPosts} />
+            <BlogList blogPosts={[]} />
           </div>
         </div>
       </div>
     </div>
   );
 };
-  
+
 export default BrandList;

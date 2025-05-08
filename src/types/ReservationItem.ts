@@ -1,7 +1,6 @@
 export interface ReservationItem {
     id: string;
     fullName: string;
-    email: string;
     phoneNumber: string;
     dateTime: string;
     location: string;

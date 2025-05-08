@@ -1,130 +1,62 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Header from "../../components/Header/Header";
 import EmployeeCard from "./EmployeeCard";
 import Pagination from "./Pagination";
-import type { EmployeeItem } from "../../types/EmployeeItem";
-
-const employees: EmployeeItem[] = [
-  // 👇 Danh sách nhân viên bạn giữ nguyên như cũ
-  {
-    id: "001",
-    name: "Lenora Benson",
-    role: "Employees",
-    branch: "Sài Gòn",
-    email: "feil.wallace@klunde.us",
-    avatarUrl: "lenora.jpg",
-    brandLogo: "starbucks.png",
-  },
-  {
-    id: "002",
-    name: "Jason Price",
-    role: "Admin",
-    branch: "Sài Gòn",
-    email: "janick.parisian@yahoo.com",
-    avatarUrl: "jason.jpg",
-    brandLogo: "highlands.png",
-  },
-  {
-    id: "003",
-    name: "Jukloe Sisao",
-    role: "Employees",
-    branch: "Sài Gòn",
-    email: "sibyl_kozey@gmail.com",
-    avatarUrl: "jukloe.jpg",
-    brandLogo: "coffeebean.png",
-  },
-  {
-    id: "004",
-    name: "Harriet King",
-    role: "Employees",
-    branch: "Sài Gòn",
-    email: "nadia_block@hotmail.com",
-    avatarUrl: "harriet.jpg",
-    brandLogo: "starbucks.png",
-  },
-  {
-    id: "005",
-    name: "Olivia Reese",
-    role: "Employees",
-    branch: "Sài Gòn",
-    email: "kemmer.hattie@cremin.us",
-    avatarUrl: "olivia.jpg",
-    brandLogo: "coffeebean.png",
-  },
-  {
-    id: "006",
-    name: "Bertha Valdez",
-    role: "Employees",
-    branch: "Sài Gòn",
-    email: "loraine.koelpin@tronto.jp",
-    avatarUrl: "bertha.jpg",
-    brandLogo: "highlands.png",
-  },
-  {
-    id: "007",
-    name: "Harriett Payne",
-    role: "Employees",
-    branch: "Sài Gòn",
-    email: "nannie.west@strella.tv",
-    avatarUrl: "harriett.jpg",
-    brandLogo: "starbucks.png",
-  },
-  {
-    id: "008",
-    name: "George Bryant",
-    role: "Employees",
-    branch: "Sài Gòn",
-    email: "delmer.klinq@gmail.com",
-    avatarUrl: "george.jpg",
-    brandLogo: "coffeebean.png",
-  },
-];
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { fetchEmployees } from "../../redux/slices/employeeSlice";
+import type { RootState } from "../../redux/store";
 
 const EmployeeList: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { items: rawEmployees, loading, error } = useAppSelector((state: RootState) => state.employees);
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8;
+
+  const employees = useMemo(() => rawEmployees.map((e) => ({
+    id: e.id,
+    name: e.full_name,
+    role: e.role,
+    branch: e.branch_id,
+    email: e.email,
+    avatarUrl: "", // Không có từ API → có thể random/avatar mặc định
+    brandLogo: "", // Không có từ API → có thể random/brand mặc định
+  })), [rawEmployees]);
+
   const totalPages = Math.ceil(employees.length / itemsPerPage);
   const paginatedItems = employees.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
 
+  useEffect(() => {
+    dispatch(fetchEmployees());
+  }, [dispatch]);
+
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar with toggle */}
-      <div
-        className={`transition-all duration-300 ${
-          sidebarOpen ? "w-[240px]" : "w-0 overflow-hidden"
-        }`}
-      >
+      <div className={`transition-all duration-300 ${sidebarOpen ? "w-[240px]" : "w-0 overflow-hidden"}`}>
         {sidebarOpen && <Sidebar />}
       </div>
 
-      {/* Main content */}
       <div className="flex-1">
         <Header toggleSidebar={toggleSidebar} />
         <div className="dashboard-body p-6">
           <div className="max-w-[1140px] mx-auto space-y-4">
-            {/* Header + Button */}
             <div className="flex justify-between items-center">
               <h1 className="text-2xl font-bold text-neutral-800">Employees</h1>
 
               <div className="flex space-x-4">
                 <select className="px-4 py-2 border border-neutral-300 rounded-md bg-white shadow-sm">
                   <option>--- Choose Brands ---</option>
-                  <option>Starbucks</option>
-                  <option>Highlands Coffee</option>
-                  <option>Phuc Long</option>
                 </select>
 
-                <select className="px-4 py-2 border  border-neutral-300 rounded-md bg-white shadow-sm">
-                  <option>Sài Gòn</option>
-                  <option>Hà Nội</option>
-                  <option>Đà Nẵng</option>
+                <select className="px-4 py-2 border border-neutral-300 rounded-md bg-white shadow-sm">
+                  <option>--- Choose Branch ---</option>
                 </select>
 
                 <button className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
@@ -133,14 +65,16 @@ const EmployeeList: React.FC = () => {
               </div>
             </div>
 
-            {/* Employee Card Grid */}
+            {loading && <p>Loading employees...</p>}
+            {error && <p className="text-red-500">{error}</p>}
+            {!loading && employees.length === 0 && <p>No employees found.</p>}
+
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
               {paginatedItems.map((employee) => (
                 <EmployeeCard key={employee.id} employee={employee} />
               ))}
             </div>
 
-            {/* Pagination */}
             {employees.length > itemsPerPage && (
               <Pagination
                 currentPage={currentPage}

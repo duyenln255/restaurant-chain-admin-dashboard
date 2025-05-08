@@ -1,41 +1,57 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import BlogCard from "./BlogCard";
-import type { BlogCardItem } from "../../types/BlogCardItem";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { fetchBlogs } from "../../redux/slices/blogSlice";
+import type { RootState } from "../../redux/store";
 
-interface BlogListProps {
-  blogPosts: BlogCardItem[];
-}
+const BlogList: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { items: rawBlogs, loading, error } = useAppSelector((state: RootState) => state.blogs);
 
-const BlogList: React.FC<BlogListProps> = ({ blogPosts }) => {
-  const [visibleBlogs, setVisibleBlogs] = useState(6); // ✅ Ban đầu hiển thị 6 blog
-  const [isLoading, setIsLoading] = useState(false); // ✅ Trạng thái loading
+  const [visibleBlogs, setVisibleBlogs] = useState(6);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const blogs = useMemo(() => rawBlogs.map((b) => ({
+    id: b.id,
+    title: b.title,
+    content: b.content,
+    photoUrl: b.photo,
+    authorId: b.staff_id,
+    status: "chua co trong api data ",
+    date: new Date(b.date_added).toLocaleDateString(),
+  })), [rawBlogs]);
 
   const loadMoreBlogs = () => {
-    setIsLoading(true); // ✅ Bật trạng thái loading
-
+    setIsLoading(true);
     setTimeout(() => {
-      setVisibleBlogs((prev) => prev + 3); // ✅ Hiển thị thêm 3 blog sau 1 giây
-      setIsLoading(false); // ✅ Tắt trạng thái loading
-    }, 1000); // ⏳ Giả lập thời gian chờ 1 giây
+      setVisibleBlogs((prev) => prev + 3);
+      setIsLoading(false);
+    }, 1000);
   };
+
+  useEffect(() => {
+    dispatch(fetchBlogs());
+  }, [dispatch]);
 
   return (
     <div className="mt-4">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {blogPosts.slice(0, visibleBlogs).map((post) => (
+        {blogs.slice(0, visibleBlogs).map((post) => (
           <BlogCard key={post.id} post={post} />
         ))}
       </div>
 
-      {/* ✅ Hiển thị nút "Load More" khi có hơn 6 blog */}
-      {blogPosts.length > 6 && visibleBlogs < blogPosts.length && (
+      {loading && <p>Loading blogs...</p>}
+      {error && <p className="text-red-500">{error}</p>}
+
+      {blogs.length > 6 && visibleBlogs < blogs.length && (
         <div className="flex justify-center mt-6">
           <button
             className={`px-4 py-2 border border-neutral-300 rounded-md ${
               isLoading ? "bg-gray-300 cursor-not-allowed" : "bg-gray-100 hover:bg-gray-200"
             }`}
             onClick={loadMoreBlogs}
-            disabled={isLoading} // ✅ Không cho click khi đang tải
+            disabled={isLoading}
           >
             {isLoading ? "Loading..." : "Load More"}
           </button>
