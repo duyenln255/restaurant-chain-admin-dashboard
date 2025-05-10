@@ -18,8 +18,8 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
   };
 
   return (
-    <header className="sticky top-0 z-30 bg-white border-b border-neutral-200">
-      <div className="flex items-center justify-between px-8 py-3.5 w-full min-h-12 max-md:px-5">
+    <header className="sticky top-0 z-30 bg-white border-b border-neutral-200 max-w-screen">
+      <div className="flex items-center justify-between px-8 sm:px-2 md:px-4 py-3.5 w-full min-h-12 max-md:px-5">
         <div className="flex items-center gap-4">
           <button className="block focus:outline-none" onClick={toggleSidebar}>
             <Menu className="w-6 h-6" />

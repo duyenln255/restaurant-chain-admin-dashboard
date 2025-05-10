@@ -2,7 +2,7 @@ import { useRoutes } from 'react-router-dom'
 import MainLayout from '../layout/MainLayout/MainLayout'
 import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute'
 
-import Dashboard from '../pages/Dashboard'
+import Dashboard from '../pages/Dashboard/Dashboard'
 import CustomerList from '../pages/Customer/CustomerList'
 import OrderList from '../pages/Order/OrderList'
 import FeedbackList from '../pages/Feedback/FeedbackList'

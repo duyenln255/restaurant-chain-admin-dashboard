@@ -48,21 +48,32 @@ const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
     <div className={`fixed top-0 left-0 z-40 h-screen bg-white flex flex-col overflow-y-auto
       ${isMobile ? 'w-full' : 'w-64'} p-6 border-r border-gray-200`}>
       
-      {/* Logo + Close */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2 ml-5 mt-1 mb-7">
-          <img src="/utopia_logo.svg" alt="Utopia Logo" className="object-contain w-8 h-8 md:w-8 md:h-8 sm:w-10 sm:h-10" />
-          <h1 className="font-bold leading-none flex items-center text-xl md:text-xl sm:text-2xl">
-            <span className="text-blue-600">UTO</span>
-            <span className="text-[#4B5563]">PIA</span>
-          </h1>
-        </div>
-        {onClose && (
-          <button onClick={onClose} className="md:hidden text-gray-600 hover:text-black">
-            <FaTimes className="w-5 h-5" />
-          </button>
-        )}
+    {/* Logo + Close */}
+    <div className="flex items-start justify-start gap-2 mb-6">
+      {/* Logo + Text */}
+      <div className="flex items-center gap-2 ml-5">
+        <img
+          src="/utopia_logo.svg"
+          alt="Utopia Logo"
+          className="object-contain w-8 h-8"
+        />
+        <h1 className="font-bold text-xl leading-none flex items-center">
+          <span className="text-blue-600">UTO</span>
+          <span className="text-[#4B5563]">PIA</span>
+        </h1>
       </div>
+
+      {/* Close button (mobile only) */}
+      {onClose && (
+        <button
+          onClick={onClose}
+          className="ml-auto text-gray-600 hover:text-black"
+        >
+          <FaTimes className="w-5 h-5" />
+        </button>
+      )}
+    </div>
+
 
       {/* Sidebar Item */}
       <nav className="flex flex-col items-start gap-3 pb-6 flex-grow">

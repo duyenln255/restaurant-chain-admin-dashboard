@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import FilterBar from './FilterBar';
 import FilterBarBlog from './FilterBarBlog';
 import BrandTable from './BrandTable';
-import BlogList from './BlogList';
+// import BlogList from './BlogList';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchBrands } from '../../redux/slices/brandSlice';
 import type { RootState } from '../../redux/store';
@@ -39,7 +39,7 @@ const BrandList: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen xs:max-w-screen xs:mx-auto">
       <div className="flex-1">
         <div className="dashboard-body p-6">
           <div className=" mx-auto space-y-4">
@@ -63,15 +63,15 @@ const BrandList: React.FC = () => {
             <BrandTable items={brands} />
 
             {/* Blog (nguyên như cũ) */}
-            <div className="flex justify-between items-center mt-10">
+            {/* <div className="flex justify-between items-center mt-10">
               <h1 className="text-2xl font-bold text-neutral-800">Blog Lists</h1>
               <button className="px-4 py-2 border border-neutral-300 rounded-md bg-red-500 text-white hover:bg-red-600">
                 Delete All
               </button>
-            </div>
+            </div> */}
 
-            <FilterBarBlog />
-            <BlogList />
+            {/* <FilterBarBlog /> */}
+            {/* <BlogList /> */}
           </div>
         </div>
       </div>

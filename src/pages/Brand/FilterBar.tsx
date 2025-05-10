@@ -43,7 +43,7 @@ const FilterBar: React.FC = () => {
   statusOptions.unshift({ value: "all", label: "--- All Status ---" })
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md flex flex-col sm:flex-row flex-wrap gap-4">
+    <div className="bg-white p-4 rounded-lg shadow-md flex flex-col sm:flex-row flex-wrap gap-4 xs:max-w-screen xs:mx-auto">
       {/* Brand Combobox */}
       <ComboboxCustom
         data={brands.map((b) => ({ value: b.id, label: b.name }))}

@@ -5,7 +5,7 @@ import type { ProductItem } from "../../types/ProductItem";
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import type { RootState } from '../../redux/store';
 import { fetchProducts } from '../../redux/slices/productSlice';
-
+import FilterBar from "./FilterBar";
 
 const ProductPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -45,6 +45,9 @@ const ProductPage: React.FC = () => {
                 Add New Product
               </button>
             </div>
+
+        {/* Filter bar */}
+        <FilterBar />
 
             {/* Status */}
             {loading && <p>Loading products...</p>}

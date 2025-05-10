@@ -1,93 +1,126 @@
-import React, { useState } from 'react';
+"use client"
+
+import React, { useState } from "react"
+import { Button } from "../../components/ui/button"
+import { CustomDatePicker } from "../../components/CustomDatePicker/CustomDatePicker"
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "../../components/ui/select"
+import { ComboboxCustom } from "../../components/Combobox/Combobox"
 
 const FilterBar: React.FC = () => {
-  const [keyword, setKeyword] = useState('');
-  const [date, setDate] = useState('');
-  const [status, setStatus] = useState('');
-  const [feedbackType, setFeedbackType] = useState('');
-  const [feedbackEmployee, setFeedbackEmployee] = useState('');
-  const [feedbackBranch, setFeedbackBranch] = useState('');
+  const [keyword, setKeyword] = useState("all")
+  const [date, setDate] = useState<Date | undefined>(undefined)
+  const [status, setStatus] = useState("all")
+  const [feedbackType, setFeedbackType] = useState("all")
+  const [feedbackEmployee, setFeedbackEmployee] = useState("all")
+  const [feedbackBranch, setFeedbackBranch] = useState("all")
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md flex flex-wrap gap-x-4 gap-y-3">
-      {/* Keyword Input */}
-      <input
-        type="text"
-        placeholder="Keyword"
+    <div className="bg-white p-4 rounded-lg shadow-md flex flex-col sm:flex-row flex-wrap gap-4">
+      {/* Keyword input */}
+      <ComboboxCustom
+        data={[]} // TODO: populate with keyword suggestions if needed
         value={keyword}
-        onChange={(e) => setKeyword(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2"
+        onChange={setKeyword}
+        placeholder="Search keyword..."
+        className="w-full sm:flex-1 border border-neutral-300"
       />
 
-      {/* Date Picker */}
-      <input
-        type="date"
+      {/* Date picker */}
+      <CustomDatePicker
         value={date}
-        onChange={(e) => setDate(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2"
+        onChange={setDate}
+        placeholder="Select created date"
       />
 
-      {/* Feedback Type Dropdown */}
-      <select
-        value={feedbackType}
-        onChange={(e) => setFeedbackType(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2"
-      >
-        <option value="">--- All Feedback Types ---</option>
-        <option value="KHIẾU NẠI">KHIẾU NẠI</option>
-        <option value="GÓP Ý">GÓP Ý</option>
-      </select>
+      {/* Feedback Type */}
+      <Select value={feedbackType} onValueChange={setFeedbackType}>
+        <SelectTrigger className="bg-white w-full sm:flex-1 border border-neutral-300">
+          <SelectValue placeholder="--- All Feedback Types ---" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">--- All Feedback Types ---</SelectItem>
+          <SelectItem value="KHIẾU NẠI">KHIẾU NẠI</SelectItem>
+          <SelectItem value="GÓP Ý">GÓP Ý</SelectItem>
+        </SelectContent>
+      </Select>
 
-      {/* Employee responsible Dropdown */}
-      <select
-        value={feedbackEmployee}
-        onChange={(e) => setFeedbackEmployee(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2"
-      >
-        <option value="">--- All Employees ---</option>
-      </select>
+      {/* Responsible Employee */}
+      <Select value={feedbackEmployee} onValueChange={setFeedbackEmployee}>
+        <SelectTrigger className="bg-white w-full sm:flex-1 border border-neutral-300">
+          <SelectValue placeholder="--- All Employees ---" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">--- All Employees ---</SelectItem>
+          {/* Dynamically populate real employees here if needed */}
+        </SelectContent>
+      </Select>
 
-      {/* Branch responsible Dropdown */}
-      <select
-        value={feedbackBranch}
-        onChange={(e) => setFeedbackBranch(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2"
-      >
-        <option value="">--- All Branches ---</option>
-      </select>
+      {/* Responsible Branch */}
+      <Select value={feedbackBranch} onValueChange={setFeedbackBranch}>
+        <SelectTrigger className="bg-white w-full sm:flex-1 border border-neutral-300">
+          <SelectValue placeholder="--- All Branches ---" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">--- All Branches ---</SelectItem>
+          {/* Dynamically populate branches here if needed */}
+        </SelectContent>
+      </Select>
 
-      {/* Status Dropdown */}
-      <select
-        value={status}
-        onChange={(e) => setStatus(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2"
-      >
-        <option value="">--- All Status ---</option>
-        <option value="Pending">Pending</option>
-        <option value="Done">Done</option>
-        <option value="Cancel">Cancel</option>
-        <option value="Verify">Verify</option>
-      </select>
+      {/* Status */}
+      <Select value={status} onValueChange={setStatus}>
+        <SelectTrigger className="bg-white w-full sm:flex-1 border border-neutral-300">
+          <SelectValue placeholder="--- All Status ---" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">--- All Status ---</SelectItem>
+          <SelectItem value="Pending">Pending</SelectItem>
+          <SelectItem value="Done">Done</SelectItem>
+          <SelectItem value="Cancel">Cancel</SelectItem>
+          <SelectItem value="Verify">Verify</SelectItem>
+        </SelectContent>
+      </Select>
 
-      {/* Search & Reset Buttons */}
-      <div className="flex gap-2">
-        <button className="bg-blue-500 text-white px-4 py-2 rounded-md">Search</button>
-        <button
-          className="border border-red-500 text-red-500 px-4 py-2 rounded-md"
+      {/* Buttons */}
+      <div className="flex gap-2 flex-wrap">
+        <Button
+          variant="outline"
+          className="bg-blue-500 text-white hover:bg-blue-600"
+          onClick={() =>
+            console.log({
+              keyword,
+              date,
+              status,
+              feedbackType,
+              feedbackEmployee,
+              feedbackBranch,
+            })
+          }
+        >
+          Search
+        </Button>
+        <Button
+          variant="outline"
+          className="border-red-500 text-red-500 hover:bg-red-50"
           onClick={() => {
-            setKeyword('');
-            setDate('');
-            setStatus('');
-            setFeedbackType('');
-            setFeedbackEmployee('');
-            setFeedbackBranch('');
+            setKeyword("all")
+            setDate(undefined)
+            setStatus("all")
+            setFeedbackType("all")
+            setFeedbackEmployee("all")
+            setFeedbackBranch("all")
           }}
         >
           Reset
-        </button>
+        </Button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default FilterBar;
+export default FilterBar

@@ -17,7 +17,7 @@ const MainLayout: React.FC = () => {
   return (
     <>
       {isLoading && <Loading visible />}
-      <div className="flex min-h-screen bg-gray-50">
+      <div className="flex bg-gray-50 w-full h-full">
         {/* Sidebar */}
         {!isMobile && (
           <div className={`${sidebarOpen ? 'w-64' : 'w-0'} transition-all duration-300`}>
@@ -27,16 +27,17 @@ const MainLayout: React.FC = () => {
         {isMobile && sidebarOpen && (
           <>
             <div className="fixed inset-0 bg-black bg-opacity-50 z-40" onClick={closeSidebar}></div>
-            <div className="fixed inset-0 z-50 bg-white shadow-lg flex flex-col w-full h-full min-h-screen">
+            <div className="fixed inset-0 z-50 bg-white shadow-lg flex flex-col w-full h-full">
               <Sidebar onClose={closeSidebar} />
             </div>
           </>
         )}
+
         {/* Main Content */}
-        <div className="flex flex-col flex-1 transition-all duration-300">
+        <div className="flex flex-col flex-1 w-full overflow-x-auto transition-all duration-300">
           <Header toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} />
-          <main className="flex-1">
-          <Outlet />
+          <main className="flex-1 w-full max-w-screen mx-auto">
+            <Outlet />
           </main>
         </div>
       </div>
