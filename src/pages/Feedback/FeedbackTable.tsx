@@ -99,7 +99,7 @@ const FeedbackTable: React.FC<FeedbackTableProps> = ({ items }) => {
       key: 'responsible',
       label: 'Responsible',
       render: (item) => (
-        <div className="min-w-40 space-y-1 text-sm leading-5">
+        <div className="space-y-1 text-sm leading-5">
           {item.responsible?.branchResponsible && (
             <div>
               <span className="font-medium text-red-500">Branch:</span>{" "}
@@ -119,7 +119,7 @@ const FeedbackTable: React.FC<FeedbackTableProps> = ({ items }) => {
       key: 'feedback',
       label: 'Feedback',
       render: (item) => (
-        <div className="min-w-50 text-sm text-wrap" title={item.feedback}>
+        <div className="text-sm text-wrap" title={item.feedback}>
           {item.feedback}
         </div>
       ),

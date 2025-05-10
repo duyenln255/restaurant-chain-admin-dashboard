@@ -6,7 +6,7 @@ export const Navbar = () => {
         loading="lazy" 
         src="/assets/images/logo.png" 
         alt="Utopia Logo" 
-        className="object-contain w-[100px]" 
+        className="object-contain" 
       />
 
       {/* Menu */}

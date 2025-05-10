@@ -13,7 +13,7 @@ const FilterBarBlog: React.FC = () => {
         placeholder="Keyword"
         value={keyword}
         onChange={(e) => setKeyword(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2 w-[200px]"
+        className="border border-neutral-300 rounded-md px-3 py-2"
       />
 
       {/* Date Picker */}
@@ -21,14 +21,14 @@ const FilterBarBlog: React.FC = () => {
         type="date"
         value={date}
         onChange={(e) => setDate(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2 w-[180px]"
+        className="border border-neutral-300 rounded-md px-3 py-2"
       />
 
       {/* Status Dropdown */}
       <select
         value={status}
         onChange={(e) => setStatus(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2 w-[200px]"
+        className="border border-neutral-300 rounded-md px-3 py-2"
       >
         <option value="">--- All Status ---</option>
         <option value="Completed">Completed</option>

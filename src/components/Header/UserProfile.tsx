@@ -12,7 +12,7 @@ const UserProfile: React.FC<UserProfileProps> = () => {
         alt="User avatar"
       />
       <div className="flex gap-7 items-center self-stretch my-auto">
-        <div className="flex flex-col self-stretch my-auto w-[58px]">
+        <div className="flex flex-col self-stretch my-auto w-[10%]">
           <div className="flex-1 shrink gap-2.5 self-stretch w-full">
             UTOPIA
           </div>

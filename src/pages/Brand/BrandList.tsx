@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import Sidebar from '../../components/Sidebar/Sidebar';
-import Header from '../../components/Header/Header';
+// import Sidebar from '../../components/Sidebar/Sidebar';
+// import Header from '../../components/Header/Header';
 import FilterBar from './FilterBar';
 import FilterBarBlog from './FilterBarBlog';
 import BrandTable from './BrandTable';
@@ -9,11 +9,13 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchBrands } from '../../redux/slices/brandSlice';
 import type { RootState } from '../../redux/store';
 import type { BrandItem } from '../../types/BrandItem';
+import { useNavigate } from "react-router-dom"; 
+import { Button } from "../../components/ui/button"
 
 const BrandList: React.FC = () => {
   const dispatch = useAppDispatch();
   const { items: rawBrands, loading, error } = useAppSelector((state: RootState) => state.brands);
-
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const toggleSidebar = () => setSidebarOpen(prev => !prev);
 
@@ -38,19 +40,18 @@ const BrandList: React.FC = () => {
 
   return (
     <div className="flex min-h-screen">
-      <div className={`transition-all duration-300 ${sidebarOpen ? 'w-[240px]' : 'w-0 overflow-hidden'}`}>
-        {sidebarOpen && <Sidebar />}
-      </div>
-
       <div className="flex-1">
-        <Header toggleSidebar={toggleSidebar} />
         <div className="dashboard-body p-6">
-          <div className="max-w-[1140px] mx-auto space-y-4">
+          <div className=" mx-auto space-y-4">
             <div className="flex justify-between items-center">
               <h1 className="text-2xl font-bold text-neutral-800">Brand Lists</h1>
-              <button className="bg-blue-500 text-white px-5 py-2 rounded-md">
+              <Button 
+                onClick={() => navigate("/brand/add")}
+                className="bg-blue-500 text-white"
+              >
                 Add New Brand
-              </button>
+              </Button>
+
             </div>
 
             <FilterBar />
@@ -70,7 +71,7 @@ const BrandList: React.FC = () => {
             </div>
 
             <FilterBarBlog />
-            <BlogList blogPosts={[]} />
+            <BlogList />
           </div>
         </div>
       </div>

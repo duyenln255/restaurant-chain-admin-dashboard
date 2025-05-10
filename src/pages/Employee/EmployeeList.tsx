@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
-import Sidebar from "../../components/Sidebar/Sidebar";
-import Header from "../../components/Header/Header";
+// import Sidebar from "../../components/Sidebar/Sidebar";
+// import Header from "../../components/Header/Header";
 import EmployeeCard from "./EmployeeCard";
 import Pagination from "./Pagination";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
@@ -39,14 +39,14 @@ const EmployeeList: React.FC = () => {
 
   return (
     <div className="flex min-h-screen">
-      <div className={`transition-all duration-300 ${sidebarOpen ? "w-[240px]" : "w-0 overflow-hidden"}`}>
+      {/* <div className={`transition-all duration-300 ${sidebarOpen ? "w-[240px]" : "w-0 overflow-hidden"}`}>
         {sidebarOpen && <Sidebar />}
-      </div>
+      </div> */}
 
       <div className="flex-1">
-        <Header toggleSidebar={toggleSidebar} />
+        {/* <Header toggleSidebar={toggleSidebar} /> */}
         <div className="dashboard-body p-6">
-          <div className="max-w-[1140px] mx-auto space-y-4">
+          <div className=" mx-auto space-y-4">
             <div className="flex justify-between items-center">
               <h1 className="text-2xl font-bold text-neutral-800">Employees</h1>
 

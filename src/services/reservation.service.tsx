@@ -11,6 +11,8 @@ export interface Reservation {
   status: string;
   place: string;
   date_added: string;
+  brand_name: string;
+  brand_address: string;
 }
 
 export const getAllReservations = async (): Promise<Reservation[]> => {

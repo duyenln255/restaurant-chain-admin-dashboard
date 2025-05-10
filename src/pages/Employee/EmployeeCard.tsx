@@ -9,7 +9,7 @@ interface EmployeeCardProps {
 
 const EmployeeCard: React.FC<EmployeeCardProps> = ({ employee }) => {
   return (
-    <div className="w-full min-h-[320px] max-h-[320px] bg-white rounded-lg shadow-md overflow-hidden border border-neutral-300 relative flex flex-col items-center px-4 py-2">
+    <div className="w-full bg-white rounded-lg shadow-md overflow-hidden border border-neutral-300 relative flex flex-col items-center px-4 py-2">
       {/* Header: Logo + Nút Edit & Delete */}
         <div className="relative w-full flex items-center justify-between px-2">
         {/* Nút chức năng */}

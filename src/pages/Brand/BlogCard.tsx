@@ -4,7 +4,7 @@ import type { BlogCardItem } from "../../types/BlogCardItem";
 const BlogCard: React.FC<{ post: BlogCardItem }> = ({ post }) => {
   return (
     <div
-      className={`flex flex-col bg-white rounded-xl shadow-md overflow-hidden w-full min-h-[500px] transition-transform duration-300 ${
+      className={`flex flex-col bg-white rounded-xl shadow-md overflow-hidden w-full transition-transform duration-300 ${
         post.status === "inactive" ? "opacity-50" : "hover:scale-105"
       }`}
       
@@ -16,7 +16,7 @@ const BlogCard: React.FC<{ post: BlogCardItem }> = ({ post }) => {
           loading="lazy"
           src={post.photoUrl}
           alt="Blog post cover"
-          className="w-full h-[200px] object-cover rounded-md"
+          className="w-full object-cover rounded-md"
         />
       </div>
       <div className="p-4 flex flex-col flex-grow">

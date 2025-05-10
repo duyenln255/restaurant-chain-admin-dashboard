@@ -16,7 +16,7 @@ const FilterBar: React.FC = () => {
         placeholder="Keyword"
         value={keyword}
         onChange={(e) => setKeyword(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2 w-[200px]"
+        className="border border-neutral-300 rounded-md px-3 py-2"
       />
 
       {/* Date Picker */}
@@ -24,14 +24,14 @@ const FilterBar: React.FC = () => {
         type="date"
         value={date}
         onChange={(e) => setDate(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2 w-[180px]"
+        className="border border-neutral-300 rounded-md px-3 py-2"
       />
 
       {/* Feedback Type Dropdown */}
       <select
         value={feedbackType}
         onChange={(e) => setFeedbackType(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2 w-[200px]"
+        className="border border-neutral-300 rounded-md px-3 py-2"
       >
         <option value="">--- All Feedback Types ---</option>
         <option value="KHIẾU NẠI">KHIẾU NẠI</option>
@@ -42,7 +42,7 @@ const FilterBar: React.FC = () => {
       <select
         value={feedbackEmployee}
         onChange={(e) => setFeedbackEmployee(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2 w-[200px]"
+        className="border border-neutral-300 rounded-md px-3 py-2"
       >
         <option value="">--- All Employees ---</option>
       </select>
@@ -51,7 +51,7 @@ const FilterBar: React.FC = () => {
       <select
         value={feedbackBranch}
         onChange={(e) => setFeedbackBranch(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2 w-[200px]"
+        className="border border-neutral-300 rounded-md px-3 py-2"
       >
         <option value="">--- All Branches ---</option>
       </select>
@@ -60,7 +60,7 @@ const FilterBar: React.FC = () => {
       <select
         value={status}
         onChange={(e) => setStatus(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2 w-[200px]"
+        className="border border-neutral-300 rounded-md px-3 py-2"
       >
         <option value="">--- All Status ---</option>
         <option value="Pending">Pending</option>

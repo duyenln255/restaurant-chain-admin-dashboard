@@ -22,7 +22,7 @@ const GenericTable = <T extends Record<string, any>>({ items, columns, itemsPerP
     <div className="bg-white rounded-lg border border-neutral-300 overflow-hidden p-4 shadow-md">
       {/* ⚡️ Scroll ngang nếu cần */}
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse min-w-[900px]">
+        <table className="w-full border-collapse">
           <thead className="bg-gray-100">
             <tr className="text-gray-700">
               {columns.map((col) => (

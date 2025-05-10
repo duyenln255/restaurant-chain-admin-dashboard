@@ -16,7 +16,7 @@ const FilterBar: React.FC = () => {
         placeholder="Keyword"
         value={keyword}
         onChange={(e) => setKeyword(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2 w-[200px]"
+        className="border border-neutral-300 rounded-md px-3 py-2"
       />
 
       {/* Date Picker */}
@@ -24,14 +24,14 @@ const FilterBar: React.FC = () => {
         type="date"
         value={date}
         onChange={(e) => setDate(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2 w-[180px]"
+        className="border border-neutral-300 rounded-md px-3 py-2"
       />
 
       {/* Voucher Type Dropdown */}
       <select
         value={voucherType}
         onChange={(e) => setVoucherType(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2 w-[200px]"
+        className="border border-neutral-300 rounded-md px-3 py-2"
       >
         <option value="">--- All Voucher Types ---</option>
         <option value="PROMOTION">PROMOTION</option>
@@ -42,7 +42,7 @@ const FilterBar: React.FC = () => {
       <select
         value={discountType}
         onChange={(e) => setDiscountType(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2 w-[200px]"
+        className="border border-neutral-300 rounded-md px-3 py-2"
       >
         <option value="">--- All Discount Types ---</option>
         <option value="Percentage">Percentage</option>
@@ -54,7 +54,7 @@ const FilterBar: React.FC = () => {
       <select
         value={brand}
         onChange={(e) => setBrand(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2 w-[200px]"
+        className="border border-neutral-300 rounded-md px-3 py-2"
       >
         <option value="">--- All Brands ---</option>
       </select>
@@ -63,7 +63,7 @@ const FilterBar: React.FC = () => {
       <select
         value={status}
         onChange={(e) => setStatus(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2 w-[200px]"
+        className="border border-neutral-300 rounded-md px-3 py-2"
       >
         <option value="">--- All Status ---</option>
         <option value="Active">Active</option>

@@ -7,4 +7,7 @@ export interface CustomerItem {
   totalOrder: number;
   totalReservation: string;
   status: string;
+  password: string;
+  gender: string;
+  dateOfBirth: string;
 }

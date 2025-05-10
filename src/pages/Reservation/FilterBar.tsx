@@ -15,7 +15,7 @@ const FilterBar: React.FC = () => {
         placeholder="Keyword"
         value={keyword}
         onChange={(e) => setKeyword(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2 w-[200px]"
+        className="border border-neutral-300 rounded-md px-3 py-2 "
       />
 
       {/* Date Picker */}
@@ -23,14 +23,14 @@ const FilterBar: React.FC = () => {
         type="date"
         value={date}
         onChange={(e) => setDate(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2 w-[180px]"
+        className="border border-neutral-300 rounded-md px-3 py-2"
       />
 
       {/* Location Dropdown */}
       <select
         value={location}
         onChange={(e) => setLocation(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2 w-[200px]"
+        className="border border-neutral-300 rounded-md px-3 py-2 "
       >
         <option value="">--- All Locations ---</option>
       </select>
@@ -39,7 +39,7 @@ const FilterBar: React.FC = () => {
       <select
         value={door}
         onChange={(e) => setDoor(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2 w-[200px]"
+        className="border border-neutral-300 rounded-md px-3 py-2 "
       >
         <option value="">--- All IN/OUTDOOR ---</option>
         <option value="INDOOR">INDOOR</option>
@@ -50,7 +50,7 @@ const FilterBar: React.FC = () => {
       <select
         value={status}
         onChange={(e) => setStatus(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2 w-[200px]"
+        className="border border-neutral-300 rounded-md px-3 py-2 "
       >
         <option value="">--- All Status ---</option>
         <option value="Active">Active</option>

@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import MainLayout from '../../layout/MainLayout/MainLayout';
 import FilterBar from './FilterBar';
 import OrderTable from './OrderTable';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
@@ -17,9 +16,11 @@ const OrderList: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <MainLayout>
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
+    <div className="flex min-h-screen">
+      <div className="flex-1">
+        <div className="dashboard-body p-6">
+          <div className="mx-auto space-y-4">        
+            <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold">Order Lists</h1>
           <button className="bg-blue-500 text-white px-5 py-2 rounded-md">
             Add New Order
@@ -32,7 +33,9 @@ const OrderList: React.FC = () => {
 
         <OrderTable items={orders} />
       </div>
-    </MainLayout>
+    </div>
+    </div>
+    </div>
   );
 };
 
