@@ -39,44 +39,37 @@ const BrandList: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <div className="flex min-h-screen xs:max-w-screen xs:mx-auto">
-      <div className="flex-1">
-        <div className="dashboard-body p-6">
-          <div className=" mx-auto space-y-4">
-            <div className="flex justify-between items-center">
-              <h1 className="text-2xl font-bold text-neutral-800">Brand Lists</h1>
-              <Button 
-                onClick={() => navigate("/brand/add")}
-                className="bg-blue-500 text-white"
-              >
-                Add New Brand
-              </Button>
-
-            </div>
-
-            <FilterBar />
-
-            {loading && <p>Loading brands...</p>}
-            {error && <p className="text-red-500">{error}</p>}
-            {!loading && brands.length === 0 && <p>No brands found.</p>}
-
-            <BrandTable items={brands} />
-
-            {/* Blog (nguyên như cũ) */}
-            {/* <div className="flex justify-between items-center mt-10">
-              <h1 className="text-2xl font-bold text-neutral-800">Blog Lists</h1>
-              <button className="px-4 py-2 border border-neutral-300 rounded-md bg-red-500 text-white hover:bg-red-600">
-                Delete All
-              </button>
-            </div> */}
-
-            {/* <FilterBarBlog /> */}
-            {/* <BlogList /> */}
+    <div className="bg-gray-50">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="space-y-6">
+          {/* Header */}
+          <div className="flex justify-between items-center">
+            <h1 className="text-xl sm:text-2xl font-bold text-neutral-800">Brand Lists</h1>
+            <Button
+              onClick={() => navigate("/brand/add")}
+              className="bg-blue-500 text-white text-sm sm:text-base px-4 py-2 rounded-md"
+            >
+              Add New Brand
+            </Button>
           </div>
+  
+          {/* Filter */}
+          <FilterBar />
+  
+          {/* States */}
+          {loading && <p className="text-sm">Loading brands...</p>}
+          {error && <p className="text-sm text-red-500">{error}</p>}
+          {!loading && brands.length === 0 && (
+            <p className="text-sm text-gray-500">No brands found.</p>
+          )}
+  
+          {/* Table */}
+          <BrandTable items={brands} />
         </div>
       </div>
     </div>
-  );
+  )
+  
 };
 
 export default BrandList;

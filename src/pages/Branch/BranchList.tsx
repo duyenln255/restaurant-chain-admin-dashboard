@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-// import Sidebar from '../../components/Sidebar/Sidebar';
-// import Header from '../../components/Header/Header';
+import AddBranch from './AddBranch'
+import EditBranch from './EditBranch'
 import FilterBar from './FilterBar';
 import BranchTable from './BranchTable';
 import '../Dashboard/Dashboard.css';
@@ -12,9 +12,6 @@ import type { BranchItem } from '../../types/BranchItem';
 const BranchList: React.FC = () => {
   const dispatch = useAppDispatch();
   const { items: rawBranches, loading, error } = useAppSelector((state: RootState) => state.branches);
-
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const toggleSidebar = () => setSidebarOpen(prev => !prev);
 
   const branches = useMemo<BranchItem[]>(() => {
     const data = Array.isArray(rawBranches) ? rawBranches : [rawBranches];
@@ -40,28 +37,31 @@ const BranchList: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <div className="flex min-h-screen">
-
-      <div className="flex-1">
-        <div className="dashboard-body">
-          <div className=" mx-auto space-y-4">
-            <div className="flex justify-between items-center">
-              <h1 className="text-2xl font-bold text-neutral-800">Branch Lists</h1>
-              <button className="bg-blue-500 text-white px-5 py-2 rounded-md">Add New Branch</button>
-            </div>
-
-            <FilterBar />
-
-            {loading && <p>Loading branches...</p>}
-            {error && <p className="text-red-500">{error}</p>}
-            {!loading && branches.length === 0 && <p>No branches found.</p>}
-
-            <BranchTable items={branches} />
+    <div className="bg-gray-50">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="space-y-6">
+          {/* Header */}
+          <div className="flex justify-between items-center">
+            <h1 className="text-xl sm:text-2xl font-bold text-neutral-800">Branch Lists</h1>
+            <AddBranch />
           </div>
+  
+          {/* Filter */}
+          <FilterBar />
+  
+          {/* States */}
+          {loading && <p className="text-sm">Loading branches...</p>}
+          {error && <p className="text-sm text-red-500">{error}</p>}
+          {!loading && branches.length === 0 && (
+            <p className="text-sm text-gray-500">No branches found.</p>
+          )}
+  
+          {/* Table */}
+          <BranchTable items={branches} />
         </div>
       </div>
     </div>
-  );
+  )
 };
 
 export default BranchList;

@@ -43,7 +43,7 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
           {value ? format(value, "yyyy-MM-dd") : <span>{placeholder}</span>}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent className="w-auto p-0" align="center">
         <Calendar
           mode="single"
           selected={value}

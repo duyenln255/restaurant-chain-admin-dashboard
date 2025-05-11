@@ -3,6 +3,7 @@ import type { BranchItem } from '../../types/BranchItem';
 import GenericTable from '../../components/Table/GenericTable';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
+import EditBranch from './EditBranch'
 
 interface BranchTableProps {
   items: BranchItem[];
@@ -99,9 +100,15 @@ const BranchTable: React.FC<BranchTableProps> = ({ items }) => {
       align: "center",
       render: (item) => (
         <div className="flex justify-center space-x-4">
-          <button onClick={() => handleEdit(item)} className="text-blue-500 hover:text-blue-700">
-            <FontAwesomeIcon icon={faPen} size="sm" />
-          </button>
+        <EditBranch
+          branch={item}
+          trigger={
+            <button className="text-blue-500 hover:text-blue-700">
+              <FontAwesomeIcon icon={faPen} size="sm" />
+            </button>
+          }
+        />
+
           <button onClick={() => handleDelete(item)} className="text-red-500 hover:text-red-700">
             <FontAwesomeIcon icon={faTrash} size="sm" />
           </button>

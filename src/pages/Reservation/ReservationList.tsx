@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import FilterBar from './FilterBar';
-// import Sidebar from '../../components/Sidebar/Sidebar';
-// import Header from '../../components/Header/Header';
 import ReservationTable from './ReservationTable';
 import type { ReservationItem } from '../../types/ReservationItem';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
@@ -13,10 +11,6 @@ import type { RootState } from '../../redux/store';
 const ReservationList: React.FC = () => {
   const dispatch = useAppDispatch();
   const { items: rawReservations, loading, error } = useAppSelector((state: RootState) => state.reservations);
-
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const toggleSidebar = () => setSidebarOpen(prev => !prev);
-
   const reservations = useMemo<ReservationItem[]>(
     () =>
       rawReservations.map((r) => ({
@@ -37,28 +31,33 @@ const ReservationList: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <div className="flex min-h-screen">
-
-      <div className="flex-1">
-        <div className="mx-auto dashboard-body p-6">
-          <div className="mx-auto space-y-4">
-            <div className="flex justify-between items-center">
-              <h1 className="text-2xl font-bold text-neutral-800">Reservation Lists</h1>
-              <button className="bg-blue-500 text-white px-5 py-2 rounded-md">Add New Reservation</button>
-            </div>
-
-            <FilterBar />
-
-            {loading && <p>Loading reservations...</p>}
-            {error && <p className="text-red-500">{error}</p>}
-            {!loading && reservations.length === 0 && <p>No reservations found.</p>}
-
-            <ReservationTable items={reservations} />
+    <div className="bg-gray-50">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="space-y-6">
+          {/* Header */}
+          <div className="flex justify-between items-center">
+            <h1 className="text-xl sm:text-2xl font-bold text-neutral-800">Reservation Lists</h1>
+            <button className="bg-blue-500 xs:w-1/5 hover:bg-blue-600 text-white text-sm sm:text-base px-4 py-2 rounded-md transition">
+              Add New Reservation
+            </button>
           </div>
+  
+          {/* Filter */}
+          <FilterBar />
+  
+          {/* States */}
+          {loading && <p className="text-sm">Loading reservations...</p>}
+          {error && <p className="text-sm text-red-500">{error}</p>}
+          {!loading && reservations.length === 0 && (
+            <p className="text-sm text-gray-500">No reservations found.</p>
+          )}
+  
+          {/* Table */}
+          <ReservationTable items={reservations} />
         </div>
       </div>
     </div>
-  );
+  )  
 };
 
 export default ReservationList;

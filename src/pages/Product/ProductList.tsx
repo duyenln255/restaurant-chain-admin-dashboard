@@ -16,27 +16,27 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
-
+ 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
-      {/* PRODUCT GRID */}
-      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 gap-6">
-        {paginatedProducts.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
+    <div className="bg-gray-50">
+        {/* Product Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {paginatedProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
 
-     {/* CUSTOM PAGINATION */}
-     {products.length > itemsPerPage && (
-        <CustomPagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          totalItems={products.length}
-          itemsPerPage={itemsPerPage}
-          onPageChange={setCurrentPage}
-        />
-      )}
-    </div>
+        {/* Pagination */}
+        {products.length > itemsPerPage && (
+          <CustomPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            totalItems={products.length}
+            itemsPerPage={itemsPerPage}
+            onPageChange={setCurrentPage}
+          />
+        )}
+      </div>
   );
 };
 

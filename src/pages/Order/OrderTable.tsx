@@ -78,7 +78,7 @@ const OrderTable: React.FC<OrderTableProps> = ({ items }) => {
       key: 'address',
       label: 'Address',
       render: (item) => (
-        <div className="max-w-30 text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.address}>
+        <div className="truncate text-xs sm:text-sm max-w-40 sm:max-w-none" title={item.address}>
           {item.address}
         </div>
       ),

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import Header from '../../components/Header/Header';
 import { useNavigate } from 'react-router-dom';
-import { mockBrands } from '../../mocks/mockBrand';
+// import { mockBrands } from '../../mocks/mockBrand';
 
 const mockCategories = ['Coffee', 'Cake'];
 const mockTypes = ['Hot', 'Cold'];
@@ -127,9 +127,9 @@ const AddProduct: React.FC = () => {
                             onChange={(e) => setBrand(e.target.value)}
                           >
                             <option value="">--- Choose Brand ---</option>
-                            {mockBrands.map((b) => (
+                            {/* {mockBrands.map((b) => (
                               <option key={b.id} value={b.name}>{b.name}</option>
-                            ))}
+                            ))} */}
                           </select>
                         </div>
                       </div>

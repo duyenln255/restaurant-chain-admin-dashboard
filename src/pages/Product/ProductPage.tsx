@@ -41,8 +41,8 @@ const ProductPage: React.FC = () => {
           <div className=" mx-auto space-y-6">
             <div className="flex justify-between items-center">
               <h1 className="text-2xl font-bold text-neutral-800">Product Lists</h1>
-              <button className="bg-blue-500 text-white px-5 py-2 rounded-md">
-                Add New Product
+              <button className="bg-blue-500 hover:bg-blue-600 text-white text-sm sm:text-base px-4 py-2 rounded-md transition">
+              Add New Product
               </button>
             </div>
 

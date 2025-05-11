@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import Sidebar from "../../components/Sidebar/Sidebar";
-// import Header from "../../components/Header/Header";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../components/ui/select"; 
+import { LuImageUp } from "react-icons/lu";
+import { X } from "lucide-react"
 
 const AddBrand: React.FC = () => {
   const navigate = useNavigate();
@@ -10,6 +17,7 @@ const AddBrand: React.FC = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [link, setLink] = useState("");
+  const [status, setStatus] = useState("Active");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const validateForm = () => {
@@ -25,9 +33,7 @@ const AddBrand: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-
-    console.log({ logo, name, description, link, status: "Active" });
-    // Redirect or further logic here
+    console.log({ logo, name, description, link, status });
   };
 
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,11 +45,9 @@ const AddBrand: React.FC = () => {
   return (
     <div className="dashboard">
       <div className="dashboard-content">
-        {/* <Sidebar /> */}
         <div className="main-content">
-          {/* <Header /> */}
           <div className="dashboard-body p-6">
-            <div className=" mx-auto space-y-6">
+            <div className="mx-auto space-y-6">
               <div
                 className="text-sm text-blue-600 cursor-pointer"
                 onClick={() => navigate("/brand")}
@@ -58,14 +62,10 @@ const AddBrand: React.FC = () => {
               <div className="bg-white rounded-xl p-8 shadow-md">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Upload Logo */}
-                  <div className="flex flex-col items-center space-y-2">
+                  {/* <div className="flex flex-col items-center space-y-2">
                     <label htmlFor="logo-upload" className="cursor-pointer">
-                      <div className="w-[72px] h-[72px] rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
-                        <img
-                          src="/assets/icons/camera-icon.png"
-                          alt="Upload"
-                          className="w-6 h-6 object-contain"
-                        />
+                      <div className="p-6 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
+                      <LuImageUp className="w-6 h-6" />
                       </div>
                       <input
                         id="logo-upload"
@@ -75,95 +75,126 @@ const AddBrand: React.FC = () => {
                         onChange={handleLogoChange}
                       />
                     </label>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-blue-600 font-medium">
-                        Upload Logo <span className="text-red-500">*</span>
-                      </span>
-                      {errors.logo && (
+                    <span className="text-sm text-blue-600 font-medium">
+                      Upload Brand Photo <span className="text-red-500">*</span>
+                    </span>
+                    {errors.logo && (
+                      <span className="text-red-500 text-xs">{errors.logo}</span>
+                    )}
+                  </div> */}
+                  <div className="flex flex-col items-center space-y-2">
+                    <label htmlFor="logo-upload" className="cursor-pointer">
+                      <div className="relative w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center">
+                        {logo ? (
+                          <>
+                            <img
+                              src={URL.createObjectURL(logo)}
+                              alt="Preview"
+                              className="absolute inset-0 w-full h-full object-cover rounded-full overflow-hidden"
+                            />
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault()
+                                setLogo(null)
+                              }}
+                              className="absolute top-1 right-1 bg-white rounded-full shadow p-1 hover:bg-red-500 hover:text-white transition-all overflow-visible"
+                              title="Remove image"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          </>
+                        ) : (
+                          <LuImageUp className="w-6 h-6 text-gray-400" />
+                        )}
+                      </div>
+                      <input
+                        id="logo-upload"
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleLogoChange}
+                      />
+                    </label>
+
+                    <span className="text-sm text-blue-600 font-medium">
+                      Upload Brand Photo <span className="text-red-500">*</span>
+                    </span>
+
+                    {errors.logo && (
+                      <span className="text-red-500 text-xs">{errors.logo}</span>
+                    )}
+                  </div>
+                  {/* Brand Name */}
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="text-sm font-medium">
+                        Brand Name <span className="text-red-500">*</span>
+                      </label>
+                      {errors.name && (
+                        <span className="text-red-500 text-xs">{errors.name}</span>
+                      )}
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Enter brand name"
+                      className="w-full border border-neutral-300 rounded-md px-4 py-2"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </div>
+
+                  {/* Description */}
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="text-sm font-medium">
+                        Description <span className="text-red-500">*</span>
+                      </label>
+                      {errors.description && (
                         <span className="text-red-500 text-xs">
-                          {errors.logo}
+                          {errors.description}
                         </span>
                       )}
                     </div>
+                    <textarea
+                      placeholder="Enter description"
+                      className="w-full border border-neutral-300 rounded-md px-4 py-2 min-h-[120px]"
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                    />
                   </div>
 
-                  {/* Form Fields */}
-                  <div className="space-y-4">
-                    {/* Brand Name */}
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <label className="text-sm font-medium">
-                          Brand Name <span className="text-red-500">*</span>
-                        </label>
-                        {errors.name && (
-                          <span className="text-red-500 text-xs">
-                            {errors.name}
-                          </span>
-                        )}
-                      </div>
-                      <input
-                        type="text"
-                        placeholder="Enter brand name"
-                        className="w-full border border-gray-300 rounded-md px-4 py-2"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                      />
-                    </div>
-
-                    {/* Description */}
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <label className="text-sm font-medium">
-                          Description <span className="text-red-500">*</span>
-                        </label>
-                        {errors.description && (
-                          <span className="text-red-500 text-xs">
-                            {errors.description}
-                          </span>
-                        )}
-                      </div>
-                      <textarea
-                        placeholder="Enter description"
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 min-h-[120px]"
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                      />
-                    </div>
-
-                    {/* Website Link */}
-                    <div>
-                      <div className="flex justify-between items-center mb-1">
-                        <label className="text-sm font-medium">
-                          Website Link <span className="text-red-500">*</span>
-                        </label>
-                        {errors.link && (
-                          <span className="text-red-500 text-xs">
-                            {errors.link}
-                          </span>
-                        )}
-                      </div>
-                      <input
-                        type="url"
-                        placeholder="https://..."
-                        className="w-full border border-gray-300 rounded-md px-4 py-2"
-                        value={link}
-                        onChange={(e) => setLink(e.target.value)}
-                      />
-                    </div>
-
-                    {/* Status (Disabled) */}
-                    <div>
-                      <label className="text-sm font-medium block mb-1">
-                        Status
+                  {/* Website Link */}
+                  <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="text-sm font-medium">
+                        Website Link <span className="text-red-500">*</span>
                       </label>
-                      <select
-                        value="Active"
-                        disabled
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 bg-gray-100 text-gray-500 custom-select"
-                      >
-                        <option value="Active">Active</option>
-                      </select>
+                      {errors.link && (
+                        <span className="text-red-500 text-xs">{errors.link}</span>
+                      )}
                     </div>
+                    <input
+                      type="url"
+                      placeholder="https://..."
+                      className="w-full border border-neutral-300 rounded-md px-4 py-2"
+                      value={link}
+                      onChange={(e) => setLink(e.target.value)}
+                    />
+                  </div>
+
+                  {/* Status with custom Select */}
+                  <div className="space-y-1">
+                    <label className="text-sm font-medium block">Status</label>
+                    <Select value={status} onValueChange={setStatus}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Active">Active</SelectItem>
+                        <SelectItem value="Inactive">Inactive</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
 
                   {/* Submit */}

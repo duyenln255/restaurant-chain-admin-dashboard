@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import FilterBar from './FilterBar';
-// import Sidebar from '../../components/Sidebar/Sidebar';
-// import Header from '../../components/Header/Header';
+import FilterBar from './FilterBar'; 
 import VoucherTable from './VoucherTable';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchVouchers } from '../../redux/slices/voucherSlice';
@@ -10,9 +8,6 @@ import type { RootState } from '../../redux/store';
 const VoucherList: React.FC = () => {
   const dispatch = useAppDispatch();
   const { items: rawVouchers, loading, error } = useAppSelector((state: RootState) => state.vouchers);
-
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const toggleSidebar = () => setSidebarOpen(prev => !prev);
 
   const vouchers = useMemo(() => rawVouchers.map((v) => ({
     id: v.id,
@@ -33,34 +28,34 @@ const VoucherList: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <div className="flex min-h-screen">
-      {/* <div className={`transition-all duration-300 ${sidebarOpen ? 'w-[240px]' : 'w-0 overflow-hidden'}`}>
-        {sidebarOpen && <Sidebar />}
-      </div> */}
-
-      <div className="flex-1">
-        {/* <Header toggleSidebar={toggleSidebar} /> */}
-        <div className="dashboard-body p-6">
-          <div className=" mx-auto space-y-4">
-            <div className="flex justify-between items-center">
-              <h1 className="text-2xl font-bold text-neutral-800">Voucher Lists</h1>
-              <button className="bg-blue-500 text-white px-5 py-2 rounded-md">
-                Add New Voucher
-              </button>
-            </div>
-
-            <FilterBar />
-
-            {loading && <p>Loading vouchers...</p>}
-            {error && <p className="text-red-500">{error}</p>}
-            {!loading && vouchers.length === 0 && <p>No vouchers found.</p>}
-
-            <VoucherTable items={vouchers} />
+    <div className="bg-gray-50">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="space-y-6">
+          {/* Header Section */}
+          <div className="flex justify-between items-center">
+            <h1 className="text-xl sm:text-2xl font-bold text-neutral-800">Voucher Lists</h1>
+            <button className="bg-blue-500 hover:bg-blue-600 text-white text-sm sm:text-base px-4 py-2 rounded-md transition">
+              Add New Voucher
+            </button>
           </div>
+  
+          {/* Filter Section */}
+          <FilterBar />
+  
+          {/* Status */}
+          {loading && <p className="text-sm">Loading vouchers...</p>}
+          {error && <p className="text-sm text-red-500">{error}</p>}
+          {!loading && vouchers.length === 0 && (
+            <p className="text-sm text-gray-500">No vouchers found.</p>
+          )}
+  
+          {/* Table */}
+          <VoucherTable items={vouchers} />
         </div>
       </div>
     </div>
-  );
+  )
+  
 };
 
 export default VoucherList;

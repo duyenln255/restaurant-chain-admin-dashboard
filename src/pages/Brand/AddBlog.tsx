@@ -48,7 +48,7 @@ const AddBlog: React.FC<AddBlogProps> = ({ brand, onClose }) => {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Enter product name"
-              className="border mt-1 px-4 py-2 rounded w-full"
+              className="border border-neutral-300 mt-1 px-4 py-2 rounded w-full"
             />
           </div>
           <div className="w-1/3">
@@ -57,7 +57,7 @@ const AddBlog: React.FC<AddBlogProps> = ({ brand, onClose }) => {
               type="text"
               value={brand.name}
               disabled
-              className="border mt-1 px-4 py-2 rounded w-full bg-gray-100 text-gray-500"
+              className="border border-neutral-300 mt-1 px-4 py-2 rounded w-full bg-gray-100 text-gray-500"
             />
           </div>
         </div>
@@ -69,7 +69,7 @@ const AddBlog: React.FC<AddBlogProps> = ({ brand, onClose }) => {
             <textarea
               value={summary}
               onChange={(e) => setSummary(e.target.value)}
-              className="border mt-1 px-4 py-2 rounded w-full"
+              className="border border-neutral-300 mt-1 px-4 py-2 rounded w-full"
               rows={4}
               placeholder="Enter summary"
             />
@@ -121,7 +121,7 @@ const AddBlog: React.FC<AddBlogProps> = ({ brand, onClose }) => {
         {/* Description */}
         <div className="mb-4">
           <label className="text-sm font-medium text-red-500">* Description</label>
-          <div className="border mt-1 rounded">
+          <div className="border border-neutral-300 mt-1 rounded">
             <Editor
               apiKey="no-api-key"
               value={description}
