@@ -1,13 +1,16 @@
 export interface CustomerItem {
   id: string;
+  displayId: string;
   fullName: string;
-  phone: string;
   email: string;
+  phone: string;
   dateJoined: string;
-  totalOrder: number;
-  totalReservation: string;
   status: string;
   password: string;
   gender: string;
-  dateOfBirth: string;
+  dateOfBirth?: string;
+  address: string;
+  avatar: string;
+  username: string;
+  brandName: string;
 }

@@ -7,6 +7,7 @@ export interface Blog {
   content: string;
   photo: string;
   date_added: string;
+  status: string;
 }
 
 export const getAllBlogs = async (): Promise<Blog[]> => {

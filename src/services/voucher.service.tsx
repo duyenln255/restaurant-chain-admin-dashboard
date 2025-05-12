@@ -2,8 +2,10 @@ import axiosInstance from "../lib/axiosInstance";
 
 export interface Voucher {
   id: string;
+  display_id: string;
   title: string;
   discount_percent: number;
+  name: string;
   code: string;
   status: string;
   start_date: string;

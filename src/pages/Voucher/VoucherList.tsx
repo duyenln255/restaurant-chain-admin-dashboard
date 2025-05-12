@@ -11,17 +11,20 @@ const VoucherList: React.FC = () => {
 
   const vouchers = useMemo(() => rawVouchers.map((v) => ({
     id: v.id,
+    displayId: v.display_id,
     type: v.type,
     title: v.title,
     code: v.code,
-    brand: v.brand_id,  // nếu muốn đẹp có thể fetch brand name
+    brand: v.name || v.brand_id, // Ưu tiên name nếu có
     description: v.description,
     discountType: v.discount_type,
     discountValue: `${v.discount_percent}%`,
     startDate: new Date(v.start_date).toLocaleDateString(),
     endDate: new Date(v.end_date).toLocaleDateString(),
     status: v.status,
+    dateAdded: new Date(v.date_added).toLocaleDateString()
   })), [rawVouchers]);
+  
 
   useEffect(() => {
     dispatch(fetchVouchers());
@@ -30,7 +33,7 @@ const VoucherList: React.FC = () => {
   return (
     <div className="bg-gray-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* Header Section */}
           <div className="flex justify-between items-center">
             <h1 className="text-xl sm:text-2xl font-bold text-neutral-800">Voucher Lists</h1>

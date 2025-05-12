@@ -44,7 +44,7 @@ const ReservationTable: React.FC<ReservationTableProps> = ({ items }) => {
     {
       key: '_index',
       label: 'No.',
-      align: 'center',
+      align: 'left',
       render: (item) => <span className="text-gray-600 text-sm">{items.findIndex(i => i.id === item.id) + 1}</span>,
     },
     {
@@ -52,7 +52,7 @@ const ReservationTable: React.FC<ReservationTableProps> = ({ items }) => {
       label: "ID",
       render: (item) => (
         <div className="max-w-20 font-semibold text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.id}>
-          {item.id}
+          {item.displayId}
         </div>
       ),
     },
@@ -76,30 +76,38 @@ const ReservationTable: React.FC<ReservationTableProps> = ({ items }) => {
     },
     {
       key: "dateTime",
-      label: "Date Time",
-      render: (item) => (
-        <div className="text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.dateTime}>
-          {item.dateTime}
-        </div>
-      ),
+      label: "Date & Time",
+      render: (item) => {
+        const [date, time] = item.dateTime.split(" ");
+        return (
+          <div className="text-xs font-bold text-center leading-snug">
+            <div>{date}</div>
+            <div className="text-xs font-bold text-blue-500">{time}</div>
+          </div>
+        );
+      },
     },
     {
-      key: "location",
+      key: "branchAddress",
       label: "Location",
       render: (item) => (
-        <div className="max-w-40 text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.location}>
-          {item.location}
+        <div className="max-w-60 text-sm text-etext-left">
+          <div className="text-xs font-semibold text-neutral-800">{item.brandName}</div>
+          <div className="text-xs text-gray-500 text-wrap">{item.branchAddress}</div>
         </div>
       ),
     },
+    
     {
-      key: "people",
+      key: "number_of_customer",
       label: "People",
     },
     {
-      key: "inOutdoor",
+      key: "place",
       label: "In/Outdoor",
       align: "center",
+      render: (item) => renderStatus(item.place),
+
     },
     {
       key: "status",

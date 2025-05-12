@@ -12,27 +12,30 @@ const FeedbackList: React.FC = () => {
     (state: RootState) => state.feedbacks
   )
 
-  const feedbacks = useMemo<FeedbackItem[]>(
-    () =>
-      rawFeedbacks.map((f) => ({
-        id: f.id,
-        type: f.type,
-        fullName: f.full_name,
-        email: f.email,
-        phoneNumber: f.phone,
-        responsible: {
-          branchResponsible: f.branch_id,
-          employeeResponsible: f.solved_by ?? undefined
-        },
-        feedback: f.content,
-        createAt: new Date(f.date_added).toLocaleString(),
-        updateAt: f.updated_at
-          ? new Date(f.updated_at).toLocaleString()
-          : undefined,
-        status: f.status
-      })),
-    [rawFeedbacks]
-  )
+const feedbacks = useMemo<FeedbackItem[]>(
+  () =>
+    rawFeedbacks.map((f) => ({
+      id: f.id,
+      displayId: f.display_id,
+      type: f.type,
+      fullName: f.customer_name,
+      phoneNumber: f.customer_phone ?? '',
+      feedback: f.content,
+      createAt: new Date(f.date_added).toLocaleString(),
+      updateAt: f.updated_at ? new Date(f.updated_at).toLocaleString() : undefined,
+      status: f.status,
+      responsible: {
+        branchResponsible: f.branch_id,
+        employeeResponsible: f.staff_name ?? undefined,
+      },
+      branchAddress: f.branch_address,
+      brandName: f.brand_name,
+      staffName: f.staff_name,
+      customerName: f.customer_name,
+    })),
+  [rawFeedbacks]
+);
+
 
   useEffect(() => {
     dispatch(fetchFeedbacks())
@@ -41,7 +44,7 @@ const FeedbackList: React.FC = () => {
   return (
     <div className="bg-gray-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* Header Section */}
           <div className="flex justify-between items-center">
             <h1 className="text-xl sm:text-2xl font-bold text-neutral-800">

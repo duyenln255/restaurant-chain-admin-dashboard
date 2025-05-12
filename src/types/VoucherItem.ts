@@ -1,5 +1,6 @@
 export interface VoucherItem {
   id: string;
+  displayId: string;
   type: string;
   title: string;
   code: string;
@@ -10,5 +11,6 @@ export interface VoucherItem {
   startDate: string;
   endDate: string;
   status: string;
-  useLimit?: string;  // ✅ Thêm dấu ? để thành optional
+  useLimit?: string;  
+  dateAdded: string;
 }

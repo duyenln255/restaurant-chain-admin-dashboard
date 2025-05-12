@@ -3,6 +3,8 @@ import type { FeedbackItem } from '../../types/FeedbackItem'
 import GenericTable from '../../components/Table/GenericTable'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '../../components/ui/tooltip'
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons'
 
 interface FeedbackTableProps {
   items: FeedbackItem[]
@@ -42,7 +44,7 @@ const FeedbackTable: React.FC<FeedbackTableProps> = ({ items }) => {
     {
       key: '_index',
       label: 'No.',
-      align: 'center',
+      align: 'left',
       render: (item) => (
         <span className="text-gray-600 text-xs sm:text-sm">
           {items.findIndex((i) => i.id === item.id) + 1}
@@ -50,20 +52,18 @@ const FeedbackTable: React.FC<FeedbackTableProps> = ({ items }) => {
       )
     },
     {
-      key: 'id',
-      label: 'ID',
+      key: 'displayId',
+      label: 'Display ID',
       render: (item) => (
-        <div
-          className="truncate text-xs sm:text-sm font-medium w-[100px] sm:w-auto"
-          title={item.id}
-        >
-          {item.id}
+        <div className="truncate text-xs sm:text-sm font-mono sm:w-auto" title={item.displayId}>
+          {item.displayId}
         </div>
       )
     },
     {
       key: 'type',
       label: 'Type',
+      align: 'center',
       render: (item) => {
         const typeColorMap: Record<string, string> = {
           Complaint: 'bg-red-100 text-red-700',
@@ -83,24 +83,19 @@ const FeedbackTable: React.FC<FeedbackTableProps> = ({ items }) => {
     },
     {
       key: 'fullName',
-      label: 'Full Name',
+      label: 'Customer',
+      align: 'center',
       render: (item) => (
-        <div
-          className="truncate text-xs sm:text-sm max-w-[150px] sm:max-w-none"
-          title={item.fullName}
-        >
+        <div className="truncate text-xs sm:text-sm" title={item.fullName}>
           {item.fullName}
         </div>
       )
     },
     {
       key: 'phoneNumber',
-      label: 'Phone Number',
+      label: 'Phone',
       render: (item) => (
-        <div
-          className="truncate text-xs sm:text-sm"
-          title={item.phoneNumber}
-        >
+        <div className="truncate text-xs sm:text-sm" title={item.phoneNumber}>
           {item.phoneNumber}
         </div>
       )
@@ -110,57 +105,86 @@ const FeedbackTable: React.FC<FeedbackTableProps> = ({ items }) => {
       label: 'Responsible',
       render: (item) => (
         <div className="text-xs sm:text-sm leading-snug space-y-1">
-          {item.responsible?.branchResponsible && (
+          {item.brandName && (
             <div>
-              <span className="font-semibold text-red-500">Branch:</span>{' '}
-              {item.responsible.branchResponsible}
+              <span className="font-semibold text-blue-600">Brand:</span>{' '}
+              {item.brandName}
             </div>
           )}
-          {item.responsible?.employeeResponsible && (
+          {item.branchAddress && (
+            <div>
+              <span className="font-semibold text-gray-600 max-w-20"></span>
+              {item.branchAddress}
+            </div>
+          )}
+          {item.staffName && (
             <div>
               <span className="font-semibold text-orange-500">Staff:</span>{' '}
-              {item.responsible.employeeResponsible}
+              {item.staffName}
             </div>
           )}
         </div>
       )
     },
+    // {
+    //   key: 'feedback',
+    //   label: 'Feedback',
+    //   align: 'center',
+    //   render: (item) => (
+    //     <div className="break-words text-xs sm:text-sm min-w-60 text-wrap" title={item.feedback}>
+    //       {item.feedback}
+    //     </div>
+    //   )
+    // },
     {
       key: 'feedback',
       label: 'Feedback',
       render: (item) => (
-        <div
-          className="break-words text-xs sm:text-sm max-w-[300px] sm:max-w-none"
-          title={item.feedback}
-        >
-          {item.feedback}
-        </div>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="cursor-pointer text-gray-500 hover:text-gray-700 flex justify-center">
+                <FontAwesomeIcon icon={faInfoCircle} size="sm" />
+              </div>
+            </TooltipTrigger>
+              <TooltipContent side="top" sideOffset={8} className="max-w-50 p-2 bg-white text-black border-1 border-gray-300 rounded text-sm text-center space-y-1">
+              {item.feedback}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       )
-    },
-    {
-      key: 'status',
-      label: 'Status',
-      render: (item) => renderStatus(item.status)
-    },
+    },    
     {
       key: 'createAt',
       label: 'Created At',
-      render: (item) => (
-        <div className="text-xs sm:text-sm">{item.createAt}</div>
-      )
+      render: (item) => {
+        const [date, time] = item.createAt.split(', ')
+        return (
+          <div className="text-center leading-snug text-xs sm:text-sm">
+            <div>{date}</div>
+            <div className="text-gray-500">{time}</div>
+          </div>
+        )
+      }
     },
     {
       key: 'updateAt',
       label: 'Updated At',
-      render: (item) => (
-        <div className="text-xs sm:text-sm">{item.updateAt || '-'}</div>
-      )
-    },
+      render: (item) => {
+        if (!item.updateAt) return <div className="text-center text-xs text-gray-400">-</div>
+        const [date, time] = item.updateAt.split(', ')
+        return (
+          <div className="text-center leading-snug text-xs sm:text-sm">
+            <div>{date}</div>
+            <div className="text-gray-500">{time}</div>
+          </div>
+        )
+      }
+    },    
     {
       key: 'action',
       label: 'Action',
       align: 'center',
-
       render: (item) => (
         <div className="flex justify-center space-x-3">
           <button
@@ -185,7 +209,7 @@ const FeedbackTable: React.FC<FeedbackTableProps> = ({ items }) => {
       <GenericTable<FeedbackItem>
         items={items}
         columns={columns}
-        itemsPerPage={5}
+        itemsPerPage={10}
       />
     </div>
   )

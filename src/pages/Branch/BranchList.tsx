@@ -18,18 +18,19 @@ const BranchList: React.FC = () => {
   
     return data.map((b) => ({
       id: b.id,
-      name: "-",
-      location: b.address, // ✅ => có location
+      name: b.display_id,
+      location: b.address,
       address: b.address,
       phone: b.phone,
       brandId: b.brand_id,
-      brand: "-", // ✅ Tạm thời chưa có API brand name thì để "-"
-      employees: 0, // ✅ Tạm thời chưa có API -> mặc định 0
-      manager: "-", // ✅ Tạm thời chưa có API -> mặc định "-"
+      brand: b.brand_name || "-",
+      employees: parseInt(b.total_employees || "0"),
+      manager: `${b.total_managers}`, // hoặc lấy tên cụ thể nếu có sau này
       status: b.status,
       date_added: b.date_added,
     }));
   }, [rawBranches]);
+  
   
 
   useEffect(() => {

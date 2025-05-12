@@ -42,7 +42,7 @@ const CustomerTable: React.FC<CustomerTableProps> = ({ items }) => {
     {
       key: '_index',
       label: 'No.',
-      align: 'center',
+      align: 'left',
       render: (item) => <span className="text-gray-600 text-sm">{items.findIndex(i => i.id === item.id) + 1}</span>,
     },
     {
@@ -50,7 +50,7 @@ const CustomerTable: React.FC<CustomerTableProps> = ({ items }) => {
       label: 'ID',
       render: (item) => (
         <div className="max-w-20 font-semibold text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.id}>
-          {item.id}
+          {item.displayId}
         </div>
       ),
     },
@@ -90,14 +90,14 @@ const CustomerTable: React.FC<CustomerTableProps> = ({ items }) => {
         </div>
       ),
     },
-    {
-      key: 'totalOrder',
-      label: 'Total Order',
-    },
-    {
-      key: 'totalReservation',
-      label: 'Total Reservation',
-    },
+    // {
+    //   key: 'totalOrder',
+    //   label: 'Total Order',
+    // },
+    // {
+    //   key: 'totalReservation',
+    //   label: 'Total Reservation',
+    // },
     {
       key: 'status',
       label: 'Status',

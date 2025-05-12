@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import {
   Dialog,
   DialogTrigger,
@@ -13,6 +13,7 @@ import {
   SelectItem,
 } from "../../components/ui/select"
 import type { BranchItem } from "../../types/BranchItem"
+import { getBrandById } from "../../services/branch.service"
 
 interface EditBranchProps {
   trigger: React.ReactNode
@@ -31,11 +32,26 @@ const EditBranch: React.FC<EditBranchProps> = ({ trigger, branch }) => {
     status: branch.status || "Prepare",
   })
 
+  const [brandInfo, setBrandInfo] = useState<{ name: string; count: number } | null>(null)
+
+  useEffect(() => {
+    if (open && branch.brandId) {
+      getBrandById(branch.brandId).then((res) => {
+        if (res) {
+          setBrandInfo({
+            name: res.brand_name,
+            count: res.total_branches,
+          })
+        }
+      })
+    }
+  }, [open, branch.brandId])
+
   const managers = ["Trần Trung Hiếu", "Nguyễn Văn A", "Lê Thị B"]
   const statuses = ["Prepare", "Open", "Closed"]
 
   const handleChange = (field: string, value: string) => {
-    setForm(prev => ({ ...prev, [field]: value }))
+    setForm((prev) => ({ ...prev, [field]: value }))
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -49,7 +65,19 @@ const EditBranch: React.FC<EditBranchProps> = ({ trigger, branch }) => {
       <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent>
         <DialogTitle>Edit Branch</DialogTitle>
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+
+        {/* ✅ Brand Info Display */}
+        {brandInfo && (
+          <div className="text-sm text-gray-700 mb-2">
+            <span className="font-semibold">Brand:</span> {brandInfo.name} —{" "}
+            <span className="italic">{brandInfo.count} branch(es)</span>
+          </div>
+        )}
+
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4"
+        >
           <div>
             <label className="text-sm font-medium block mb-1">Name</label>
             <input
@@ -76,7 +104,10 @@ const EditBranch: React.FC<EditBranchProps> = ({ trigger, branch }) => {
           </div>
           <div>
             <label className="text-sm font-medium block mb-1">Manager</label>
-            <Select value={form.manager} onValueChange={(val) => handleChange("manager", val)}>
+            <Select
+              value={form.manager}
+              onValueChange={(val) => handleChange("manager", val)}
+            >
               <SelectTrigger className="w-full bg-gray-100">
                 <SelectValue placeholder="Select manager" />
               </SelectTrigger>
@@ -99,7 +130,10 @@ const EditBranch: React.FC<EditBranchProps> = ({ trigger, branch }) => {
           </div>
           <div>
             <label className="text-sm font-medium block mb-1">Status</label>
-            <Select value={form.status} onValueChange={(val) => handleChange("status", val)}>
+            <Select
+              value={form.status}
+              onValueChange={(val) => handleChange("status", val)}
+            >
               <SelectTrigger className="w-full bg-gray-100">
                 <SelectValue placeholder="Select status" />
               </SelectTrigger>
@@ -113,7 +147,10 @@ const EditBranch: React.FC<EditBranchProps> = ({ trigger, branch }) => {
             </Select>
           </div>
           <div className="sm:col-span-2 mt-4 text-center">
-            <button type="submit" className="bg-blue-500 text-white px-8 py-3 rounded-xl font-semibold">
+            <button
+              type="submit"
+              className="bg-blue-500 text-white px-8 py-3 rounded-xl font-semibold"
+            >
               Update
             </button>
           </div>

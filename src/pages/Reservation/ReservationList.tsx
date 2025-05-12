@@ -15,17 +15,20 @@ const ReservationList: React.FC = () => {
     () =>
       rawReservations.map((r) => ({
         id: r.id,
+        displayId: r.display_id,
         fullName: r.full_name,
         phoneNumber: r.phone,
         dateTime: `${new Date(r.reservation_date).toLocaleDateString()} ${r.reservation_time}`,
-        location: r.branch_id, // Bạn có thể custom sau nếu muốn map branch
-        people: r.number_of_customer,
-        inOutdoor: r.place,
+        location: r.branch_id,
+        branchAddress: r.branch_address,
+        brandName: r.brand_name,
+        number_of_customer: r.number_of_customer,
+        place: r.place,
         status: r.status,
       })),
     [rawReservations]
   );
-
+  
   useEffect(() => {
     dispatch(fetchReservations());
   }, [dispatch]);
@@ -33,7 +36,7 @@ const ReservationList: React.FC = () => {
   return (
     <div className="bg-gray-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* Header */}
           <div className="flex justify-between items-center">
             <h1 className="text-xl sm:text-2xl font-bold text-neutral-800">Reservation Lists</h1>

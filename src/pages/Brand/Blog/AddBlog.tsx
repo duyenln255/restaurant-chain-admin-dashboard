@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { BrandItem } from "../../types/BrandItem";
+import type { BrandItem } from "../../../types/BrandItem";
 import { Editor } from "@tinymce/tinymce-react";
 import { Box, Typography } from "@mui/material";
 

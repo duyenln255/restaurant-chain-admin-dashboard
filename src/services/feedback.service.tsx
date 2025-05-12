@@ -2,7 +2,9 @@ import axiosInstance from "../lib/axiosInstance";
 
 export interface Feedback {
   id: string;
+  display_id: string;
   customer_id: string;
+  customer_name: string;
   branch_id: string;
   type: string;
   content: string;
@@ -12,8 +14,12 @@ export interface Feedback {
   date_added: string;
   full_name: string;
   email: string;
-  phone: string;
+  customer_phone: string;
   address: string;
+  staff_name: string;
+  branch_address: string;
+  brand_name: string;
+
 }
 
 export const getAllFeedbacks = async (): Promise<Feedback[]> => {

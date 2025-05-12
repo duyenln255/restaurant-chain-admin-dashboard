@@ -8,4 +8,6 @@ export interface BranchItem {
     brand: string;
     status: string;
     phone: string;
+    brandId: string;
+    date_added: string;
   }

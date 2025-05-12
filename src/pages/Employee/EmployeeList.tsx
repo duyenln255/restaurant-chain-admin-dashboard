@@ -50,7 +50,7 @@ const EmployeeList: React.FC = () => {
   return (
     <div className="bg-gray-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* Header + Filter */}
           <div className="space-y-4">
           <div className="flex justify-between items-center">

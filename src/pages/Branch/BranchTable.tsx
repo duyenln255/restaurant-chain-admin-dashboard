@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import type { BranchItem } from '../../types/BranchItem';
 import GenericTable from '../../components/Table/GenericTable';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,10 +10,7 @@ interface BranchTableProps {
 }
 
 const BranchTable: React.FC<BranchTableProps> = ({ items }) => {
-
-  const handleEdit = (item: BranchItem) => {
-    console.log('Edit:', item);
-  };
+  const [editingBranch, setEditingBranch] = useState<BranchItem | null>(null)
 
   const handleDelete = (item: BranchItem) => {
     console.log('Delete:', item);
@@ -43,30 +40,41 @@ const BranchTable: React.FC<BranchTableProps> = ({ items }) => {
     {
       key: '_index',
       label: 'No.',
-      align: 'center',
+      align: 'left',
       render: (item) => <span className="text-gray-600 text-sm">{items.findIndex(i => i.id === item.id) + 1}</span>,
     },
     {
       key: "location",
       label: "Location",
       render: (item) => (
-        <div className="text-sm overflow-hidden whitespace-nowrap text-ellipsis " title={item.location}>
+        <div className="text-sm text-wrap" title={item.location}>
           {item.location}
         </div>
       ),
     },
+    // {
+    //   key: "address",
+    //   label: "Address",
+    //   render: (item) => (
+    //     <div className="text-sm overflow-hidden whitespace-nowrap text-ellipsis " title={item.address}>
+    //       {item.address}
+    //     </div>
+    //   ),
+    // },
     {
-      key: "address",
-      label: "Address",
+      key: "brand",
+      label: "Brand",
+      align : 'center',
       render: (item) => (
-        <div className="text-sm overflow-hidden whitespace-nowrap text-ellipsis " title={item.address}>
-          {item.address}
+        <div className="text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.brand}>
+          {item.brand}
         </div>
       ),
     },
     {
       key: "manager",
       label: "Manager",
+      align : 'center',
       render: (item) => (
         <div className="text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.manager}>
           {item.manager}
@@ -76,19 +84,12 @@ const BranchTable: React.FC<BranchTableProps> = ({ items }) => {
     {
       key: "employees",
       label: "Employees",
+      align : 'center',
       render: (item) => (
         <div className="text-sm">{item.employees}</div>
       ),
     },
-    {
-      key: "brand",
-      label: "Brand",
-      render: (item) => (
-        <div className="text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.brand}>
-          {item.brand}
-        </div>
-      ),
-    },
+
     {
       key: "status",
       label: "Status",
@@ -100,16 +101,17 @@ const BranchTable: React.FC<BranchTableProps> = ({ items }) => {
       align: "center",
       render: (item) => (
         <div className="flex justify-center space-x-4">
-        <EditBranch
-          branch={item}
-          trigger={
-            <button className="text-blue-500 hover:text-blue-700">
-              <FontAwesomeIcon icon={faPen} size="sm" />
-            </button>
-          }
-        />
+          <button
+            onClick={() => setEditingBranch(item)}
+            className="text-blue-500 hover:text-blue-700"
+          >
+            <FontAwesomeIcon icon={faPen} size="sm" />
+          </button>
 
-          <button onClick={() => handleDelete(item)} className="text-red-500 hover:text-red-700">
+          <button
+            onClick={() => handleDelete(item)}
+            className="text-red-500 hover:text-red-700"
+          >
             <FontAwesomeIcon icon={faTrash} size="sm" />
           </button>
         </div>
@@ -120,6 +122,12 @@ const BranchTable: React.FC<BranchTableProps> = ({ items }) => {
   return (
     <div className="space-y-4">
       <GenericTable<BranchItem> items={items} columns={columns} itemsPerPage={10} />
+      {editingBranch && (
+        <EditBranch
+          branch={editingBranch}
+          trigger={<></>} // No external trigger, opened via state
+        />
+      )}
     </div>
   );
 };

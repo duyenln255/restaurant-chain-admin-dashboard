@@ -16,19 +16,22 @@ const CustomerList: React.FC = () => {
     () =>
       rawCustomers.map((c) => ({
         id: c.id,
+        displayId: c.display_id,
         fullName: c.full_name,
         email: c.email,
         phone: c.phone,
         dateJoined: new Date(c.date_added).toLocaleDateString(),
-        totalOrder: 0, 
-        totalReservation: "",
         status: c.status,
-        password: c.password,
         gender: c.gender,
-        dateOfBirth: "",
+        address: c.address,
+        avatar: c.avatar,
+        username: c.username,
+        brandName: c.brand_name,
+        password: c.password,
       })),
     [rawCustomers]
   );
+  
 
   useEffect(() => {
     dispatch(fetchCustomers());
@@ -37,7 +40,7 @@ const CustomerList: React.FC = () => {
   return (
     <div className="bg-gray-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* Header Section */}
           <div className="flex justify-between items-center">
             <h1 className="text-xl sm:text-2xl font-bold text-neutral-800">Customer Lists</h1>

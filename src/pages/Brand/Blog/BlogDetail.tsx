@@ -1,5 +1,5 @@
 import React from "react";
-import type { BlogCardItem } from "../../types/BlogCardItem";
+import type { BlogCardItem } from "../../../types/BlogCardItem";
 
 interface BlogDetailProps {
   blog: BlogCardItem;

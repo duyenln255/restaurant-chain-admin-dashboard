@@ -1,18 +1,22 @@
-import React from 'react';
+import { useNavigate} from "react-router-dom";
+import React, {useState } from 'react';
 import type { BrandItem } from '../../types/BrandItem';
 import GenericTable from '../../components/Table/GenericTable';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash, faFileAlt, faLink } from "@fortawesome/free-solid-svg-icons";
+import BlogListModal from "./Blog/BlogListModal";  
 
 interface BrandTableProps {
   items: BrandItem[];
 }
 
 const BrandTable: React.FC<BrandTableProps> = ({ items }) => {
-  const handleEdit = (item: BrandItem) => {
-    console.log('Edit:', item);
-  };
+  const navigate = useNavigate();
+  const [showBlogModal, setShowBlogModal] = useState(false);
 
+  const handleEdit = (item: BrandItem) => {
+    navigate(`/brand/edit/${item.id}`);
+  };
   const handleDelete = (item: BrandItem) => {
     console.log('Delete:', item);
   };
@@ -48,18 +52,26 @@ const BrandTable: React.FC<BrandTableProps> = ({ items }) => {
     {
       key: '_index',
       label: 'No.',
-      align: 'center',
+      align: 'left',
       render: (item) => <span className="text-gray-600 text-sm">{items.findIndex(i => i.id === item.id) + 1}</span>,
+    },
+    {
+      key: "displayId",
+      label: "ID",
+      align: "center",
+      render: (item) => (
+        <span className="text-gray-700 text-sm font-mono">{item.displayId}</span>
+      ),
     },
     {
       key: "logo",
       label: "Logo",
       align: 'center',
       render: (item) => (
-        <div className="flex justify-center text-center">
-          <img src={item.logo} alt="Brand Logo" className="w-12 h-12 object-contain rounded-md" />
+        <div className="flex items-center justify-center">
+          <img src={item.logo} alt="Brand Logo" className="w-12 h-12 object-contain rounded-md h-full" />
         </div>
-      ),
+      )      
     },
     {
       key: "name",
@@ -100,6 +112,16 @@ const BrandTable: React.FC<BrandTableProps> = ({ items }) => {
       render: (item) => renderHour(item.closed_hours, "close"),
     },
     {
+      key: "date_added",
+      label: "Created Date",
+      align: "center",
+      render: (item) => (
+        <span className="text-sm text-gray-700">
+          {new Date(item.date_added).toLocaleDateString()}
+        </span>
+      ),
+    },    
+    {
       key: "status",
       label: "Status",
       render: (item) => renderStatus(item.status),
@@ -116,7 +138,7 @@ const BrandTable: React.FC<BrandTableProps> = ({ items }) => {
           <button onClick={() => handleDelete(item)} className="text-red-500 hover:text-red-700">
             <FontAwesomeIcon icon={faTrash} size="sm" />
           </button>
-          <button onClick={() => handleCreateBlog(item)} className="text-gray-600 hover:text-gray-800">
+          <button onClick={() => setShowBlogModal(true)} className="text-gray-600 hover:text-gray-800">
             <FontAwesomeIcon icon={faFileAlt} size="sm" />
           </button>
         </div>
@@ -127,6 +149,7 @@ const BrandTable: React.FC<BrandTableProps> = ({ items }) => {
   return (
     <div className="space-y-4">
       <GenericTable<BrandItem> items={items} columns={columns} itemsPerPage={10} />
+      <BlogListModal open={showBlogModal} onClose={() => setShowBlogModal(false)} />
     </div>
   );
 };

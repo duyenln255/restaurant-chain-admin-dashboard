@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
-// import Sidebar from '../../components/Sidebar/Sidebar';
-// import Header from '../../components/Header/Header';
 import FilterBar from './FilterBar';
-import FilterBarBlog from './FilterBarBlog';
+import FilterBarBlog from './Blog/FilterBarBlog';
 import BrandTable from './BrandTable';
 // import BlogList from './BlogList';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
@@ -16,23 +14,23 @@ const BrandList: React.FC = () => {
   const dispatch = useAppDispatch();
   const { items: rawBrands, loading, error } = useAppSelector((state: RootState) => state.brands);
   const navigate = useNavigate();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const toggleSidebar = () => setSidebarOpen(prev => !prev);
-
   const brands = useMemo<BrandItem[]>(
     () =>
       rawBrands.map((b) => ({
         id: b.id,
+        displayId: b.display_id, // thêm dòng này
         logo: b.logo_url,
         name: b.name,
         link: b.website_url,
         description: b.description,
         status: b.status,
-        opening_hours: b.opening_hours,
-        closed_hours: b.closed_hours
+        opening_hours: b.opening_hours?.slice(0, 5), // "08:30"
+        closed_hours: b.closed_hours?.slice(0, 5),   // "22:00"
+        date_added: new Date(b.date_added).toLocaleDateString() // ví dụ 11/5/2025
       })),
     [rawBrands]
   );
+  
 
   useEffect(() => {
     dispatch(fetchBrands());
@@ -41,7 +39,7 @@ const BrandList: React.FC = () => {
   return (
     <div className="bg-gray-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="space-y-6">
+        <div className="space-y-4">
           {/* Header */}
           <div className="flex justify-between items-center">
             <h1 className="text-xl sm:text-2xl font-bold text-neutral-800">Brand Lists</h1>

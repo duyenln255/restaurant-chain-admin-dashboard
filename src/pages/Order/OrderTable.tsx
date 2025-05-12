@@ -19,7 +19,7 @@ const OrderTable: React.FC<OrderTableProps> = ({ items }) => {
     console.log('Delete:', item);
   };
 
-  const renderOrderType = (orderType: OrderItem['orderType']) => {
+  const renderOrderType = (orderType: OrderItem['type']) => {
     return (
       <span className="inline-block bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm whitespace-nowrap">
         {orderType}
@@ -61,16 +61,16 @@ const OrderTable: React.FC<OrderTableProps> = ({ items }) => {
       label: 'ID',
       render: (item) => (
         <div className="max-w-20 font-semibold text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.id}>
-          {item.id}
+          {item.display_id}
         </div>
       ),
      },
     { 
-      key: 'name', 
+      key: 'full_name', 
       label: 'Name',
       render: (item) => (
-        <div className="max-w-28 font-semibold text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.name}>
-          {item.name}
+        <div className="max-w-28 font-semibold text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.full_name}>
+          {item.full_name}
         </div>
       ),
      },
@@ -83,14 +83,13 @@ const OrderTable: React.FC<OrderTableProps> = ({ items }) => {
         </div>
       ),
     },
-    { 
-      key: 'date', 
-      label: 'Date',
+    {
+      key: 'date_added',
+      label: 'Date Added',
       render: (item) => (
-        <div className="text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.address}>
-          {item.date}
-        </div>
-      ), },
+        <div className='text-sm'>{new Date(item.date_added).toLocaleDateString()}</div>
+      )
+    },
     {
       key: 'cart',
       label: 'Products',
@@ -119,10 +118,15 @@ const OrderTable: React.FC<OrderTableProps> = ({ items }) => {
       },
     },
     {
-      key: 'orderType',
-      label: 'Order Type',
-      render: (item) => renderOrderType(item.orderType),
-    },
+      key: 'preorder_time',
+      label: 'Preorder Time',
+      align: 'center',
+      render: (item) => (
+        <div className="text-blue-700">
+          {item.preorder_time ? item.preorder_time : '-'}
+        </div>
+      )
+    },    
     {
       key: 'status',
       label: 'Status',

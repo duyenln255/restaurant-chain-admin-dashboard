@@ -3,6 +3,13 @@ import type { VoucherItem } from '../../types/VoucherItem';
 import GenericTable from '../../components/Table/GenericTable';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from "../../components/ui/tooltip";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
 interface VoucherTableProps {
   items: VoucherItem[];
@@ -40,21 +47,22 @@ const VoucherTable: React.FC<VoucherTableProps> = ({ items }) => {
     {
       key: '_index',
       label: 'No.',
-      align: 'center',
+      align: 'left',
       render: (item) => <span className="text-gray-600 text-sm">{items.findIndex(i => i.id === item.id) + 1}</span>,
     },
-    {
-      key: "id",
-      label: "ID",
-      render: (item) => (
-        <div className="max-w-20 font-medium text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.id}>
-          {item.id}
-        </div>
-      ),
-    },
+    // {
+    //   key: "id",
+    //   label: "ID",
+    //   render: (item) => (
+    //     <div className="max-w-20 font-medium text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.id}>
+    //       {item.displayId}
+    //     </div>
+    //   ),
+    // },
     {
       key: "type",
       label: "Type",
+      align: 'center',
       render: (item) => (
         <span className="inline-block px-2 py-1 text-xs font-semibold rounded-md bg-blue-100 text-blue-700 whitespace-nowrap">
           {item.type}
@@ -81,7 +89,7 @@ const VoucherTable: React.FC<VoucherTableProps> = ({ items }) => {
       key: "brand",
       label: "Brand",
       render: (item) => (
-        <div className="max-w-28 text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.brand}>
+        <div className="max-w-40 text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.brand}>
           {item.brand}
         </div>
       ),
@@ -90,11 +98,20 @@ const VoucherTable: React.FC<VoucherTableProps> = ({ items }) => {
       key: "description",
       label: "Description",
       render: (item) => (
-        <div className="text-sm overflow-hidden text-ellipsis" title={item.description}>
-          {item.description}
-        </div>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="cursor-pointer text-gray-500 hover:text-gray-700 flex justify-center">
+                <FontAwesomeIcon icon={faInfoCircle} size="sm" />
+              </div>
+            </TooltipTrigger>
+              <TooltipContent side="top" sideOffset={8} className="p-2 bg-white text-black border-1 border-gray-300 rounded text-sm space-y-1">
+              {item.description}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       ),
-    },
+    },    
     {
       key: "discountType",
       label: "Discount Type",
@@ -116,26 +133,34 @@ const VoucherTable: React.FC<VoucherTableProps> = ({ items }) => {
       key: "discountValue",
       label: "Discount",
       render: (item) => (
-        <span className="text-sm">{item.discountValue}</span>
+        <span className="text-sm font-semibold">{item.discountValue}</span>
       ),
     },
     {
       key: "startDate",
       label: "Start Date",
       render: (item) => (
-        <span className="text-sm">{item.startDate}</span>
+        <span className="text-sm text-blue-500">{item.startDate}</span>
       ),
     },
     {
       key: "endDate",
       label: "End Date",
       render: (item) => (
-        <span className="text-sm">{item.endDate}</span>
+        <span className="text-sm text-red-500">{item.endDate}</span>
       ),
     },
     {
+      key: "dateAdded",
+      label: "Date Added",
+      render: (item) => (
+        <span className="text-sm text-gray-500">{item.dateAdded}</span>
+      ),
+    },    
+    {
       key: "status",
       label: "Status",
+      align: "center",
       render: (item) => renderStatus(item.status),
     },
     {

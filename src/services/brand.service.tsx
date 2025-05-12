@@ -2,6 +2,7 @@ import axiosInstance from "../lib/axiosInstance";
 
 export interface Brand {
   id: string;
+  display_id: string;
   rcms_id: string;
   name: string;
   description: string;

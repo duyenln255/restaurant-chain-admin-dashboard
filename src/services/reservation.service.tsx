@@ -2,6 +2,7 @@ import axiosInstance from "../lib/axiosInstance";
 
 export interface Reservation {
   id: string;
+  display_id: string;
   full_name: string;
   phone: string;
   branch_id: string;
@@ -12,7 +13,7 @@ export interface Reservation {
   place: string;
   date_added: string;
   brand_name: string;
-  brand_address: string;
+  branch_address: string;
 }
 
 export const getAllReservations = async (): Promise<Reservation[]> => {

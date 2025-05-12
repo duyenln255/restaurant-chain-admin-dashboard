@@ -1,7 +1,10 @@
 import axiosInstance from "../lib/axiosInstance";
 
-export interface APIOrderResponse {
+export interface Order {
   id: string;
+  display_id: string;
+  branch_name: string;
+  brand_address: string;
   customer_id: string;
   branch_id: string;
   status: string;
@@ -28,7 +31,7 @@ export interface APIOrderResponse {
   address: string;
 }
 
-export const fetchAllOrdersApi = async (): Promise<APIOrderResponse[]> => {
+export const fetchAllOrdersApi = async (): Promise<Order[]> => {
   const response = await axiosInstance.get("/order");
   return response.data.order;
 };
