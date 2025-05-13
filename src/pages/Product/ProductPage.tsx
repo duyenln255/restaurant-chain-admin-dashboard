@@ -6,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import type { RootState } from '../../redux/store';
 import { fetchProducts } from '../../redux/slices/productSlice';
 import FilterBar from "./FilterBar";
+import { useNavigate } from "react-router-dom";
 
 const ProductPage: React.FC = () => {
   const dispatch = useAppDispatch();

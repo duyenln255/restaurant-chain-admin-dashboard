@@ -4,6 +4,7 @@ import VoucherTable from './VoucherTable';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchVouchers } from '../../redux/slices/voucherSlice';
 import type { RootState } from '../../redux/store';
+import { useNavigate } from "react-router-dom";
 
 const VoucherList: React.FC = () => {
   const dispatch = useAppDispatch();

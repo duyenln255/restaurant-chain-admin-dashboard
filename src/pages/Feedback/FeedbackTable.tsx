@@ -209,7 +209,7 @@ const FeedbackTable: React.FC<FeedbackTableProps> = ({ items }) => {
       <GenericTable<FeedbackItem>
         items={items}
         columns={columns}
-        itemsPerPage={10}
+        itemsPerPage={5}
       />
     </div>
   )

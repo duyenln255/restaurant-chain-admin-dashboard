@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { fetchFeedbacks } from '../../redux/slices/feedbackSlice'
 import type { RootState } from '../../redux/store'
 import type { FeedbackItem } from '../../types/FeedbackItem'
+import { useNavigate } from "react-router-dom";
 
 const FeedbackList: React.FC = () => {
   const dispatch = useAppDispatch()

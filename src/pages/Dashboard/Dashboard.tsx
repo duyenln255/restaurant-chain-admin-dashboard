@@ -71,7 +71,6 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="flex min-h-screen ">
-
       <div className="flex-1">
         <div className="dashboard-body p-6">
           <div className="mx-auto space-y-4">

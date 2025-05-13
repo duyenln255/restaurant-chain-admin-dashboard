@@ -14,6 +14,9 @@ import AddBrand from '../pages/Brand/AddBrand'
 import EditBrand from '../pages/Brand/EditBrand'
 import ProductPage from '../pages/Product/ProductPage'
 import EmployeeList from '../pages/Employee/EmployeeList'
+import AddEmployee from '../pages/Employee/AddEmployee'
+import EditEmployee from '../pages/Employee/EditEmployee'
+
 import Login from '../pages/Login/Login'
 
 export default function useRouteElement() {
@@ -40,7 +43,9 @@ export default function useRouteElement() {
         { path: '/brand/add', element: <AddBrand /> },
         { path: '/brand/edit/:id', element: <EditBrand /> },
         { path: '/product', element: <ProductPage /> },
-        { path: '/employee', element: <EmployeeList /> }
+        { path: '/employee', element: <EmployeeList /> },
+        { path: '/employee/add', element: <AddEmployee /> },
+        { path: '/employee/edit/:id', element: <EditEmployee /> },
       ]
     }
   ])

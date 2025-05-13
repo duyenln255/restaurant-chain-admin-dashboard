@@ -182,7 +182,7 @@ const VoucherTable: React.FC<VoucherTableProps> = ({ items }) => {
 
   return (
     <div className="space-y-4">
-      <GenericTable<VoucherItem> items={items} columns={columns} itemsPerPage={5} />
+      <GenericTable<VoucherItem> items={items} columns={columns} itemsPerPage={10} />
     </div>
   );
 };

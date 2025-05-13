@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getAllEmployees } from "../../services/employee.service";
 import type { Employee } from "../../services/employee.service";
+import { deleteEmployee } from "../../services/employee.service";
 
 interface EmployeeState {
   items: Employee[];
@@ -19,6 +20,13 @@ export const fetchEmployees = createAsyncThunk(
   async () => {
     const response = await getAllEmployees();
     return response;
+  }
+);
+export const deleteEmployeeThunk = createAsyncThunk(
+  "employees/delete",
+  async (id: string, { dispatch }) => {
+    await deleteEmployee(id);
+    dispatch(fetchEmployees()); // reload sau khi xóa
   }
 );
 

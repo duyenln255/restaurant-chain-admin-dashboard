@@ -27,7 +27,7 @@ const AddBrand: React.FC = () => {
     if (!name.trim()) newErrors.name = "Required";
     if (!description.trim()) newErrors.description = "Required";
     if (!link.trim()) newErrors.link = "Required";
-    if (!logo) newErrors.logo = "Required";
+    // if (!logo) newErrors.logo = "Required";
     if (!openingHour) newErrors.openingHour = "Required";
     if (!closingHour) newErrors.closingHour = "Required";
     setErrors(newErrors);
