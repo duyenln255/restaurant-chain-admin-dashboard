@@ -65,40 +65,32 @@ const VoucherList: React.FC = () => {
   };
 
   return (
-    <div className="dashboard">
-      <div className="dashboard-content">
-        <div className="main-content">
-          <div className="dashboard-body p-6">
-            <div className="mx-auto space-y-4">
-              <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-neutral-800">
-                  {t("vouchers.voucherList")}
-                </h1>
-                <button
-                  onClick={() => navigate("/voucher/add")}
-                  className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md transition-colors"
-                >
-                  {t("vouchers.addNewVoucher")}
-                </button>
-              </div>
-
-              <FilterBar />
-
-              {loading && <p>{t("vouchers.loadingVouchers")}</p>}
-              {error && <p className="text-red-500">{error}</p>}
-              {!loading && vouchers.length === 0 && (
-                <p>{t("vouchers.noVouchersFound")}</p>
-              )}
-
-              <VoucherTable
-                items={vouchers}
-                onEdit={(id) => navigate(`/voucher/edit/${id}`)}
-                onDelete={handleDeleteVoucher}
-              />
-            </div>
-          </div>
-        </div>
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-4">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold text-neutral-800">
+          {t("vouchers.voucherList")}
+        </h1>
+        <button
+          onClick={() => navigate("/voucher/add")}
+          className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md transition-colors"
+        >
+          {t("vouchers.addNewVoucher")}
+        </button>
       </div>
+
+      <FilterBar />
+
+      {loading && <p>{t("vouchers.loadingVouchers")}</p>}
+      {error && <p className="text-red-500">{error}</p>}
+      {!loading && vouchers.length === 0 && (
+        <p>{t("vouchers.noVouchersFound")}</p>
+      )}
+
+      <VoucherTable
+        items={vouchers}
+        onEdit={(id) => navigate(`/voucher/edit/${id}`)}
+        onDelete={handleDeleteVoucher}
+      />
     </div>
   );
 };

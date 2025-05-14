@@ -1,83 +1,115 @@
-import React, { useState } from "react";
+"use client"
+
+import React, { useState } from "react"
+import { Button } from "../../components/ui/button"
+import { CustomDatePicker } from "../../components/CustomDatePicker/CustomDatePicker"
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "../../components/ui/select"
+import { ComboboxCustom } from "../../components/Combobox/Combobox"
 
 const FilterBar: React.FC = () => {
-  const [keyword, setKeyword] = useState("");
-  const [date, setDate] = useState("");
-  const [status, setStatus] = useState("");
-  const [location, setLocation] = useState("");
-  const [door, setDoor] = useState("");
+  const [keyword, setKeyword] = useState("all")
+  const [date, setDate] = useState<Date | undefined>(undefined)
+  const [status, setStatus] = useState("all")
+  const [reservationType, setReservationType] = useState("all")
+  const [reservationEmployee, setReservationEmployee] = useState("all")
+  const [reservationBranch, setReservationBranch] = useState("all")
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md flex flex-wrap gap-x-4 gap-y-3">
-      {/* Keyword Input */}
-      <input
-        type="text"
-        placeholder="Keyword"
+    <div className="bg-white p-4 rounded-lg shadow-md flex flex-col sm:flex-row flex-wrap gap-4">
+      {/* Keyword input */}
+      <ComboboxCustom
+        data={[]} // TODO: populate with keyword suggestions if needed
         value={keyword}
-        onChange={(e) => setKeyword(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2 "
+        onChange={setKeyword}
+        placeholder="Search keyword..."
+        className="w-full sm:flex-1 border border-neutral-300"
       />
 
-      {/* Date Picker */}
-      <input
-        type="date"
+      {/* Date picker */}
+      <CustomDatePicker
         value={date}
-        onChange={(e) => setDate(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2"
+        onChange={setDate}
+        placeholder="Select created date"
       />
 
-      {/* Location Dropdown */}
-      <select
-        value={location}
-        onChange={(e) => setLocation(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2 "
-      >
-        <option value="">--- All Locations ---</option>
-      </select>
+      {/* Reservation Type */}
+      <Select value={reservationType} onValueChange={setReservationType}>
+        <SelectTrigger className="bg-white w-full sm:flex-1 border border-neutral-300">
+          <SelectValue placeholder="--- All Reservation Types ---" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">--- All Reservation Types ---</SelectItem>
+          <SelectItem value="Indoor">Indoor</SelectItem>
+          <SelectItem value="Outdoor">Outdoor</SelectItem>
+        </SelectContent>
+      </Select>
 
-      {/* INOUTDOR Dropdown */}
-      <select
-        value={door}
-        onChange={(e) => setDoor(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2 "
-      >
-        <option value="">--- All IN/OUTDOOR ---</option>
-        <option value="INDOOR">INDOOR</option>
-        <option value="OUTDOOR">OUTDOOR</option>
-      </select>
+      {/* Responsible Branch */}
+      <Select value={reservationBranch} onValueChange={setReservationBranch}>
+        <SelectTrigger className="bg-white w-full sm:flex-1 border border-neutral-300">
+          <SelectValue placeholder="--- All Branches ---" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">--- All Branches ---</SelectItem>
+          {/* Dynamically populate branches here if needed */}
+        </SelectContent>
+      </Select>
 
-      {/* Status Dropdown */}
-      <select
-        value={status}
-        onChange={(e) => setStatus(e.target.value)}
-        className="border border-neutral-300 rounded-md px-3 py-2 "
-      >
-        <option value="">--- All Status ---</option>
-        <option value="Active">Active</option>
-        <option value="Waiting">Waiting</option>
-        <option value="Cancel">Cancel</option>
-      </select>
+      {/* Status */}
+      <Select value={status} onValueChange={setStatus}>
+        <SelectTrigger className="bg-white w-full sm:flex-1 border border-neutral-300">
+          <SelectValue placeholder="--- All Status ---" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">--- All Status ---</SelectItem>
+          {/* <SelectItem value="Pending">Pending</SelectItem> */}
+          {/* <SelectItem value="Done">Done</SelectItem> */}
+          {/* <SelectItem value="Cancel">Cancel</SelectItem> */}
+          {/* <SelectItem value="Verify">Verify</SelectItem> */}
+        </SelectContent>
+      </Select>
 
-      {/* Search & Reset Buttons */}
-      <div className="flex gap-2">
-        <button className="bg-blue-500 text-white px-4 py-2 rounded-md">
+      {/* Buttons */}
+      <div className="flex gap-2 flex-wrap">
+        <Button
+          variant="outline"
+          className="bg-blue-500 text-white hover:bg-blue-600"
+          onClick={() =>
+            console.log({
+              keyword,
+              date,
+              status,
+              reservationType,
+              reservationEmployee,
+              reservationBranch,
+            })
+          }
+        >
           Search
-        </button>
-        <button
-          className="border border-red-500 text-red-500 px-4 py-2 rounded-md"
+        </Button>
+        <Button
+          variant="outline"
+          className="border-red-500 text-red-500 hover:bg-red-50"
           onClick={() => {
-            setKeyword("");
-            setDate("");
-            setStatus("");
-            setLocation("");
-            setDoor("");
+            setKeyword("all")
+            setDate(undefined)
+            setStatus("all")
+            setReservationType("all")
+            setReservationEmployee("all")
+            setReservationBranch("all")
           }}
         >
           Reset
-        </button>
+        </Button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default FilterBar;
+export default FilterBar

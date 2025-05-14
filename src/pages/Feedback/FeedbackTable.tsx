@@ -54,7 +54,6 @@ const FeedbackTable: React.FC<FeedbackTableProps> = ({
     {
       key: "displayId",
       label: t("feedback.id"),
-      align: "center",
       render: (item) => (
         <div className="truncate text-xs sm:text-sm font-mono sm:w-auto" title={item.displayId}>
           {item.displayId}

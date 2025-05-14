@@ -29,6 +29,7 @@ const CustomerList: React.FC = () => {
     () =>
       rawCustomers.map((c) => ({
         id: c.customer_id,
+        displayId: c.display_id,
         customer_id: c.customer_id,
         fullName: c.full_name,
         email: c.email,
@@ -66,40 +67,35 @@ const CustomerList: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen">
-      <div className="flex-1">
-        <div className="dashboard-body">
-          <div className=" mx-auto space-y-4">
-            <div className="flex justify-between items-center">
-              <h1 className="text-2xl font-bold text-neutral-800">
-                {t("customer.customerList")}
-              </h1>
-              <button
-                onClick={() => navigate("/customer/add")}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md transition-colors"
-              >
-                {t("customer.addNewCustomer")}
-              </button>
-            </div>
-
-            <FilterBar />
-
-            {/* Status */}
-            {loading && <p>{t("customer.loadingCustomers")}</p>}
-            {error && <p className="text-red-500">{error}</p>}
-            {!loading && customers.length === 0 && (
-              <p>{t("customer.noCustomersFound")}</p>
-            )}
-
-            <CustomerTable
-              items={customers}
-              onEdit={(id) => navigate(`/customer/edit/${id}`)}
-              onDelete={handleDeleteCustomer}
-            />
-          </div>
-        </div>
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-4">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold text-neutral-800">
+          {t("customer.customerList")}
+        </h1>
+        <button
+          onClick={() => navigate("/customer/add")}
+          className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md transition-colors"
+        >
+          {t("customer.addNewCustomer")}
+        </button>
       </div>
+
+      <FilterBar />
+
+      {/* Status */}
+      {loading && <p>{t("customer.loadingCustomers")}</p>}
+      {error && <p className="text-red-500">{error}</p>}
+      {!loading && customers.length === 0 && (
+        <p>{t("customer.noCustomersFound")}</p>
+      )}
+
+      <CustomerTable
+        items={customers}
+        onEdit={(id) => navigate(`/customer/edit/${id}`)}
+        onDelete={handleDeleteCustomer}
+      />
     </div>
+
   );
 };
 

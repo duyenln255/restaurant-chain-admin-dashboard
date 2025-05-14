@@ -52,38 +52,30 @@ const OrderList: React.FC = () => {
   };
 
   return (
-    <div className="dashboard">
-      <div className="dashboard-content">
-        <div className="main-content">
-          <div className="dashboard-body p-6">
-            <div className="mx-auto space-y-4">
-              <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold">{t("orders.orderList")}</h1>
-                <button
-                  onClick={() => navigate("/order/add")}
-                  className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md transition-colors"
-                >
-                  {t("orders.addNewOrder")}
-                </button>
-              </div>
-
-              <FilterBar />
-
-              {loading && <p>{t("orders.loadingOrders")}</p>}
-              {error && <p className="text-red-500">{error}</p>}
-              {!loading && orders.length === 0 && (
-                <p>{t("orders.noOrdersFound")}</p>
-              )}
-
-              <OrderTable
-                items={orders}
-                onEdit={(id) => navigate(`/order/edit/${id}`)}
-                onDelete={handleDeleteOrder}
-              />
-            </div>
-          </div>
-        </div>
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-4">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">{t("orders.orderList")}</h1>
+        <button
+          onClick={() => navigate("/order/add")}
+          className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md transition-colors"
+        >
+          {t("orders.addNewOrder")}
+        </button>
       </div>
+
+      <FilterBar />
+
+      {loading && <p>{t("orders.loadingOrders")}</p>}
+      {error && <p className="text-red-500">{error}</p>}
+      {!loading && orders.length === 0 && (
+        <p>{t("orders.noOrdersFound")}</p>
+      )}
+
+      <OrderTable
+        items={orders}
+        onEdit={(id) => navigate(`/order/edit/${id}`)}
+        onDelete={handleDeleteOrder}
+      />
     </div>
   );
 };

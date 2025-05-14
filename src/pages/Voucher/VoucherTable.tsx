@@ -57,7 +57,7 @@ const VoucherTable: React.FC<VoucherTableProps> = ({
           className="max-w-20 font-medium text-sm overflow-hidden whitespace-nowrap text-ellipsis"
           title={item.id}
         >
-          {item.id}
+          {item.displayId}
         </div>
       ),
     },

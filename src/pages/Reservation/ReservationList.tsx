@@ -73,41 +73,37 @@ const ReservationList: React.FC = () => {
   };
 
   return (
-    <div className="dashboard">
-      <div className="dashboard-content">
-        <div className="main-content">
-          <div className="dashboard-body p-6">
-            <div className="mx-auto space-y-4">
-              <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-neutral-800">
-                  Reservation Lists
-                </h1>
-                <button
-                  onClick={() => navigate("/reservation/add")}
-                  className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md transition-colors"
-                >
-                  Add New Reservation
-                </button>
-              </div>
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="space-y-4">
 
-              <FilterBar />
-
-              {loading && <p>Loading reservations...</p>}
-              {error && <p className="text-red-500">{error}</p>}
-              {!loading && reservations.length === 0 && (
-                <p>No reservations found.</p>
-              )}
-
-              <ReservationTable
-                items={reservations}
-                onEdit={(id) => navigate(`/reservation/edit/${id}`)}
-                onDelete={handleDeleteReservation}
-              />
-            </div>
-          </div>
-        </div>
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold text-neutral-800">
+          Reservation Lists
+        </h1>
+        <button
+          onClick={() => navigate("/reservation/add")}
+          className="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md transition-colors"
+        >
+          Add New Reservation
+        </button>
       </div>
+
+      <FilterBar />
+
+      {loading && <p>Loading reservations...</p>}
+      {error && <p className="text-red-500">{error}</p>}
+      {!loading && reservations.length === 0 && (
+        <p>No reservations found.</p>
+      )}
+
+      <ReservationTable
+        items={reservations}
+        onEdit={(id) => navigate(`/reservation/edit/${id}`)}
+        onDelete={handleDeleteReservation}
+      />
     </div>
+    </div>
+
   );
 };
 

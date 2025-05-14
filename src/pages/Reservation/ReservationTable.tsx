@@ -16,11 +16,13 @@ const ReservationTable: React.FC<ReservationTableProps> = ({
   onDelete,
 }) => {
   const renderStatus = (status: ReservationItem["status"]) => {
-    const colorMap: Record<string, string> = {
-      Pending: "bg-yellow-100 text-yellow-700",
-      Confirmed: "bg-sky-100 text-blue-700",
-      Completed: "bg-green-100 text-green-700",
-      Cancelled: "bg-red-100 text-red-700",
+    const colorMap: Record<ReservationItem['status'], string> = {
+      Waiting: 'bg-yellow-100 text-yellow-700',
+      Confirmed: 'bg-sky-100 text-blue-700',
+      Completed: 'bg-green-100 text-green-700',
+      Cancelled: 'bg-red-100 text-red-700',
+      Active: 'bg-sky-100 text-blue-700',
+      Cancel: 'bg-gray-300 text-gray-600',
     };
 
     // Mặc định nếu không tìm thấy status trong colorMap
@@ -135,7 +137,7 @@ const ReservationTable: React.FC<ReservationTableProps> = ({
       key: "place",
       label: "In/Outdoor",
       align: "center",
-      render: (item) => <div className="text-center">{item.place}</div>,
+      render: (item) => renderStatus(item.place),
     },
     {
       key: "status",

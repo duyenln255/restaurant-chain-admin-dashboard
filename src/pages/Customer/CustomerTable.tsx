@@ -58,7 +58,7 @@ const CustomerTable: React.FC<CustomerTableProps> = ({
           className="max-w-20 font-semibold text-sm overflow-hidden whitespace-nowrap text-ellipsis"
           title={item.id}
         >
-          {item.id}
+          {item.displayId}
         </div>
       ),
     },
@@ -110,14 +110,14 @@ const CustomerTable: React.FC<CustomerTableProps> = ({
         </div>
       ),
     },
-    {
-      key: "totalOrder",
-      label: t("customer.totalOrders"),
-    },
-    {
-      key: "totalReservation",
-      label: t("common.reservation"),
-    },
+    // {
+    //   key: "totalOrder",
+    //   label: t("customer.totalOrders"),
+    // },
+    // {
+    //   key: "totalReservation",
+    //   label: t("common.reservation"),
+    // },
     {
       key: "status",
       label: t("customer.status"),
