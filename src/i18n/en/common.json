@@ -1,16 +1,40 @@
 {
-      "month": {
-        "january": "January",
-        "february": "February",
-        "march": "March",
-        "april": "April",
-        "may": "May",
-        "june": "June",
-        "july": "July",
-        "august": "August",
-        "september": "September",
-        "october": "October",
-        "november": "November",
-        "december": "December"
-      }
+  "common": {
+    "enter": "Enter",
+    "check": "Check",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "update": "Update",
+    "required": "Required",
+    "search": "Search",
+    "loading": "Loading...",
+    "save": "Save",
+    "actions": "Actions",
+    "back": "Back",
+    "yes": "Yes",
+    "no": "No",
+    "confirm": "Confirm",
+    "close": "Close",
+    "next": "Next",
+    "previous": "Previous",
+    "noData": "No data available",
+    "success": "Success",
+    "error": "Error",
+    "warning": "Warning",
+    "info": "Information",
+    "month": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    }
+  }
 }

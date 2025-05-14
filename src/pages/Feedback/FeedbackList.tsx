@@ -8,6 +8,7 @@ import type { FeedbackItem } from '../../types/FeedbackItem'
 import { useNavigate } from "react-router-dom";
 
 const FeedbackList: React.FC = () => {
+  const navigate = useNavigate(); // hook chuyển trang  
   const dispatch = useAppDispatch()
   const { items: rawFeedbacks, loading, error } = useAppSelector(
     (state: RootState) => state.feedbacks
@@ -51,9 +52,13 @@ const feedbacks = useMemo<FeedbackItem[]>(
             <h1 className="text-xl sm:text-2xl font-bold text-neutral-800">
               Feedback Lists
             </h1>
-            <button className="bg-blue-500 xs:w-1/5 hover:bg-blue-600 text-white text-sm sm:text-base px-4 py-2 rounded-md transition">
+            <button
+              className="bg-blue-500 xs:w-1/5 hover:bg-blue-600 text-white text-sm sm:text-base px-4 py-2 rounded-md transition"
+              onClick={() => navigate('/feedback/add')}
+            >
               Add New Feedback
             </button>
+
           </div>
 
           {/* Filter Bar */}

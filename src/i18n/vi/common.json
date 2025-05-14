@@ -1,18 +1,41 @@
 {
-    
+    "common": {
+    "enter": "Nhập",
+    "check": "Kiểm tra",
+    "submit": "Gửi",
+    "cancel": "Hủy",
+    "update": "Cập nhật",
+    "required": "Bắt buộc",
+    "search": "Tìm kiếm",
+    "loading": "Đang tải...",
+    "save": "Lưu",
+    "actions": "Thao tác",
+    "back": "Quay lại",
+    "yes": "Có",
+    "no": "Không",
+    "confirm": "Xác nhận",
+    "close": "Đóng",
+    "next": "Tiếp",
+    "previous": "Trước",
+    "noData": "Không có dữ liệu",
+    "success": "Thành công",
+    "error": "Lỗi",
+    "warning": "Cảnh báo",
+    "info": "Thông tin",
     "month": {
-        "january": "Tháng 1",
-        "february": "Tháng 2",
-        "march": "Tháng 3",
-        "april": "Tháng 4",
-        "may": "Tháng 5",
-        "june": "Tháng 6",
-        "july": "Tháng 7",
-        "august": "Tháng 8",
-        "september": "Tháng 9",
-        "october": "Tháng 10",
-        "november": "Tháng 11",
-        "december": "Tháng 12"
+      "january": "Tháng Một",
+      "february": "Tháng Hai",
+      "march": "Tháng Ba",
+      "april": "Tháng Tư",
+      "may": "Tháng Năm",
+      "june": "Tháng Sáu",
+      "july": "Tháng Bảy",
+      "august": "Tháng Tám",
+      "september": "Tháng Chín",
+      "october": "Tháng Mười",
+      "november": "Tháng Mười Một",
+      "december": "Tháng Mười Hai"
     }
-      
+  }
 }
+  

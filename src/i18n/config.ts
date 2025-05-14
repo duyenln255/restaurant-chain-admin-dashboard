@@ -16,9 +16,14 @@ import en_reservations from './en/reservation.json'
 import vi_reservations from './vi/reservation.json'
 import vi_brand_branch from './vi/brand_branch.json'
 import en_brand_branch from './en/brand_branch.json'
+import vi_feedback from './vi/feedback.json'
+import en_feedback from './en/feedback.json'
+import vi_voucher from './vi/voucher.json'
+import en_voucher from './en/voucher.json'
 
 i18next.use(initReactI18next).init({
   lng: 'vi', // if you're using a language detector, do not define the lng option
+  fallbackLng: "en",
   debug: true,
   resources: {
     en: {
@@ -30,7 +35,9 @@ i18next.use(initReactI18next).init({
         ...en_common,
         ...en_settings,
         ...en_reservations,
-        ...en_brand_branch
+        ...en_brand_branch,
+        ...en_feedback,
+        ...en_voucher,
       }
     },
     vi: {
@@ -42,7 +49,9 @@ i18next.use(initReactI18next).init({
         ...vi_common,
         ...vi_settings,
         ...vi_reservations,
-        ...vi_brand_branch
+        ...vi_brand_branch,
+        ...vi_feedback,
+        ...vi_voucher
       }
     }
   },

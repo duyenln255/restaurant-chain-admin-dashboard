@@ -6,8 +6,10 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchCustomers } from '../../redux/slices/customerSlice';
 import type { RootState } from '../../redux/store';
 import type { CustomerItem } from '../../types/CustomerItem';
+import { useNavigate } from "react-router-dom";
 
 const CustomerList: React.FC = () => {
+  const navigate = useNavigate(); // hook chuyển trang
   const dispatch = useAppDispatch();
   const { items: rawCustomers, loading, error } = useAppSelector((state: RootState) => state.customers);
 

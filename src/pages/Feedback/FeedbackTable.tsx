@@ -5,18 +5,34 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPen, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '../../components/ui/tooltip'
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons'
+import { useNavigate } from "react-router-dom";
+import { deleteFeedback } from "../../redux/slices/feedbackSlice";
+import { useAppDispatch } from "../../redux/hooks";
+import { toast } from 'react-toastify'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "../../components/ui/dialog"
+import 'react-toastify/dist/ReactToastify.css'
+
 
 interface FeedbackTableProps {
   items: FeedbackItem[]
 }
 
 const FeedbackTable: React.FC<FeedbackTableProps> = ({ items }) => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const handleDelete = async (item: FeedbackItem) => {
+    if (window.confirm("Are you sure you want to delete this feedback?")) {
+      await dispatch(deleteFeedback(item.id));
+    }
+  };
   const handleEdit = (item: FeedbackItem) => {
-    console.log('Edit:', item)
-  }
-
-  const handleDelete = (item: FeedbackItem) => {
-    console.log('Delete:', item)
+    navigate(`/feedback/edit/${item.id}`);
   }
 
   const renderStatus = (status: FeedbackItem['status']) => {

@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 
 const ReservationList: React.FC = () => {
+  const navigate = useNavigate(); // hook chuyển trang
   const dispatch = useAppDispatch();
   const { items: rawReservations, loading, error } = useAppSelector((state: RootState) => state.reservations);
   const reservations = useMemo<ReservationItem[]>(

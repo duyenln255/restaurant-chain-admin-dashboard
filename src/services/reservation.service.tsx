@@ -20,3 +20,17 @@ export const getAllReservations = async (): Promise<Reservation[]> => {
   const response = await axiosInstance.get<{ reservation: Reservation[] }>("/reservation");
   return response.data.reservation;
 };
+
+export const getReservationById = async (id: string): Promise<Reservation> => {
+  const response = await axiosInstance.get<{ reservation: Reservation }>(`/reservation/${id}`);
+  return response.data.reservation;
+};
+
+export const updateReservation = async (id: string, reservation: Reservation): Promise<Reservation> => {
+  const response = await axiosInstance.put<{ reservation: Reservation }>(`/reservation/${id}`, reservation);
+  return response.data.reservation;
+};
+
+export const deleteReservation = async (id: string): Promise<void> => {
+  await axiosInstance.delete(`/reservation/${id}`);
+};

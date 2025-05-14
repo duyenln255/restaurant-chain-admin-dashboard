@@ -11,6 +11,7 @@ const OrderList: React.FC = () => {
   const orders = useAppSelector((state: RootState) => state.orders.items);
   const loading = useAppSelector((state: RootState) => state.orders.loading);
   const error = useAppSelector((state: RootState) => state.orders.error);
+  const navigate = useNavigate(); // hook chuyển trang
 
   useEffect(() => {
     dispatch(fetchOrders());

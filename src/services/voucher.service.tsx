@@ -21,3 +21,22 @@ export const getAllVouchers = async (): Promise<Voucher[]> => {
   const response = await axiosInstance.get<{ voucher: Voucher[] }>("/voucher");
   return response.data.voucher;
 };
+
+export const getVoucherById = async (id: string): Promise<Voucher> => {
+  const response = await axiosInstance.get<{ voucher: Voucher }>(`/voucher/${id}`);
+  return response.data.voucher;
+};
+
+export const updateVoucher = async (id: string, voucher: Voucher): Promise<Voucher> => {
+  const response = await axiosInstance.put<{ voucher: Voucher }>(`/voucher/${id}`, voucher);
+  return response.data.voucher;
+};
+
+export const deleteVoucher = async (id: string): Promise<void> => {
+  await axiosInstance.delete(`/voucher/${id}`);
+};
+
+export const createVoucher = async (voucher: Voucher): Promise<Voucher> => {
+  const response = await axiosInstance.post<{ voucher: Voucher }>("/voucher", voucher);
+  return response.data.voucher;
+};

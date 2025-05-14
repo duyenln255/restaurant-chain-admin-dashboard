@@ -7,6 +7,7 @@ import type { RootState } from '../../redux/store';
 import { useNavigate } from "react-router-dom";
 
 const VoucherList: React.FC = () => {
+  const navigate = useNavigate(); // hook chuyển trang
   const dispatch = useAppDispatch();
   const { items: rawVouchers, loading, error } = useAppSelector((state: RootState) => state.vouchers);
 

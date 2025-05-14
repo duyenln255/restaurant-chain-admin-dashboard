@@ -11,6 +11,7 @@ import type { BranchItem } from '../../types/BranchItem';
 import { useNavigate } from "react-router-dom";
 
 const BranchList: React.FC = () => {
+  const navigate = useNavigate(); // hook chuyển trang
   const dispatch = useAppDispatch();
   const { items: rawBranches, loading, error } = useAppSelector((state: RootState) => state.branches);
 

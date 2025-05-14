@@ -150,13 +150,13 @@ const VoucherTable: React.FC<VoucherTableProps> = ({ items }) => {
         <span className="text-sm text-red-500">{item.endDate}</span>
       ),
     },
-    {
-      key: "dateAdded",
-      label: "Date Added",
-      render: (item) => (
-        <span className="text-sm text-gray-500">{item.dateAdded}</span>
-      ),
-    },    
+    // {
+    //   key: "dateAdded",
+    //   label: "Date Added",
+    //   render: (item) => (
+    //     <span className="text-sm text-gray-500">{item.dateAdded}</span>
+    //   ),
+    // },    
     {
       key: "status",
       label: "Status",
