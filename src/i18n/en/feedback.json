@@ -1,0 +1,37 @@
+{
+    "feedback": {
+      "addNewFeedback": "Add New Feedback",
+      "editFeedback": "Edit Feedback",
+      "addFeedback": "Add Feedback",
+      "updateFeedback": "Update Feedback",
+      "status": "Status",
+      "pending": "Pending",
+      "published": "Published",
+      "hidden": "Hidden",
+      "customerPhone": "Customer Phone",
+      "customerName": "Customer Name",
+      "orderCode": "Order Code",
+      "chooseOrders": "Choose Order",
+      "productCode": "Product",
+      "chooseProducts": "Choose Product",
+      "customerRequest": "Customer Request",
+      "chooseRequest": "Choose Request",
+      "refund": "Refund",
+      "exchange": "Exchange",
+      "complaint": "Complaint",
+      "description": "Description",
+      "branchResponsible": "Branch Responsible",
+      "chooseBranch": "Choose Branch",
+      "staffResponsible": "Responsible Staff",
+      "chooseStaff": "Choose Staff",
+      "staffFollow": "Follow-up Staff",
+      "type": "Feedback Type",
+      "chooseType": "Choose Type",
+      "suggestion": "Suggestion",
+      "praise": "Praise",
+      "noFeedbackFound": "No feedback found.",
+      "addError": "Failed to add feedback.",
+      "updateError": "Failed to update feedback."
+    }
+  }
+  

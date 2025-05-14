@@ -151,6 +151,7 @@ const VoucherTable: React.FC<VoucherTableProps> = ({
       label: t("vouchers.endDate"),
       render: (item) => <span className="text-sm">{item.endDate}</span>,
     },
+
     {
       key: "status",
       label: t("vouchers.status"),

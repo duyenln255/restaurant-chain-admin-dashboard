@@ -9,6 +9,7 @@ import FilterBar from "./FilterBar";
 import { useNavigate } from "react-router-dom";
 
 const ProductPage: React.FC = () => {
+  const navigate = useNavigate(); // hook chuyển trang
   const dispatch = useAppDispatch();
   const { items: rawProducts, loading, error } = useAppSelector(
     (state: RootState) => state.products

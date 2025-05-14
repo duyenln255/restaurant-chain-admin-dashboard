@@ -162,7 +162,7 @@ const feedbackSlice = createSlice({
         state.loading = false;
         state.error = "Failed to delete feedback";
       });
-  },
+  }
 });
 
 export default feedbackSlice.reducer;

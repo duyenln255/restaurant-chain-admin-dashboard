@@ -120,3 +120,21 @@ export const deleteOrder = async (id: string): Promise<void> => {
     throw error;
   }
 };
+export const fetchOrderByIdApi = async (id: string): Promise<Order> => {
+  const response = await axiosInstance.get(`/order/${id}`);
+  return response.data.order;
+};
+
+export const createOrderApi = async (order: Order): Promise<Order> => {
+  const response = await axiosInstance.post("/order", order);
+  return response.data.order;
+};
+
+export const updateOrderApi = async (id: string, order: Order): Promise<Order> => {
+  const response = await axiosInstance.put(`/order/${id}`, order);
+  return response.data.order;
+};
+
+export const deleteOrderApi = async (id: string): Promise<void> => {
+  await axiosInstance.delete(`/order/${id}`);
+};

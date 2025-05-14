@@ -1,0 +1,37 @@
+{
+    "feedback": {
+        "addNewFeedback": "Thêm phản hồi mới",
+        "editFeedback": "Chỉnh sửa phản hồi",
+        "addFeedback": "Thêm phản hồi",
+        "updateFeedback": "Cập nhật phản hồi",
+        "status": "Trạng thái",
+        "pending": "Chờ xử lý",
+        "published": "Đã đăng",
+        "hidden": "Đã ẩn",
+        "customerPhone": "Số điện thoại khách hàng",
+        "customerName": "Tên khách hàng",
+        "orderCode": "Mã đơn hàng",
+        "chooseOrders": "Chọn đơn hàng",
+        "productCode": "Sản phẩm",
+        "chooseProducts": "Chọn sản phẩm",
+        "customerRequest": "Yêu cầu khách hàng",
+        "chooseRequest": "Chọn yêu cầu",
+        "refund": "Hoàn tiền",
+        "exchange": "Đổi hàng",
+        "complaint": "Khiếu nại",
+        "description": "Mô tả",
+        "branchResponsible": "Chi nhánh phụ trách",
+        "chooseBranch": "Chọn chi nhánh",
+        "staffResponsible": "Nhân viên xử lý",
+        "chooseStaff": "Chọn nhân viên",
+        "staffFollow": "Nhân viên theo dõi",
+        "type": "Loại phản hồi",
+        "chooseType": "Chọn loại",
+        "suggestion": "Góp ý",
+        "praise": "Khen ngợi",
+        "noFeedbackFound": "Không tìm thấy phản hồi.",
+        "addError": "Thêm phản hồi thất bại.",
+        "updateError": "Cập nhật phản hồi thất bại."    
+    }
+  }
+  

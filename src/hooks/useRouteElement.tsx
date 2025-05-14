@@ -36,6 +36,10 @@ export default function useRouteElement() {
       element: <Login />,
     },
     {
+      path: "/login",
+      element: <Login />,
+    },
+    {
       element: (
         <ProtectedRoute>
           <MainLayout />
