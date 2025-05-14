@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
-import { FaBell } from 'react-icons/fa6';
-import { Menu } from 'lucide-react';
-import SearchBar from './SearchBar';
-import LanguageSelector from './LanguageSelector';
-import UserProfile from './UserProfile';
+import React, { useState } from "react";
+import { FaBell } from "react-icons/fa6";
+import { Menu } from "lucide-react";
+import SearchBar from "./SearchBar";
+import LanguageSelector from "./LanguageSelector";
+import LanguageSwitcher from "../LanguageSwitcher";
+import UserProfile from "./UserProfile";
 
 interface HeaderProps {
   toggleSidebar?: () => void;
@@ -11,15 +12,9 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
-  const [showMenu, setShowMenu] = useState<string>('');
-
-  const handleSelectLangClick = () => {
-    setShowMenu('login');
-  };
-
   return (
-    <header className="sticky top-0 z-30 bg-white border-b border-neutral-200 max-w-screen">
-      <div className="flex items-center justify-between px-8 sm:px-2 md:px-4 py-3.5 w-full min-h-12 max-md:px-5">
+    <header className="sticky top-0 z-30 bg-white border-b border-neutral-200">
+      <div className="flex items-center justify-between px-8 py-3.5 w-full min-h-12 max-md:px-5">
         <div className="flex items-center gap-4">
           <button className="block focus:outline-none" onClick={toggleSidebar}>
             <Menu className="w-6 h-6" />
@@ -27,17 +22,12 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
         </div>
         <div className="flex gap-7 items-center">
           <FaBell className="w-6 h-6" />
-          <LanguageSelector
-            handleClick={handleSelectLangClick}
-            showMenu={showMenu}
-            setShowMenu={setShowMenu}
-          />
+          <LanguageSwitcher />
           <UserProfile />
         </div>
       </div>
     </header>
-  )
-  
+  );
 };
 
 export default Header;

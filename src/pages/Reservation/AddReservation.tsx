@@ -1,232 +1,289 @@
-// import React, { useState, useEffect } from 'react';
-// import { useNavigate } from 'react-router-dom';
-// import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-// import { addReservation } from '../../redux/slices/reservationSlice';
-// import { fetchBranches } from '../../redux/slices/branchSlice';
-// import { useLoading } from '../../contexts/LoadingContext';
-// import type { RootState } from '../../redux/store';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { addReservation } from "../../redux/slices/reservationSlice";
+import { fetchBranches } from "../../redux/slices/branchSlice";
+import { useLoading } from "../../contexts/LoadingContext";
+import type { RootState } from "../../redux/store";
 
-// const AddReservation: React.FC = () => {
-//   const navigate = useNavigate();
-//   const dispatch = useAppDispatch();
-//   const { setLoading } = useLoading();
-//   const { items: branches } = useAppSelector((state: RootState) => state.branches);
+const AddReservation: React.FC = () => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const { setLoading } = useLoading();
+  const { items: branches } = useAppSelector(
+    (state: RootState) => state.branches
+  );
 
-//   const [customerName, setCustomerName] = useState('');
-//   const [customerId, setCustomerId] = useState('');
-//   const [branchId, setBranchId] = useState('');
-//   const [reservationDate, setReservationDate] = useState('');
-//   const [reservationTime, setReservationTime] = useState('');
-//   const [partySize, setPartySize] = useState(1);
-//   const [specialRequests, setSpecialRequests] = useState('');
-//   const [status, setStatus] = useState<'confirmed' | 'pending' | 'cancelled' | 'completed'>('pending');
-//   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [fullName, setFullName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [branchId, setBranchId] = useState("");
+  const [reservationDate, setReservationDate] = useState("");
+  const [reservationTime, setReservationTime] = useState("");
+  const [numberOfCustomers, setNumberOfCustomers] = useState(1);
+  const [place, setPlace] = useState("Indoor");
+  const [status, setStatus] = useState("Pending");
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-//   useEffect(() => {
-//     dispatch(fetchBranches());
-//   }, [dispatch]);
+  useEffect(() => {
+    dispatch(fetchBranches());
+  }, [dispatch]);
 
-//   const validateForm = () => {
-//     const newErrors: { [key: string]: string } = {};
-//     if (!customerName.trim()) newErrors.customerName = 'Required';
-//     if (!customerId.trim()) newErrors.customerId = 'Required';
-//     if (!branchId) newErrors.branchId = 'Required';
-//     if (!reservationDate) newErrors.reservationDate = 'Required';
-//     if (!reservationTime) newErrors.reservationTime = 'Required';
-//     if (partySize < 1) newErrors.partySize = 'Must be at least 1';
-    
-//     // Validate date is not in the past
-//     if (reservationDate) {
-//       const today = new Date();
-//       today.setHours(0, 0, 0, 0);
-//       const selectedDate = new Date(reservationDate);
-//       if (selectedDate < today) {
-//         newErrors.reservationDate = 'Date cannot be in the past';
-//       }
-//     }
-    
-//     setErrors(newErrors);
-//     return Object.keys(newErrors).length === 0;
-//   };
+  const validateForm = () => {
+    const newErrors: { [key: string]: string } = {};
+    if (!fullName.trim()) newErrors.fullName = "Required";
+    if (!phone.trim()) newErrors.phone = "Required";
+    if (!branchId) newErrors.branchId = "Required";
+    if (!reservationDate) newErrors.reservationDate = "Required";
+    if (!reservationTime) newErrors.reservationTime = "Required";
+    if (numberOfCustomers < 1)
+      newErrors.numberOfCustomers = "Must be at least 1";
 
-//   const handleSubmit = async (e: React.FormEvent) => {
-//     e.preventDefault();
-//     if (!validateForm()) return;
-    
-//     try {
-//       setLoading(true);
-      
-//       await dispatch(addReservation({
-//         customer_id: customerId,
-//         branch_id: branchId,
-//         reservation_date: reservationDate,
-//         reservation_time: reservationTime,
-//         party_size: partySize,
-//         status,
-//         special_requests: specialRequests,
-//         customer_name: customerName
-//       })).unwrap();
-      
-//       navigate('/reservation');
-//     } catch (error) {
-//       console.error('Failed to add reservation:', error);
-//       alert('Failed to add reservation. Please try again.');
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
+    // Validate date is not in the past
+    if (reservationDate) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const selectedDate = new Date(reservationDate);
+      if (selectedDate < today) {
+        newErrors.reservationDate = "Date cannot be in the past";
+      }
+    }
 
-//   return (
-//     <div className="dashboard">
-//       <div className="dashboard-content">
-//         <div className="main-content">
-//           <div className="dashboard-body p-6">
-//             <div className="mx-auto space-y-6">
-//               <div className="text-sm text-blue-600 cursor-pointer" onClick={() => navigate('/reservation')}>
-//                 ← Back to Reservation List
-//               </div>
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
-//               <h1 className="text-3xl font-bold text-neutral-800">Add New Reservation</h1>
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateForm()) return;
 
-//               <div className="bg-white rounded-xl p-8 shadow-md px-[250px]">
-//                 <form onSubmit={handleSubmit} className="space-y-6">
-//                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-//                     {/* Customer Name */}
-//                     <div>
-//                       <div className="flex justify-between mb-1">
-//                         <label className="text-sm font-medium">Customer Name <span className="text-red-500">*</span></label>
-//                         {errors.customerName && <span className="text-red-500 text-xs">{errors.customerName}</span>}
-//                       </div>
-//                       <input
-//                         type="text"
-//                         value={customerName}
-//                         onChange={(e) => setCustomerName(e.target.value)}
-//                         className="w-full border border-gray-300 rounded-md px-4 py-2"
-//                         placeholder="Enter customer name"
-//                       />
-//                     </div>
+    try {
+      setLoading(true);
 
-//                     {/* Customer ID */}
-//                     <div>
-//                       <div className="flex justify-between mb-1">
-//                         <label className="text-sm font-medium">Customer ID <span className="text-red-500">*</span></label>
-//                         {errors.customerId && <span className="text-red-500 text-xs">{errors.customerId}</span>}
-//                       </div>
-//                       <input
-//                         type="text"
-//                         value={customerId}
-//                         onChange={(e) => setCustomerId(e.target.value)}
-//                         className="w-full border border-gray-300 rounded-md px-4 py-2"
-//                         placeholder="Enter customer ID"
-//                       />
-//                     </div>
+      await dispatch(
+        addReservation({
+          full_name: fullName,
+          phone: phone,
+          branch_id: branchId,
+          reservation_date: reservationDate,
+          reservation_time: reservationTime,
+          number_of_customer: numberOfCustomers,
+          place: place,
+          status: status,
+        })
+      ).unwrap();
 
-//                     {/* Branch */}
-//                     <div>
-//                       <div className="flex justify-between mb-1">
-//                         <label className="text-sm font-medium">Branch <span className="text-red-500">*</span></label>
-//                         {errors.branchId && <span className="text-red-500 text-xs">{errors.branchId}</span>}
-//                       </div>
-//                       <select
-//                         value={branchId}
-//                         onChange={(e) => setBranchId(e.target.value)}
-//                         className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white"
-//                       >
-//                         <option value="">Select a branch</option>
-//                         {branches.map((branch) => (
-//                           <option key={branch.id} value={branch.id}>
-//                             {branch.name}
-//                           </option>
-//                         ))}
-//                       </select>
-//                     </div>
+      navigate("/reservation");
+    } catch (error) {
+      console.error("Failed to add reservation:", error);
+      alert("Failed to add reservation. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-//                     {/* Party Size */}
-//                     <div>
-//                       <div className="flex justify-between mb-1">
-//                         <label className="text-sm font-medium">Party Size <span className="text-red-500">*</span></label>
-//                         {errors.partySize && <span className="text-red-500 text-xs">{errors.partySize}</span>}
-//                       </div>
-//                       <input
-//                         type="number"
-//                         value={partySize}
-//                         onChange={(e) => setPartySize(Number(e.target.value))}
-//                         className="w-full border border-gray-300 rounded-md px-4 py-2"
-//                         min="1"
-//                       />
-//                     </div>
+  return (
+    <div className="dashboard">
+      <div className="dashboard-content">
+        <div className="main-content">
+          <div className="dashboard-body p-6">
+            <div className="mx-auto space-y-6">
+              <div
+                className="text-sm text-blue-600 cursor-pointer"
+                onClick={() => navigate("/reservation")}
+              >
+                ← Back to Reservation List
+              </div>
 
-//                     {/* Reservation Date */}
-//                     <div>
-//                       <div className="flex justify-between mb-1">
-//                         <label className="text-sm font-medium">Reservation Date <span className="text-red-500">*</span></label>
-//                         {errors.reservationDate && <span className="text-red-500 text-xs">{errors.reservationDate}</span>}
-//                       </div>
-//                       <input
-//                         type="date"
-//                         value={reservationDate}
-//                         onChange={(e) => setReservationDate(e.target.value)}
-//                         className="w-full border border-gray-300 rounded-md px-4 py-2"
-//                       />
-//                     </div>
+              <h1 className="text-3xl font-bold text-neutral-800">
+                Add New Reservation
+              </h1>
 
-//                     {/* Reservation Time */}
-//                     <div>
-//                       <div className="flex justify-between mb-1">
-//                         <label className="text-sm font-medium">Reservation Time <span className="text-red-500">*</span></label>
-//                         {errors.reservationTime && <span className="text-red-500 text-xs">{errors.reservationTime}</span>}
-//                       </div>
-//                       <input
-//                         type="time"
-//                         value={reservationTime}
-//                         onChange={(e) => setReservationTime(e.target.value)}
-//                         className="w-full border border-gray-300 rounded-md px-4 py-2"
-//                       />
-//                     </div>
+              <div className="bg-white rounded-xl p-8 shadow-md px-[250px]">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Full Name */}
+                    <div>
+                      <div className="flex justify-between mb-1">
+                        <label className="text-sm font-medium">
+                          Full Name <span className="text-red-500">*</span>
+                        </label>
+                        {errors.fullName && (
+                          <span className="text-red-500 text-xs">
+                            {errors.fullName}
+                          </span>
+                        )}
+                      </div>
+                      <input
+                        type="text"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        className="w-full border border-gray-300 rounded-md px-4 py-2"
+                        placeholder="Enter full name"
+                      />
+                    </div>
 
-//                     {/* Status */}
-//                     <div>
-//                       <label className="block text-sm mb-1 font-medium">Status</label>
-//                       <select
-//                         value={status}
-//                         onChange={(e) => setStatus(e.target.value as 'confirmed' | 'pending' | 'cancelled' | 'completed')}
-//                         className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white"
-//                       >
-//                         <option value="pending">Pending</option>
-//                         <option value="confirmed">Confirmed</option>
-//                         <option value="cancelled">Cancelled</option>
-//                         <option value="completed">Completed</option>
-//                       </select>
-//                     </div>
+                    {/* Phone */}
+                    <div>
+                      <div className="flex justify-between mb-1">
+                        <label className="text-sm font-medium">
+                          Phone <span className="text-red-500">*</span>
+                        </label>
+                        {errors.phone && (
+                          <span className="text-red-500 text-xs">
+                            {errors.phone}
+                          </span>
+                        )}
+                      </div>
+                      <input
+                        type="text"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        className="w-full border border-gray-300 rounded-md px-4 py-2"
+                        placeholder="Enter phone number"
+                      />
+                    </div>
 
-//                     {/* Special Requests */}
-//                     <div className="md:col-span-2">
-//                       <label className="block text-sm mb-1 font-medium">Special Requests</label>
-//                       <textarea
-//                         value={specialRequests}
-//                         onChange={(e) => setSpecialRequests(e.target.value)}
-//                         className="w-full border border-gray-300 rounded-md px-4 py-2 h-32"
-//                         placeholder="Enter any special requests or notes"
-//                       />
-//                     </div>
-//                   </div>
+                    {/* Branch */}
+                    <div>
+                      <div className="flex justify-between mb-1">
+                        <label className="text-sm font-medium">
+                          Branch <span className="text-red-500">*</span>
+                        </label>
+                        {errors.branchId && (
+                          <span className="text-red-500 text-xs">
+                            {errors.branchId}
+                          </span>
+                        )}
+                      </div>
+                      <select
+                        value={branchId}
+                        onChange={(e) => setBranchId(e.target.value)}
+                        className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white"
+                      >
+                        <option value="">Select a branch</option>
+                        {branches.map((branch) => (
+                          <option key={branch.id} value={branch.id}>
+                            {branch.name || "Unknown Branch"}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
 
-//                   <div className="text-center pt-4">
-//                     <button
-//                       type="submit"
-//                       className="bg-blue-500 text-white px-8 py-2 rounded-md hover:bg-blue-600"
-//                     >
-//                       Create Reservation
-//                     </button>
-//                   </div>
-//                 </form>
-//               </div>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
+                    {/* Number of Customers */}
+                    <div>
+                      <div className="flex justify-between mb-1">
+                        <label className="text-sm font-medium">
+                          Number of Customers{" "}
+                          <span className="text-red-500">*</span>
+                        </label>
+                        {errors.numberOfCustomers && (
+                          <span className="text-red-500 text-xs">
+                            {errors.numberOfCustomers}
+                          </span>
+                        )}
+                      </div>
+                      <input
+                        type="number"
+                        value={numberOfCustomers}
+                        onChange={(e) =>
+                          setNumberOfCustomers(Number(e.target.value))
+                        }
+                        className="w-full border border-gray-300 rounded-md px-4 py-2"
+                        min="1"
+                      />
+                    </div>
 
-// export default AddReservation;
+                    {/* Reservation Date */}
+                    <div>
+                      <div className="flex justify-between mb-1">
+                        <label className="text-sm font-medium">
+                          Reservation Date{" "}
+                          <span className="text-red-500">*</span>
+                        </label>
+                        {errors.reservationDate && (
+                          <span className="text-red-500 text-xs">
+                            {errors.reservationDate}
+                          </span>
+                        )}
+                      </div>
+                      <input
+                        type="date"
+                        value={reservationDate}
+                        onChange={(e) => setReservationDate(e.target.value)}
+                        className="w-full border border-gray-300 rounded-md px-4 py-2"
+                      />
+                    </div>
+
+                    {/* Reservation Time */}
+                    <div>
+                      <div className="flex justify-between mb-1">
+                        <label className="text-sm font-medium">
+                          Reservation Time{" "}
+                          <span className="text-red-500">*</span>
+                        </label>
+                        {errors.reservationTime && (
+                          <span className="text-red-500 text-xs">
+                            {errors.reservationTime}
+                          </span>
+                        )}
+                      </div>
+                      <input
+                        type="time"
+                        value={reservationTime}
+                        onChange={(e) => setReservationTime(e.target.value)}
+                        className="w-full border border-gray-300 rounded-md px-4 py-2"
+                      />
+                    </div>
+
+                    {/* Status */}
+                    <div>
+                      <label className="block text-sm mb-1 font-medium">
+                        Status
+                      </label>
+                      <select
+                        value={status}
+                        onChange={(e) => setStatus(e.target.value)}
+                        className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white"
+                      >
+                        <option value="Pending">Pending</option>
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Cancelled">Cancelled</option>
+                        <option value="Completed">Completed</option>
+                      </select>
+                    </div>
+
+                    {/* Place */}
+                    <div>
+                      <label className="block text-sm mb-1 font-medium">
+                        Place
+                      </label>
+                      <select
+                        value={place}
+                        onChange={(e) => setPlace(e.target.value)}
+                        className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white"
+                      >
+                        <option value="Indoor">Indoor</option>
+                        <option value="Outdoor">Outdoor</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="text-center pt-4">
+                    <button
+                      type="submit"
+                      className="bg-blue-500 text-white px-8 py-2 rounded-md hover:bg-blue-600"
+                    >
+                      Create Reservation
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default AddReservation;

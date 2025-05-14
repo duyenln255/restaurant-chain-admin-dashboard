@@ -78,32 +78,89 @@ const AddBranch: React.FC<AddBranchProps> = ({ brandId }) => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <button className="bg-blue-500 text-white px-5 py-2 rounded-md">Add New Branch</button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogTitle>Add Branch</DialogTitle>
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-          {/* Name */}
-          <div>
-            <label className="text-sm font-medium block mb-1">Name</label>
-            <input
-              value={form.name}
-              onChange={(e) => handleChange("name", e.target.value)}
-              className="w-full px-4 py-2 border border-neutral-300 rounded-md bg-gray-100"
-            />
-          </div>
+    <div className="dashboard">
+      <div className="dashboard-content">
+        <div className="main-content">
+          <div className="dashboard-body p-6">
+            <div className="mx-auto space-y-6">
+              <div
+                className="text-sm text-blue-600 cursor-pointer"
+                onClick={() => navigate("/branch")}
+              >
+                ← {t("branch.branchList")}
+              </div>
 
-          {/* Location */}
-          <div>
-            <label className="text-sm font-medium block mb-1">Location</label>
-            <input
-              value={form.location}
-              onChange={(e) => handleChange("location", e.target.value)}
-              className="w-full px-4 py-2 border border-neutral-300 rounded-md bg-gray-100"
-            />
-          </div>
+              <h1 className="text-3xl font-bold text-neutral-800">
+                {t("branch.addNewBranch")}
+              </h1>
+
+              <div className="bg-white rounded-xl p-8 shadow-md px-[250px]">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Brand */}
+                    <div>
+                      <div className="flex justify-between mb-1">
+                        <label className="text-sm font-medium">
+                          {t("branch.brand")}{" "}
+                          <span className="text-red-500">*</span>
+                        </label>
+                        {errors.brand && (
+                          <span className="text-red-500 text-xs">
+                            {errors.brand}
+                          </span>
+                        )}
+                      </div>
+                      <select
+                        className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white"
+                        value={brand}
+                        onChange={(e) => setBrand(e.target.value)}
+                      >
+                        <option value="">{t("branch.search.allBrands")}</option>
+                        {brands.map((b) => (
+                          <option key={b.id} value={b.id}>
+                            {b.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Status */}
+                    <div>
+                      <label className="block text-sm mb-1 font-medium">
+                        {t("branch.status")}
+                      </label>
+                      <select
+                        value={status}
+                        onChange={(e) => setStatus(e.target.value)}
+                        className="border border-gray-300 rounded-md h-[42px] px-4 text-sm text-gray-700 bg-white w-full"
+                      >
+                        <option value="Active">{t("branch.active")}</option>
+                        <option value="Inactive">{t("branch.inactive")}</option>
+                        <option value="Prepare">Prepare</option>
+                      </select>
+                    </div>
+
+                    {/* Phone */}
+                    <div>
+                      <div className="flex justify-between mb-1">
+                        <label className="text-sm font-medium">
+                          {t("branch.phone")}{" "}
+                          <span className="text-red-500">*</span>
+                        </label>
+                        {errors.phone && (
+                          <span className="text-red-500 text-xs">
+                            {errors.phone}
+                          </span>
+                        )}
+                      </div>
+                      <input
+                        type="tel"
+                        placeholder={`${t("common.enter")} ${t("branch.phone")}`}
+                        className="w-full border border-gray-300 rounded-md px-4 py-2"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                      />
+                    </div>
 
           {/* Address */}
           <div className="sm:col-span-2">
@@ -171,4 +228,5 @@ const AddBranch: React.FC<AddBranchProps> = ({ brandId }) => {
   );
 };
 
+export default AddBranch;
 export default AddBranch;

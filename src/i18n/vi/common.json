@@ -1,5 +1,5 @@
 {
-    "common": {
+  "common": {
     "enter": "Nhập",
     "check": "Kiểm tra",
     "submit": "Gửi",
@@ -38,4 +38,3 @@
     }
   }
 }
-  

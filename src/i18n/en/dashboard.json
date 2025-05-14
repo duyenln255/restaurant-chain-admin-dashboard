@@ -1,15 +1,21 @@
-
-  {
-    "dashboard": {
-      "title": "Dashboard",
-      "total_customers": "Total Customers",
-      "total_orders": "Total Order",
-      "total_sales": "Total Sales",
-      "total_staff": "Total Staff",
-      "up_from_yesterday": "Up from yesterday",
-      "up_from_last_week": "Up from past week",
-      "down_from_yesterday": "Down from yesterday",
-      "sales_details": "Sales Details"
+{
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome back",
+    "totalSales": "Total Sales",
+    "totalOrders": "Total Orders",
+    "totalCustomers": "Total Customers",
+    "totalStaff": "Total Staff",
+    "recentOrders": "Recent Orders",
+    "topProducts": "Top Products",
+    "salesOverview": "Sales Overview",
+    "sales_details": "Sales Details",
+    "deals_details": "Deals Details",
+    "up_from_yesterday": "up from yesterday",
+    "down_from_yesterday": "down from yesterday",
+    "up_from_last_week": "up from last week",
+    "month": {
+      "oct": "October"
     }
   }
-  
+}

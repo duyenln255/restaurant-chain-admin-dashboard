@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { fetchFeedbackById, updateFeedbackThunk } from "../../redux/slices/feedbackSlice";
+import {
+  fetchFeedbackById,
+  editFeedback,
+} from "../../redux/slices/feedbackSlice";
 import { fetchBranches } from "../../redux/slices/branchSlice";
 import { fetchProducts } from "../../redux/slices/productSlice";
 import { useLoading } from "../../contexts/LoadingContext";
@@ -14,50 +17,47 @@ const EditFeedback: React.FC = () => {
   const dispatch = useAppDispatch();
   const { setLoading } = useLoading();
   const { t } = useTranslation();
+  const { selectedFeedback, loading, error } = useAppSelector(
+    (state: RootState) => state.feedbacks
+  );
+  const { items: branches } = useAppSelector(
+    (state: RootState) => state.branches
+  );
+  const { items: products } = useAppSelector(
+    (state: RootState) => state.products
+  );
 
-  const { selectedFeedback, loading, error } = useAppSelector((state: RootState) => state.feedbacks);
-  const { items: branches } = useAppSelector((state: RootState) => state.branches);
-  const { items: products } = useAppSelector((state: RootState) => state.products);
-
-  const [status, setStatus] = useState<"published" | "hidden" | "pending">("pending");
+  const [status, setStatus] = useState("Pending");
   const [customerPhone, setCustomerPhone] = useState("");
   const [customerName, setCustomerName] = useState("");
-  const [orderId, setOrderId] = useState("");
-  const [productId, setProductId] = useState("");
-  const [requestType, setRequestType] = useState("");
-  const [description, setDescription] = useState("");
+  const [content, setContent] = useState("");
   const [branchId, setBranchId] = useState("");
-  const [staffResponsible, setStaffResponsible] = useState("");
-  const [staffFollow, setStaffFollow] = useState("");
-  const [feedbackType, setFeedbackType] = useState("");
+  const [solvedBy, setSolvedBy] = useState("");
+  const [feedbackType, setFeedbackType] = useState("Complaint");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const validStatuses = ["published", "hidden", "pending"] as const;
-  const fallbackStatus: "published" | "hidden" | "pending" = "pending";
-  
+
   useEffect(() => {
     dispatch(fetchBranches());
     dispatch(fetchProducts());
+
     if (id) {
       setLoading(true);
-      dispatch(fetchFeedbackById(id)).finally(() => setLoading(false));
+      dispatch(fetchFeedbackById(id)).finally(() => {
+        setLoading(false);
+      });
     }
   }, [id]);
 
   useEffect(() => {
     if (selectedFeedback) {
-      setStatus(
-        validStatuses.includes(selectedFeedback.status as any)
-          ? (selectedFeedback.status as "published" | "hidden" | "pending")
-          : fallbackStatus
-      );      
-      setCustomerPhone(selectedFeedback.customer_id || "");
+      console.log("Selected feedback:", selectedFeedback);
+      setStatus(selectedFeedback.status || "Pending");
+      setCustomerPhone(selectedFeedback.customer_phone || "");
       setCustomerName(selectedFeedback.customer_name || "");
-      setOrderId(selectedFeedback.order_id || "");
-      setProductId(selectedFeedback.product_id || "");
-      setDescription(selectedFeedback.comment || "");
+      setContent(selectedFeedback.content || "");
       setBranchId(selectedFeedback.branch_id || "");
-      setStaffResponsible(selectedFeedback.solved_by || "");
-      setFeedbackType(selectedFeedback.type || "KHIẾU NẠI");
+      setSolvedBy(selectedFeedback.solved_by || "");
+      setFeedbackType(selectedFeedback.type || "Complaint");
     }
   }, [selectedFeedback]);
 
@@ -66,12 +66,16 @@ const EditFeedback: React.FC = () => {
     if (!customerPhone.trim()) newErrors.customerPhone = "Required";
     if (!customerName.trim()) newErrors.customerName = "Required";
     if (!feedbackType.trim()) newErrors.feedbackType = "Required";
+    if (!content.trim()) newErrors.content = "Required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleCheckPhone = () => {
+    // Simulate checking phone number in database
+    console.log("Checking phone:", customerPhone);
+    // In a real app, you would fetch customer data based on phone number
     if (customerPhone.length >= 10) {
       setCustomerName("John Doe");
     }
@@ -83,13 +87,26 @@ const EditFeedback: React.FC = () => {
 
     try {
       setLoading(true);
-      await dispatch(updateFeedbackThunk({
-        id,
-        staff_id: staffResponsible
-      })).unwrap();
-      
+
+      await dispatch(
+        editFeedback({
+          id,
+          feedback: {
+            customer_id: customerPhone, // Using phone as customer ID for simplicity
+            customer_name: customerName,
+            customer_phone: customerPhone,
+            content: content,
+            status: status,
+            type: feedbackType,
+            branch_id: branchId || "",
+            solved_by: solvedBy || "",
+          },
+        })
+      ).unwrap();
+
       navigate("/feedback");
     } catch (error) {
+      console.error("Failed to update feedback:", error);
       alert(t("feedback.updateError"));
     } finally {
       setLoading(false);
@@ -97,188 +114,169 @@ const EditFeedback: React.FC = () => {
   };
 
   if (error) return <div className="p-4 text-red-500">{error}</div>;
-  if (!selectedFeedback && !loading) return <div className="p-4 text-red-500">{t("feedback.noFeedbackFound")}</div>;
+  if (!selectedFeedback && !loading)
+    return (
+      <div className="p-4 text-red-500">{t("feedback.noFeedbackFound")}</div>
+    );
 
   return (
     <div className="dashboard">
       <div className="dashboard-content">
         <div className="main-content">
           <div className="dashboard-body p-6">
-            <div className="mx-auto max-w-4xl w-full">
+            <div className="mx-auto">
               <h1 className="text-2xl font-bold text-neutral-800 mb-6">
                 {t("feedback.editFeedback")}
               </h1>
 
               <div className="bg-white rounded-xl p-8 shadow-md">
                 <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Status */}
                     <div>
-                      <label className="block text-sm font-medium mb-1">{t("feedback.status")}</label>
+                      <label className="block text-sm font-medium mb-1">
+                        Status
+                      </label>
                       <select
                         value={status}
-                        onChange={(e) => setStatus(e.target.value as any)}
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white text-sm"
+                        onChange={(e) => setStatus(e.target.value)}
+                        className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white"
                       >
-                        <option value="pending">{t("feedback.pending")}</option>
-                        <option value="published">{t("feedback.published")}</option>
-                        <option value="hidden">{t("feedback.hidden")}</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Resolved">Resolved</option>
+                        <option value="In Progress">In Progress</option>
                       </select>
                     </div>
-
-                    <div className="sm:col-span-2">
+                    <div className="hidden md:block"></div>{" "}
+                    {/* Empty div for grid alignment */}
+                    {/* Customer Phone */}
+                    <div>
                       <label className="block text-sm font-medium mb-1">
-                        {t("feedback.customerPhone")} <span className="text-red-500">*</span>
+                        Customer Phone <span className="text-red-500">*</span>
                       </label>
-                      <div className="flex flex-col sm:flex-row gap-2">
+                      <div className="flex">
                         <input
                           type="text"
                           value={customerPhone}
                           onChange={(e) => setCustomerPhone(e.target.value)}
-                          className="w-full sm:flex-1 border border-gray-300 rounded-md px-4 py-2 text-sm"
+                          className="flex-1 border border-gray-300 rounded-l-md px-4 py-2"
                           placeholder="077-XXX-XXXX"
                         />
                         <button
                           type="button"
                           onClick={handleCheckPhone}
-                          className="w-full sm:w-auto bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 text-sm"
+                          className="bg-blue-500 text-white px-4 py-2 rounded-r-md hover:bg-blue-600"
                         >
-                          {t("common.check")}
+                          Check
                         </button>
                       </div>
-                      {errors.customerPhone && <p className="text-red-500 text-xs mt-1">{errors.customerPhone}</p>}
+                      {errors.customerPhone && (
+                        <span className="text-red-500 text-xs mt-1">
+                          {errors.customerPhone}
+                        </span>
+                      )}
                     </div>
-
+                    {/* Customer Name */}
                     <div>
                       <label className="block text-sm font-medium mb-1">
-                        {t("feedback.customerName")} <span className="text-red-500">*</span>
+                        Customer Name <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
                         value={customerName}
                         onChange={(e) => setCustomerName(e.target.value)}
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 text-sm"
-                        placeholder={`${t("common.enter")} ${t("feedback.customerName")}`}
+                        className="w-full border border-gray-300 rounded-md px-4 py-2"
+                        placeholder="Enter name"
                       />
-                      {errors.customerName && <p className="text-red-500 text-xs mt-1">{errors.customerName}</p>}
+                      {errors.customerName && (
+                        <span className="text-red-500 text-xs mt-1">
+                          {errors.customerName}
+                        </span>
+                      )}
                     </div>
-
-                    <div>
-                      <label className="block text-sm font-medium mb-1">{t("feedback.orderCode")}</label>
-                      <select
-                        value={orderId}
-                        onChange={(e) => setOrderId(e.target.value)}
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white text-sm"
-                      >
-                        <option value="">{t("feedback.chooseOrders")}</option>
-                        <option value="order1">Order #1</option>
-                        <option value="order2">Order #2</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium mb-1">{t("feedback.productCode")}</label>
-                      <select
-                        value={productId}
-                        onChange={(e) => setProductId(e.target.value)}
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white text-sm"
-                      >
-                        <option value="">{t("feedback.chooseProducts")}</option>
-                        {products.map((p) => (
-                          <option key={p.id} value={p.id}>
-                            {p.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div className="sm:col-span-2">
-                      <label className="block text-sm font-medium mb-1">{t("feedback.customerRequest")}</label>
-                      <select
-                        value={requestType}
-                        onChange={(e) => setRequestType(e.target.value)}
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white text-sm"
-                      >
-                        <option value="">{t("feedback.chooseRequest")}</option>
-                        <option value="refund">{t("feedback.refund")}</option>
-                        <option value="exchange">{t("feedback.exchange")}</option>
-                        <option value="complaint">{t("feedback.complaint")}</option>
-                      </select>
-                    </div>
-
-                    <div className="sm:col-span-2">
-                      <label className="block text-sm font-medium mb-1">{t("feedback.description")}</label>
+                    {/* Content */}
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-medium mb-1">
+                        Content <span className="text-red-500">*</span>
+                      </label>
                       <textarea
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 h-32 text-sm"
-                        placeholder={`${t("common.enter")} ${t("feedback.description")}`}
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                        className="w-full border border-gray-300 rounded-md px-4 py-2 h-32"
+                        placeholder="Enter feedback content"
                       />
+                      {errors.content && (
+                        <span className="text-red-500 text-xs mt-1">
+                          {errors.content}
+                        </span>
+                      )}
                     </div>
-
+                    {/* Branch Responsible */}
                     <div>
-                      <label className="block text-sm font-medium mb-1">{t("feedback.branchResponsible")}</label>
+                      <label className="block text-sm font-medium mb-1">
+                        Branch Responsible
+                      </label>
                       <select
                         value={branchId}
                         onChange={(e) => setBranchId(e.target.value)}
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white text-sm"
+                        className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white"
                       >
-                        <option value="">{t("feedback.chooseBranch")}</option>
-                        {branches.map((b) => (
-                          <option key={b.id} value={b.id}>
-                            {b.address}
+                        <option value="">--- Choose Branch ---</option>
+                        {branches.map((branch) => (
+                          <option key={branch.id} value={branch.id}>
+                            {branch.name || "Unknown Branch"}
                           </option>
                         ))}
                       </select>
                     </div>
-
-                    <div>
-                      <label className="block text-sm font-medium mb-1">{t("feedback.staffResponsible")}</label>
-                      <select
-                        value={staffResponsible}
-                        onChange={(e) => setStaffResponsible(e.target.value)}
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white text-sm"
-                      >
-                        <option value="">{t("feedback.chooseStaff")}</option>
-                        <option value="staff1">Lenora Benson</option>
-                        <option value="staff2">John Smith</option>
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium mb-1">{t("feedback.staffFollow")}</label>
-                      <select
-                        value={staffFollow}
-                        onChange={(e) => setStaffFollow(e.target.value)}
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white text-sm"
-                      >
-                        <option value="">{t("feedback.chooseStaff")}</option>
-                        <option value="staff1">Lenora Benson</option>
-                        <option value="staff2">John Smith</option>
-                      </select>
-                    </div>
-
+                    {/* Staff Responsible */}
                     <div>
                       <label className="block text-sm font-medium mb-1">
-                        {t("feedback.type")} <span className="text-red-500">*</span>
+                        Staff Responsible
+                      </label>
+                      <select
+                        value={solvedBy}
+                        onChange={(e) => setSolvedBy(e.target.value)}
+                        className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white"
+                      >
+                        <option value="">--- Choose Staff ---</option>
+                        <option value="f6b8d0f6-a8b0-c2d4-e6f8-a0b2c4d6e8f0">
+                          Olivia Wilson
+                        </option>
+                        <option value="a7c9e1a7-b0c2-d4e6-f8a0-b2c4d6e8f0a2">
+                          Ethan Davis
+                        </option>
+                        <option value="b8d0f2b8-c2d4-e6f8-a0b2-c4d6e8f0a2b4">
+                          Isabella Miller
+                        </option>
+                      </select>
+                    </div>
+                    {/* Feedback Type */}
+                    <div>
+                      <label className="block text-sm font-medium mb-1">
+                        Feedback Type <span className="text-red-500">*</span>
                       </label>
                       <select
                         value={feedbackType}
                         onChange={(e) => setFeedbackType(e.target.value)}
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white text-sm"
+                        className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white"
                       >
-                        <option value="">{t("feedback.chooseType")}</option>
-                        <option value="KHIẾU NẠI">{t("feedback.complaint")}</option>
-                        <option value="GÓP Ý">{t("feedback.suggestion")}</option>
-                        <option value="KHEN NGỢI">{t("feedback.praise")}</option>
+                        <option value="Complaint">Complaint</option>
+                        <option value="Suggestion">Suggestion</option>
+                        <option value="Praise">Praise</option>
                       </select>
-                      {errors.feedbackType && <p className="text-red-500 text-xs mt-1">{errors.feedbackType}</p>}
+                      {errors.feedbackType && (
+                        <span className="text-red-500 text-xs mt-1">
+                          {errors.feedbackType}
+                        </span>
+                      )}
                     </div>
                   </div>
 
                   <div className="text-center pt-4">
                     <button
                       type="submit"
-                      className="bg-blue-500 text-white px-8 py-2 rounded-md hover:bg-blue-600 text-sm"
+                      className="bg-blue-500 text-white px-8 py-2 rounded-md hover:bg-blue-600"
                     >
                       {t("common.update")}
                     </button>

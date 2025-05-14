@@ -5,73 +5,136 @@ export interface Branch {
   id: string;
   display_id: string;
   brand_id: string;
-  brand_name: string;
   address: string;
   phone: string;
   status: string;
   date_added: string;
+  brand_name: string;
   total_staffs: string;
   total_employees: string;
   total_managers: string;
 }
 
-// Payload for creating/updating
-export interface BranchInput {
-  brand_id?: string; // Required for POST
+/**
+ * [GET] /branch
+ * Get all branches
+ */
+export const getAllBranches = async (): Promise<Branch[]> => {
+  try {
+    const response = await axiosInstance.get("/branch");
+    console.log("Raw API response for branches:", response);
+
+    // Kiểm tra cấu trúc dữ liệu
+    if (response.data && Array.isArray(response.data.branch)) {
+      return response.data.branch;
+    } else if (
+      response.data &&
+      response.data.branch &&
+      !Array.isArray(response.data.branch)
+    ) {
+      return [response.data.branch];
+    } else if (response.data && Array.isArray(response.data)) {
+      return response.data;
+    } else {
+      console.error("Unexpected API response structure:", response.data);
+      return [];
+    }
+  } catch (error) {
+    console.error("Error fetching branches:", error);
+    return [];
+  }
+};
+
+/**
+ * [GET] /branch/:id
+ * Get branch by ID
+ */
+export const getBranchById = async (id: string): Promise<Branch> => {
+  try {
+    const response = await axiosInstance.get(`/branch/${id}`);
+    console.log(`API response for branch ${id}:`, response);
+
+    // Kiểm tra cấu trúc dữ liệu
+    if (response.data && response.data.branch) {
+      return response.data.branch;
+    } else {
+      return response.data;
+    }
+  } catch (error) {
+    console.error(`Error fetching branch with id ${id}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * [POST] /branch
+ * Create new branch
+ */
+export interface BranchCreateRequest {
+  brand_id: string;
   address: string;
   phone: string;
   status: string;
-  id?: string; // Required for PUT
 }
 
-// GET all branches
-export const getAllBranches = async (): Promise<Branch[]> => {
-  const response = await axiosInstance.get<{ branch: Branch[] }>("/branch");
-  return response.data.branch;
+export const createBranch = async (
+  branch: BranchCreateRequest
+): Promise<Branch> => {
+  try {
+    const response = await axiosInstance.post("/branch", branch);
+    console.log("Create branch response:", response);
+
+    if (response.data && response.data.branch) {
+      return response.data.branch;
+    } else {
+      return response.data;
+    }
+  } catch (error) {
+    console.error("Error creating branch:", error);
+    throw error;
+  }
 };
 
-// GET a branch by ID
-export const getBranchById = async (id: string): Promise<Branch> => {
-  const response = await axiosInstance.get<{ branch: Branch }>(`/branch/${id}`);
-  return response.data.branch;
-};
-
-// POST create a new branch
-export const createBranch = async (branch: Required<Pick<BranchInput, 'brand_id' | 'address' | 'phone' | 'status'>>) => {
-  const response = await axiosInstance.post("/branch", branch);
-  return response.data;
-};
-
-// PUT update a branch
-export const updateBranch = async (id: string, branch: Required<Pick<BranchInput, 'address' | 'phone' | 'status'>>) => {
-  const payload = { ...branch, id };
-  const response = await axiosInstance.put(`/branch/${id}`, payload);
-  return response.data;
-};
-
-// DELETE a branch
-export const deleteBranch = async (id: string): Promise<void> => {
-  await axiosInstance.delete(`/branch/${id}`);
-};
-
-// (Optional) get brand info from local branches
-export interface BrandInfo {
-  brand_id: string;
-  brand_name: string;
-  total_branches: number;
+/**
+ * [PUT] /branch/:id
+ * Update branch by ID
+ */
+export interface BranchUpdateRequest {
+  brand_id?: string;
+  address?: string;
+  phone?: string;
+  status?: string;
 }
 
-export const getBrandById = async (brandId: string): Promise<BrandInfo | null> => {
-  const branches = await getAllBranches();
-  const brandBranches = branches.filter(b => b.brand_id === brandId);
+export const updateBranch = async (
+  id: string,
+  branch: BranchUpdateRequest
+): Promise<Branch> => {
+  try {
+    const response = await axiosInstance.put(`/branch/${id}`, branch);
+    console.log(`Update branch response for id ${id}:`, response);
 
-  if (brandBranches.length === 0) return null;
+    if (response.data && response.data.branch) {
+      return response.data.branch;
+    } else {
+      return response.data;
+    }
+  } catch (error) {
+    console.error(`Error updating branch with id ${id}:`, error);
+    throw error;
+  }
+};
 
-  const { brand_name } = brandBranches[0];
-
-  return {
-    brand_id: brandId,
-    brand_name,
-    total_branches: brandBranches.length,
-  };
+/**
+ * [DELETE] /branch/:id
+ * Delete branch by ID
+ */
+export const deleteBranchById = async (id: string): Promise<void> => {
+  try {
+    const response = await axiosInstance.delete(`/branch/${id}`);
+    console.log(`Delete branch response for id ${id}:`, response);
+  } catch (error) {
+    console.error(`Error deleting branch with id ${id}:`, error);
+    throw error;
+  }
 };
