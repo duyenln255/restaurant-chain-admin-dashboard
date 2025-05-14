@@ -195,7 +195,7 @@ const AddFeedback: React.FC = () => {
                         <option value="">{t("feedback.chooseBranch")}</option>
                         {branches.map((branch) => (
                           <option key={branch.id} value={branch.id}>
-                            {branch.name || "Unknown Branch"}
+                            {branch.address || "Unknown Branch"}
                           </option>
                         ))}
                       </select>
