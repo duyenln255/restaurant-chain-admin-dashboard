@@ -4,6 +4,8 @@ import type { FeedbackItem } from "../../types/FeedbackItem";
 import GenericTable from "../../components/Table/GenericTable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '../../components/ui/tooltip'
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons'
 
 interface FeedbackTableProps {
   items: FeedbackItem[];
@@ -50,16 +52,14 @@ const FeedbackTable: React.FC<FeedbackTableProps> = ({
       ),
     },
     {
-      key: "id",
+      key: "displayId",
       label: t("feedback.id"),
+      align: "center",
       render: (item) => (
-        <div
-          className="max-w-20 font-semibold text-sm overflow-hidden whitespace-nowrap text-ellipsis"
-          title={item.id}
-        >
-          {item.id}
+        <div className="truncate text-xs sm:text-sm font-mono sm:w-auto" title={item.displayId}>
+          {item.displayId}
         </div>
-      ),
+      )
     },
     {
       key: "type",
@@ -113,53 +113,81 @@ const FeedbackTable: React.FC<FeedbackTableProps> = ({
       ),
     },
     {
-      key: "responsible",
-      label: t("feedback.responsible"),
+      key: 'responsible',
+      label: 'Responsible',
       render: (item) => (
-        <div className="space-y-1 text-sm leading-5">
-          {item.responsible?.branchResponsible && (
+        <div className="text-xs sm:text-sm leading-snug space-y-1">
+          {item.brandName && (
             <div>
-              <span className="font-medium text-red-500">
-                {t("feedback.branch")}:
-              </span>{" "}
-              <span>{item.responsible.branchResponsible}</span>
+              <span className="font-semibold text-blue-600">Brand:</span>{' '}
+              {item.brandName}
             </div>
           )}
-          {item.responsible?.employeeResponsible && (
+          {item.branchAddress && (
             <div>
-              <span className="font-medium text-orange-500">
-                {t("feedback.staff")}:
-              </span>{" "}
-              <span>{item.responsible.employeeResponsible}</span>
+              <span className="font-semibold text-gray-600 max-w-20"></span>
+              {item.branchAddress}
+            </div>
+          )}
+          {item.staffName && (
+            <div>
+              <span className="font-semibold text-orange-500">Staff:</span>{' '}
+              {item.staffName}
             </div>
           )}
         </div>
-      ),
+      )
     },
     {
-      key: "feedback",
-      label: t("feedback.feedback"),
+      key: 'feedback',
+      label: 'Feedback',
       render: (item) => (
-        <div className="text-sm text-wrap" title={item.feedback}>
-          {item.feedback}
-        </div>
-      ),
-    },
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="cursor-pointer text-gray-500 hover:text-gray-700 flex justify-center">
+                <FontAwesomeIcon icon={faInfoCircle} size="sm" />
+              </div>
+            </TooltipTrigger>
+              <TooltipContent side="top" sideOffset={8} className="max-w-50 p-2 bg-white text-black border-1 border-gray-300 rounded text-sm text-center space-y-1">
+              {item.feedback}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      )
+    },   
     {
       key: "status",
       label: t("feedback.status"),
       render: (item) => renderStatus(item.status),
     },
     {
-      key: "createAt",
-      label: t("feedback.createAt"),
-      render: (item) => <div className="text-sm ">{item.createAt}</div>,
+      key: 'createAt',
+      label: 'Created At',
+      render: (item) => {
+        const [date, time] = item.createAt.split(', ')
+        return (
+          <div className="text-center leading-snug text-xs sm:text-sm">
+            <div>{date}</div>
+            <div className="text-gray-500">{time}</div>
+          </div>
+        )
+      }
     },
     {
-      key: "updateAt",
-      label: t("feedback.updateAt"),
-      render: (item) => <div className="text-sm">{item.updateAt || "-"}</div>,
-    },
+      key: 'updateAt',
+      label: 'Updated At',
+      render: (item) => {
+        if (!item.updateAt) return <div className="text-center text-xs text-gray-400">-</div>
+        const [date, time] = item.updateAt.split(', ')
+        return (
+          <div className="text-center leading-snug text-xs sm:text-sm">
+            <div>{date}</div>
+            <div className="text-gray-500">{time}</div>
+          </div>
+        )
+      }
+    }, 
     {
       key: "action",
       label: t("common.action"),
