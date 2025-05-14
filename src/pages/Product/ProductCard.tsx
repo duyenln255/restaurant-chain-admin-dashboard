@@ -14,7 +14,7 @@ const ProductCard: React.FC<{ product: ProductItem }> = ({ product }) => {
 
   // Format giá tiền
   const formatPrice = (price: string) => {
-    return price + " đ";
+    return price;
   };
 
   return (
