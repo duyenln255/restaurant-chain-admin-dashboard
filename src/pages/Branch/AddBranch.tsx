@@ -1,238 +1,174 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogTitle,
+} from "../../components/ui/dialog";
 import {
   Select,
-  SelectContent,
-  SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectContent,
+  SelectItem,
 } from "../../components/ui/select";
-import { LuImageUp } from "react-icons/lu";
-import { X } from "lucide-react";
+import { createBranch } from "../../services/branch.service";
+import { useAppDispatch } from "../../redux/hooks";
+import { fetchBranches } from "../../redux/slices/branchSlice";
+import { toast } from "react-toastify";
+import { getAllEmployees, type Employee } from "../../services/employee.service";
+interface AddBranchProps {
+  brandId: string;
+}
 
-const AddBrand: React.FC = () => {
-  const navigate = useNavigate();
 
-  const [logo, setLogo] = useState<File | null>(null);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [link, setLink] = useState("");
-  const [status, setStatus] = useState("Active");
-  const [openingHour, setOpeningHour] = useState("");
-  const [closingHour, setClosingHour] = useState("");
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+const AddBranch: React.FC<AddBranchProps> = ({ brandId }) => {
+  const [open, setOpen] = useState(false);
+  const [managers, setManagers] = useState<Employee[]>([]);
+  const [form, setForm] = useState({
+    name: "",
+    location: "",
+    address: "",
+    manager: "",
+    quantity: "",
+    status: "Active",
+  });
 
-  const validateForm = () => {
-    const newErrors: { [key: string]: string } = {};
-    if (!name.trim()) newErrors.name = "Required";
-    if (!description.trim()) newErrors.description = "Required";
-    if (!link.trim()) newErrors.link = "Required";
-    // if (!logo) newErrors.logo = "Required";
-    if (!openingHour) newErrors.openingHour = "Required";
-    if (!closingHour) newErrors.closingHour = "Required";
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const dispatch = useAppDispatch();
+
+  const statuses = ["Active", "Inactive"];
+
+  useEffect(() => {
+    const fetchManagers = async () => {
+      try {
+        const employees = await getAllEmployees();
+        const branchManagers = employees.filter((e) => e.role === "Branch Manager");
+        setManagers(branchManagers);
+      } catch (error) {
+        console.error("Failed to fetch managers:", error);
+        toast.error("Failed to load managers");
+      }
+    };
+
+    if (open) fetchManagers();
+  }, [open]);
+
+  const handleChange = (field: string, value: string) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateForm()) return;
-    console.log({
-      logo,
-      name,
-      description,
-      link,
-      status,
-      openingHour,
-      closingHour,
-    });
-  };
 
-  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setLogo(e.target.files[0]);
+    try {
+      await createBranch({
+        brand_id: brandId,
+        address: form.address,
+        phone: form.location,
+        status: form.status,
+      });
+
+      toast.success("Branch created successfully!");
+      dispatch(fetchBranches());
+      setOpen(false);
+    } catch (error) {
+      console.error("Create branch failed:", error);
+      toast.error("Failed to create branch.");
     }
   };
 
   return (
-  <div className="p-6 mx-auto space-y-6 ">
-    <div
-      className="text-sm text-blue-600 cursor-pointer"
-      onClick={() => navigate("/brand")}
-    >
-      ← Back to Brand List
-    </div>
-
-    <h1 className="text-3xl font-bold text-neutral-800">
-      Add New Brand
-    </h1>
-
-    <div className="bg-white rounded-xl p-8 shadow-md">
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Upload Logo */}
-        <div className="flex flex-col items-center space-y-2">
-          <label htmlFor="logo-upload" className="cursor-pointer">
-            <div className="relative w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center">
-              {logo ? (
-                <>
-                  <img
-                    src={URL.createObjectURL(logo)}
-                    alt="Preview"
-                    className="absolute inset-0 w-full h-full object-cover rounded-full overflow-hidden"
-                  />
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setLogo(null);
-                    }}
-                    className="absolute top-1 right-1 bg-white rounded-full shadow p-1 hover:bg-red-500 hover:text-white transition-all overflow-visible"
-                    title="Remove image"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </>
-              ) : (
-                <LuImageUp className="w-6 h-6 text-gray-400" />
-              )}
-            </div>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <button className="bg-blue-500 text-white px-5 py-2 rounded-md">Add New Branch</button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogTitle>Add Branch</DialogTitle>
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+          {/* Name */}
+          <div>
+            <label className="text-sm font-medium block mb-1">Name</label>
             <input
-              id="logo-upload"
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleLogoChange}
+              value={form.name}
+              onChange={(e) => handleChange("name", e.target.value)}
+              className="w-full px-4 py-2 border border-neutral-300 rounded-md bg-gray-100"
             />
-          </label>
-          <span className="text-sm text-blue-600 font-medium">
-            Upload Brand Photo <span className="text-red-500">*</span>
-          </span>
-          {errors.logo && (
-            <span className="text-red-500 text-xs">{errors.logo}</span>
-          )}
-        </div>
-
-        {/* Brand Name */}
-        <div>
-          <div className="flex justify-between items-center mb-1">
-            <label className="text-sm font-medium">
-              Brand Name <span className="text-red-500">*</span>
-            </label>
-            {errors.name && (
-              <span className="text-red-500 text-xs">{errors.name}</span>
-            )}
           </div>
-          <input
-            type="text"
-            placeholder="Enter brand name"
-            className="text-sm w-full border border-neutral-300 rounded-md px-4 py-2"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </div>
 
-        {/* Description */}
-        <div>
-          <div className="flex justify-between items-center mb-1">
-            <label className="text-sm font-medium">
-              Description <span className="text-red-500">*</span>
-            </label>
-            {errors.description && (
-              <span className="text-red-500 text-xs">
-                {errors.description}
-              </span>
-            )}
+          {/* Location */}
+          <div>
+            <label className="text-sm font-medium block mb-1">Location</label>
+            <input
+              value={form.location}
+              onChange={(e) => handleChange("location", e.target.value)}
+              className="w-full px-4 py-2 border border-neutral-300 rounded-md bg-gray-100"
+            />
           </div>
-          <textarea
-            placeholder="Enter description"
-            className="text-sm w-full border border-neutral-300 rounded-md px-4 py-2 min-h-30"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-        </div>
 
-        {/* Website Link */}
-        <div>
-          <div className="flex justify-between items-center mb-1">
-            <label className="text-sm font-medium">
-              Website Link <span className="text-red-500">*</span>
-            </label>
-            {errors.link && (
-              <span className="text-red-500 text-xs">{errors.link}</span>
-            )}
+          {/* Address */}
+          <div className="sm:col-span-2">
+            <label className="text-sm font-medium block mb-1">Address</label>
+            <input
+              value={form.address}
+              onChange={(e) => handleChange("address", e.target.value)}
+              className="w-full px-4 py-2 border border-neutral-300 rounded-md bg-gray-100"
+            />
           </div>
-          <input
-            type="url"
-            placeholder="https://..."
-            className="text-sm w-full border border-neutral-300 rounded-md px-4 py-2"
-            value={link}
-            onChange={(e) => setLink(e.target.value)}
-          />
-        </div>
 
-        {/* Opening Hour */}
-        <div>
-          <div className="flex justify-between items-center mb-1">
-            <label className="text-sm font-medium">
-              Opening Hour <span className="text-red-500">*</span>
-            </label>
-            {errors.openingHour && (
-              <span className="text-red-500 text-xs">{errors.openingHour}</span>
-            )}
+          {/* Manager */}
+          <div>
+            <label className="text-sm font-medium block mb-1">Manager</label>
+            <Select value={form.manager} onValueChange={(val) => handleChange("manager", val)}>
+              <SelectTrigger className="w-full bg-gray-100">
+                <SelectValue placeholder="Select manager" />
+              </SelectTrigger>
+              <SelectContent>
+                {managers.map((m) => (
+                  <SelectItem key={m.id} value={m.id}>
+                    {m.full_name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <input
-            type="time"
-            className="text-sm w-full border border-neutral-300 rounded-md px-4 py-2"
-            value={openingHour}
-            onChange={(e) => setOpeningHour(e.target.value)}
-          />
-        </div>
 
-        {/* Closing Hour */}
-        <div>
-          <div className="flex justify-between items-center mb-1">
-            <label className="text-sm font-medium">
-              Closing Hour <span className="text-red-500">*</span>
-            </label>
-            {errors.closingHour && (
-              <span className="text-red-500 text-xs">{errors.closingHour}</span>
-            )}
+          {/* Quantity */}
+          <div>
+            <label className="text-sm font-medium block mb-1">Quantity Employees</label>
+            <input
+              value={form.quantity}
+              onChange={(e) => handleChange("quantity", e.target.value)}
+              className="w-full px-4 py-2 border border-neutral-300 rounded-md bg-gray-100"
+            />
           </div>
-          <input
-            type="time"
-            className="text-sm w-full border border-neutral-300 rounded-md px-4 py-2"
-            value={closingHour}
-            onChange={(e) => setClosingHour(e.target.value)}
-          />
-        </div>
 
-        {/* Status */}
-        <div className="space-y-1">
-          <label className="text-sm font-medium block">Status</label>
-          <Select value={status} onValueChange={setStatus}>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Active">Active</SelectItem>
-              <SelectItem value="Inactive">Inactive</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+          {/* Status */}
+          <div>
+            <label className="text-sm font-medium block mb-1">Status</label>
+            <Select value={form.status} onValueChange={(val) => handleChange("status", val)}>
+              <SelectTrigger className="w-full bg-gray-100">
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                {statuses.map((s) => (
+                  <SelectItem key={s} value={s}>
+                    {s}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-        {/* Submit */}
-        <div className="text-center pt-4">
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-8 py-2 rounded-md hover:bg-blue-600"
-          >
-            Add Now
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
+          {/* Submit */}
+          <div className="sm:col-span-2 mt-4 text-center">
+            <button type="submit" className="bg-blue-500 text-white px-8 py-3 rounded-xl font-semibold">
+              Add Branch
+            </button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 };
 
-export default AddBrand;
+export default AddBranch;
