@@ -163,7 +163,7 @@ const AddReservation: React.FC = () => {
                         <option value="">Select a branch</option>
                         {branches.map((branch) => (
                           <option key={branch.id} value={branch.id}>
-                            {branch.name || "Unknown Branch"}
+                            {branch.address || "Unknown Branch"}
                           </option>
                         ))}
                       </select>
