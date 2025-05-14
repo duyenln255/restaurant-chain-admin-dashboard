@@ -2,13 +2,13 @@ import React, { useState, useEffect, useMemo } from 'react';
 import FilterBar from './FilterBar';
 import FilterBarBlog from './Blog/FilterBarBlog';
 import BrandTable from './BrandTable';
-// import BlogList from './BlogList';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchBrands } from '../../redux/slices/brandSlice';
 import type { RootState } from '../../redux/store';
 import type { BrandItem } from '../../types/BrandItem';
 import { useNavigate } from "react-router-dom"; 
 import { Button } from "../../components/ui/button"
+import { getFilteredBrands } from "../../services/brand.service";
 
 const BrandList: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -18,23 +18,57 @@ const BrandList: React.FC = () => {
     () =>
       rawBrands.map((b) => ({
         id: b.id,
-        displayId: b.display_id, // thêm dòng này
+        displayId: b.display_id,
         logo: b.logo_url,
         name: b.name,
         link: b.website_url,
         description: b.description,
         status: b.status,
-        opening_hours: b.opening_hours?.slice(0, 5), // "08:30"
-        closed_hours: b.closed_hours?.slice(0, 5),   // "22:00"
-        date_added: new Date(b.date_added).toLocaleDateString() // ví dụ 11/5/2025
+        opening_hours: b.opening_hours?.slice(0, 5),
+        closed_hours: b.closed_hours?.slice(0, 5),
+        date_added: new Date(b.date_added).toLocaleDateString()
       })),
     [rawBrands]
   );
-  
 
   useEffect(() => {
     dispatch(fetchBrands());
   }, [dispatch]);
+
+  const [filteredBrands, setFilteredBrands] = useState<BrandItem[]>([]);
+  const [filters, setFilters] = useState<{
+    brandId: string;
+    status: string;
+    dateAdded?: string;
+  }>({
+    brandId: "",
+    status: "all",
+  });
+
+  const fetchFiltered = async () => {
+    try {
+      const data = await getFilteredBrands(filters);
+      const mapped = data.map((b) => ({
+        id: b.id,
+        displayId: b.display_id,
+        logo: b.logo_url,
+        name: b.name,
+        link: b.website_url,
+        description: b.description,
+        status: b.status,
+        opening_hours: b.opening_hours?.slice(0, 5),
+        closed_hours: b.closed_hours?.slice(0, 5),
+        date_added: new Date(b.date_added).toLocaleDateString(),
+      }));
+      setFilteredBrands(mapped);
+    } catch (error) {
+      console.error("Failed to filter brands", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchFiltered();
+  }, [filters]);
 
   return (
     <div className="bg-gray-50">
@@ -50,24 +84,23 @@ const BrandList: React.FC = () => {
               Add New Brand
             </Button>
           </div>
-  
+
           {/* Filter */}
-          <FilterBar />
-  
+          <FilterBar onFilterChange={setFilters} />
+
           {/* States */}
           {loading && <p className="text-sm">Loading brands...</p>}
           {error && <p className="text-sm text-red-500">{error}</p>}
           {!loading && brands.length === 0 && (
             <p className="text-sm text-gray-500">No brands found.</p>
           )}
-  
+
           {/* Table */}
-          <BrandTable items={brands} />
-        </div>
+          <BrandTable items={filteredBrands.length > 0 || filters.brandId || filters.status !== "all" || filters.dateAdded ? filteredBrands : brands} />
+          </div>
       </div>
     </div>
-  )
-  
+  );
 };
 
 export default BrandList;

@@ -1,17 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../components/ui/select";
 import { LuImageUp } from "react-icons/lu";
 import { X } from "lucide-react";
-import type { BrandItem } from "../../types/BrandItem";
-// import { mockBrands } from "../../mocks/mockBrand"; // Bạn thay bằng API thực nếu có
+import { getBrandById, updateBrand } from "../../services/brand.service";
+import type { Brand } from "../../services/brand.service";
+import { toast } from "react-toastify";
 
 const EditBrand: React.FC = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const [brand, setBrand] = useState<BrandItem | null>(null);
   const [logo, setLogo] = useState<File | null>(null);
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [link, setLink] = useState("");
@@ -21,16 +28,22 @@ const EditBrand: React.FC = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
-    // const found = mockBrands.find((b) => b.id === id); // Replace with API fetch
-    // if (found) {
-    //   setBrand(found);
-    //   setName(found.name);
-    //   setDescription(found.description);
-    //   setLink(found.link);
-    //   setStatus(found.status || "Active");
-    //   setOpeningHour(found.opening_hours?.slice(0, 5) || "");
-    //   setClosingHour(found.closed_hours?.slice(0, 5) || "");
-    // }
+    const fetchData = async () => {
+      try {
+        if (!id) return;
+        const brand = await getBrandById(id);
+        setName(brand.name);
+        setDescription(brand.description);
+        setLink(brand.website_url);
+        setStatus(brand.status);
+        setOpeningHour(brand.opening_hours?.slice(0, 5));
+        setClosingHour(brand.closed_hours?.slice(0, 5));
+        setLogoUrl(brand.logo_url || null);
+      } catch (err) {
+        console.error("Failed to fetch brand details", err);
+      }
+    };
+    fetchData();
   }, [id]);
 
   const validateForm = () => {
@@ -44,28 +57,40 @@ const EditBrand: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateForm()) return;
+    if (!validateForm() || !id) return;
 
-    console.log({
-      id,
+    const updatedBrand = {
       name,
       description,
-      link,
+      opening_hours: openingHour,
+      closed_hours: closingHour,
+      logo_url: logoUrl || "", // nếu không có logo thì để rỗng
+      website_url: link,
       status,
-      openingHour,
-      closingHour,
-      logo: logo ?? brand?.logo,
-    });
+    };
 
-    navigate("/brand");
+    try {
+      await updateBrand(id, updatedBrand);
+      toast.success("Brand updated successfully!");
+      navigate("/brand");
+    } catch (err) {
+      console.error("Failed to update brand", err);
+      toast.error("Failed to update brand.");
+    }    
   };
 
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setLogo(e.target.files[0]);
+      setLogoUrl(null); // clear logo URL để hiển thị ảnh preview mới
     }
+  };
+
+  const removeLogo = () => {
+    setLogo(null);
+    setLogoUrl(null); // gỡ cả logo đã có từ server
   };
 
   return (
@@ -78,7 +103,7 @@ const EditBrand: React.FC = () => {
 
       <div className="bg-white rounded-xl p-8 shadow-md">
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Upload Logo */}
+          {/* Logo Upload */}
           <div className="flex flex-col items-center space-y-2">
             <label htmlFor="logo-upload" className="cursor-pointer">
               <div className="relative w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center">
@@ -93,7 +118,26 @@ const EditBrand: React.FC = () => {
                       type="button"
                       onClick={(e) => {
                         e.preventDefault();
-                        setLogo(null);
+                        removeLogo();
+                      }}
+                      className="absolute top-1 right-1 bg-white rounded-full shadow p-1 hover:bg-red-500 hover:text-white transition-all overflow-visible"
+                      title="Remove image"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </>
+                ) : logoUrl ? (
+                  <>
+                    <img
+                      src={logoUrl}
+                      alt="Server Logo"
+                      className="w-full h-full object-cover rounded-full"
+                    />
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        removeLogo();
                       }}
                       className="absolute top-1 right-1 bg-white rounded-full shadow p-1 hover:bg-red-500 hover:text-white transition-all overflow-visible"
                       title="Remove image"
@@ -102,11 +146,7 @@ const EditBrand: React.FC = () => {
                     </button>
                   </>
                 ) : (
-                  <img
-                    src={brand?.logo}
-                    alt="Current Logo"
-                    className="w-full h-full object-cover rounded-full"
-                  />
+                  <LuImageUp className="w-6 h-6 text-gray-400" />
                 )}
               </div>
               <input
@@ -117,9 +157,7 @@ const EditBrand: React.FC = () => {
                 onChange={handleLogoChange}
               />
             </label>
-            <span className="text-sm text-blue-600 font-medium">
-              Upload Brand Photo
-            </span>
+            <span className="text-sm text-blue-600 font-medium">Upload Brand Photo</span>
           </div>
 
           {/* Brand Name */}

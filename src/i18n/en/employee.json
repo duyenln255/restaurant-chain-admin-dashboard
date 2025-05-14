@@ -1,5 +1,49 @@
 {
-    "employee":{
-        
+    "employee": {
+      "title": "Nhân viên",
+      "addEmployee": "Thêm nhân viên mới",
+      "editEmployee": "Chỉnh sửa nhân viên",
+      "backToList": "Quay về danh sách nhân viên",
+      "fullName": "Họ và tên",
+      "enterFullName": "Nhập họ và tên",
+      "username": "Tên đăng nhập",
+      "enterUsername": "Nhập tên đăng nhập",
+      "password": "Mật khẩu",
+      "enterPassword": "Nhập mật khẩu",
+      "email": "Email",
+      "enterEmail": "Nhập email",
+      "phone": "Số điện thoại",
+      "enterPhone": "XXX-XXX-XXXX",
+      "branch": "Chi nhánh",
+      "selectBranch": "Chọn chi nhánh",
+      "brand": "Thương hiệu",
+      "selectBrand": "Chọn thương hiệu",
+      "position": "Chức vụ",
+      "enterPosition": "Nhập chức vụ",
+      "salary": "Lương",
+      "enterSalary": "Nhập lương",
+      "gender": "Giới tính",
+      "selectGender": "--- Chọn giới tính ---",
+      "male": "Nam",
+      "female": "Nữ",
+      "dob": "Ngày sinh",
+      "selectDate": "Chọn ngày",
+      "uploadPhoto": "Tải ảnh đại diện",
+      "submitAdd": "Thêm mới",
+      "submitUpdate": "Cập nhật",
+      "filters": {
+        "allBrands": "--- Tất cả thương hiệu ---",
+        "allBranches": "--- Tất cả chi nhánh ---"
+      },
+      "card": {
+        "branch": "Chi nhánh",
+        "phone": "SĐT",
+        "email": "Email"
+      },
+      "pagination": {
+        "showing": "Hiển thị",
+        "of": "trên"
+      }
     }
-}
+  }
+  

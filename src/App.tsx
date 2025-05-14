@@ -4,6 +4,8 @@ import { SidebarProvider } from './contexts/SidebarContext'
 import { LoadingProvider } from './contexts/LoadingContext'
 import useRouteElement from './hooks/useRouteElement'
 import './index.css'
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const routeElement = useRouteElement()
@@ -15,6 +17,7 @@ function App() {
           {routeElement}
         </LoadingProvider>
       </SidebarProvider>
+      <ToastContainer position="top-right" autoClose={3000} />
     </Provider>
   )
 }

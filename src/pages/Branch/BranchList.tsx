@@ -9,12 +9,14 @@ import { fetchBranches } from '../../redux/slices/branchSlice';
 import type { RootState } from '../../redux/store';
 import type { BranchItem } from '../../types/BranchItem';
 import { useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 const BranchList: React.FC = () => {
   const navigate = useNavigate(); // hook chuyển trang
   const dispatch = useAppDispatch();
   const { items: rawBranches, loading, error } = useAppSelector((state: RootState) => state.branches);
-
+  const [searchParams] = useSearchParams();
+  const selectedBrandId = searchParams.get("brandId");
   const branches = useMemo<BranchItem[]>(() => {
     const data = Array.isArray(rawBranches) ? rawBranches : [rawBranches];
   
@@ -46,8 +48,8 @@ const BranchList: React.FC = () => {
           {/* Header */}
           <div className="flex justify-between items-center">
             <h1 className="text-xl sm:text-2xl font-bold text-neutral-800">Branch Lists</h1>
-            <AddBranch />
-          </div>
+            <AddBranch brandId={selectedBrandId || ""} />
+            </div>
   
           {/* Filter */}
           <FilterBar />

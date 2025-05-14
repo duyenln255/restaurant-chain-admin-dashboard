@@ -1,5 +1,49 @@
 {
-    "employee":{
-        
+    "employee": {
+      "title": "Employees",
+      "addEmployee": "Add New Employee",
+      "editEmployee": "Edit Employee",
+      "backToList": "Back to Employee List",
+      "fullName": "Full Name",
+      "enterFullName": "Enter full name",
+      "username": "Username",
+      "enterUsername": "Enter username",
+      "password": "Password",
+      "enterPassword": "Enter password",
+      "email": "Email",
+      "enterEmail": "Enter email",
+      "phone": "Phone Number",
+      "enterPhone": "XXX-XXX-XXXX",
+      "branch": "Branch",
+      "selectBranch": "Select Branch",
+      "brand": "Brand",
+      "selectBrand": "Select Brand",
+      "position": "Position",
+      "enterPosition": "Enter position",
+      "salary": "Salary",
+      "enterSalary": "Enter salary",
+      "gender": "Gender",
+      "selectGender": "--- Choose Gender ---",
+      "male": "Male",
+      "female": "Female",
+      "dob": "Date of Birth",
+      "selectDate": "Select date",
+      "uploadPhoto": "Upload Photo",
+      "submitAdd": "Add Now",
+      "submitUpdate": "Update",
+      "filters": {
+        "allBrands": "--- All Brands ---",
+        "allBranches": "--- All Branches ---"
+      },
+      "card": {
+        "branch": "Branch",
+        "phone": "Phone",
+        "email": "Email"
+      },
+      "pagination": {
+        "showing": "Showing",
+        "of": "of"
+      }
     }
-}
+  }
+  

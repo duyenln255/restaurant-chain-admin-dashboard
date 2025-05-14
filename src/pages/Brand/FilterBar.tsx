@@ -14,7 +14,15 @@ import {
 import { getAllBrands } from "../../services/brand.service"
 import type { Brand } from "../../services/brand.service"
 
-const FilterBar: React.FC = () => {
+interface FilterBarProps {
+  onFilterChange: (filters: {
+    brandId: string;
+    status: string;
+    dateAdded?: string;
+  }) => void;
+}
+
+const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange }) => {
   const [selectedBrand, setSelectedBrand] = useState("")
   const [status, setStatus] = useState("all")
   const [date, setDate] = useState<Date | undefined>(undefined)
@@ -77,19 +85,25 @@ const FilterBar: React.FC = () => {
       <div className="flex gap-2 flex-wrap">
       <Button
         variant="outline"
-        className="bg-blue-500 text-white hover:bg-blue-6Z00"
-        onClick={() => console.log({ selectedBrand, status, date })}
-      >
+        className="bg-blue-500 text-white hover:bg-blue-600"
+        onClick={() =>
+          onFilterChange({
+            brandId: selectedBrand,
+            status,
+            dateAdded: selectedDate?.toISOString().split("T")[0],
+          })
+        }      
+        >
         Search
       </Button>
         <Button
           variant="outline"
           className="border-red-500 text-red-500 hover:bg-red-50"
           onClick={() => {
-            setSelectedBrand("")
-            setStatus("all")
-            setDate(undefined)
-          }}
+            setSelectedBrand("");
+            setStatus("all");
+            setSelectedDate(undefined); // sửa đúng biến
+          }}          
         >
           Reset
         </Button>

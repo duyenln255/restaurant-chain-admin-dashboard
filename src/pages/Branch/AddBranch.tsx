@@ -1,36 +1,81 @@
-// AddBranch.tsx
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogTrigger,
   DialogContent,
   DialogTitle,
-} from "../../components/ui/dialog"
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "../../components/ui/select"
+} from "../../components/ui/dialog";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "../../components/ui/select";
+import { createBranch } from "../../services/branch.service";
+import { useAppDispatch } from "../../redux/hooks";
+import { fetchBranches } from "../../redux/slices/branchSlice";
+import { toast } from "react-toastify";
+import { getAllEmployees, type Employee } from "../../services/employee.service";
+interface AddBranchProps {
+  brandId: string;
+}
 
-const AddBranch: React.FC = () => {
-  const [open, setOpen] = useState(false)
+
+const AddBranch: React.FC<AddBranchProps> = ({ brandId }) => {
+  const [open, setOpen] = useState(false);
+  const [managers, setManagers] = useState<Employee[]>([]);
   const [form, setForm] = useState({
     name: "",
     location: "",
     address: "",
     manager: "",
     quantity: "",
-    status: "Prepare",
-  })
+    status: "Active",
+  });
 
-  const managers = ["Trần Trung Hiếu", "Nguyễn Văn A", "Lê Thị B"]
-  const statuses = ["Prepare", "Open", "Closed"]
+  const dispatch = useAppDispatch();
+
+  const statuses = ["Active", "Inactive"];
+
+  useEffect(() => {
+    const fetchManagers = async () => {
+      try {
+        const employees = await getAllEmployees();
+        const branchManagers = employees.filter((e) => e.role === "Branch Manager");
+        setManagers(branchManagers);
+      } catch (error) {
+        console.error("Failed to fetch managers:", error);
+        toast.error("Failed to load managers");
+      }
+    };
+
+    if (open) fetchManagers();
+  }, [open]);
 
   const handleChange = (field: string, value: string) => {
-    setForm(prev => ({ ...prev, [field]: value }))
-  }
+    setForm((prev) => ({ ...prev, [field]: value }));
+  };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("New branch:", form)
-    setOpen(false)
-  }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      await createBranch({
+        brand_id: brandId,
+        address: form.address,
+        phone: form.location,
+        status: form.status,
+      });
+
+      toast.success("Branch created successfully!");
+      dispatch(fetchBranches());
+      setOpen(false);
+    } catch (error) {
+      console.error("Create branch failed:", error);
+      toast.error("Failed to create branch.");
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -79,8 +124,8 @@ const AddBranch: React.FC = () => {
               </SelectTrigger>
               <SelectContent>
                 {managers.map((m) => (
-                  <SelectItem key={m} value={m}>
-                    {m}
+                  <SelectItem key={m.id} value={m.id}>
+                    {m.full_name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -123,7 +168,7 @@ const AddBranch: React.FC = () => {
         </form>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default AddBranch
+export default AddBranch;

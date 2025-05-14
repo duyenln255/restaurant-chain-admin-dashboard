@@ -1,8 +1,41 @@
 {
-    "brand":{
-        
-    },
-    "branch":{
-        
+    "brand": {
+      "brandListTitle": "Brand Lists",
+      "addBrand": "Add New Brand",
+      "editBrand": "Edit Brand",
+      "brandName": "Brand Name",
+      "enterBrandName": "Enter brand name",
+      "description": "Description",
+      "enterDescription": "Enter description",
+      "link": "Website Link",
+      "enterLink": "https://...",
+      "openingHour": "Opening Hour",
+      "closingHour": "Closing Hour",
+      "status": "Status",
+      "active": "Active",
+      "inactive": "Inactive",
+      "uploadBrandPhoto": "Upload Brand Photo",
+      "backToList": "Back to Brand List",
+      "submitAdd": "Add Now",
+      "submitUpdate": "Update",
+      "selectBrand": "Select brand...",
+      "selectStatus": "--- All Status ---",
+      "selectCreatedDate": "Select created date",
+      "search": "Search",
+      "reset": "Reset",
+      "table": {
+        "no": "No.",
+        "id": "ID",
+        "logo": "Logo",
+        "name": "Brand Name",
+        "link": "Link",
+        "description": "Description",
+        "opening": "Opening",
+        "closed": "Closed",
+        "createdDate": "Created Date",
+        "status": "Status",
+        "action": "Action"
+      }
     }
-}
+  }
+  

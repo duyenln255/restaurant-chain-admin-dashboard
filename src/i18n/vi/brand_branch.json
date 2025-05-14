@@ -1,8 +1,41 @@
 {
-    "brand":{
-        
-    },
-    "branch":{
-        
+    "brand": {
+      "brandListTitle": "Danh sách thương hiệu",
+      "addBrand": "Thêm thương hiệu mới",
+      "editBrand": "Chỉnh sửa thương hiệu",
+      "brandName": "Tên thương hiệu",
+      "enterBrandName": "Nhập tên thương hiệu",
+      "description": "Mô tả",
+      "enterDescription": "Nhập mô tả",
+      "link": "Liên kết website",
+      "enterLink": "https://...",
+      "openingHour": "Giờ mở cửa",
+      "closingHour": "Giờ đóng cửa",
+      "status": "Trạng thái",
+      "active": "Hoạt động",
+      "inactive": "Ngừng hoạt động",
+      "uploadBrandPhoto": "Tải ảnh thương hiệu",
+      "backToList": "Quay về danh sách thương hiệu",
+      "submitAdd": "Thêm mới",
+      "submitUpdate": "Cập nhật",
+      "selectBrand": "Chọn thương hiệu...",
+      "selectStatus": "--- Tất cả trạng thái ---",
+      "selectCreatedDate": "Chọn ngày tạo",
+      "search": "Tìm kiếm",
+      "reset": "Đặt lại",
+      "table": {
+        "no": "STT",
+        "id": "ID",
+        "logo": "Logo",
+        "name": "Tên thương hiệu",
+        "link": "Liên kết",
+        "description": "Mô tả",
+        "opening": "Mở cửa",
+        "closed": "Đóng cửa",
+        "createdDate": "Ngày tạo",
+        "status": "Trạng thái",
+        "action": "Hành động"
+      }
     }
-}
+  }
+  
