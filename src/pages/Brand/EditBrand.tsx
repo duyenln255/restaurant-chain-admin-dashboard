@@ -10,12 +10,13 @@ import {
 import { LuImageUp } from "react-icons/lu";
 import { X } from "lucide-react";
 import { getBrandById, updateBrand } from "../../services/brand.service";
-import type { Brand } from "../../services/brand.service";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const EditBrand: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [logo, setLogo] = useState<File | null>(null);
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
@@ -66,40 +67,45 @@ const EditBrand: React.FC = () => {
       description,
       opening_hours: openingHour,
       closed_hours: closingHour,
-      logo_url: logoUrl || "", // nếu không có logo thì để rỗng
+      logo_url: logoUrl || "",
       website_url: link,
       status,
     };
 
     try {
       await updateBrand(id, updatedBrand);
-      toast.success("Brand updated successfully!");
+      toast.success(t("brand.brandUpdated"));
       navigate("/brand");
     } catch (err) {
       console.error("Failed to update brand", err);
-      toast.error("Failed to update brand.");
-    }    
+      toast.error(t("brand.deleteError"));
+    }
   };
 
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setLogo(e.target.files[0]);
-      setLogoUrl(null); // clear logo URL để hiển thị ảnh preview mới
+      setLogoUrl(null);
     }
   };
 
   const removeLogo = () => {
     setLogo(null);
-    setLogoUrl(null); // gỡ cả logo đã có từ server
+    setLogoUrl(null);
   };
 
   return (
     <div className="p-6 mx-auto space-y-6">
-      <div className="text-sm text-blue-600 cursor-pointer" onClick={() => navigate("/brand")}>
-        ← Back to Brand List
+      <div
+        className="text-sm text-blue-600 cursor-pointer"
+        onClick={() => navigate("/brand")}
+      >
+        ← {t("brand.brandList")}
       </div>
 
-      <h1 className="text-3xl font-bold text-neutral-800">Edit Brand</h1>
+      <h1 className="text-3xl font-bold text-neutral-800">
+        {t("brand.editBrand")}
+      </h1>
 
       <div className="bg-white rounded-xl p-8 shadow-md">
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -120,7 +126,7 @@ const EditBrand: React.FC = () => {
                         e.preventDefault();
                         removeLogo();
                       }}
-                      className="absolute top-1 right-1 bg-white rounded-full shadow p-1 hover:bg-red-500 hover:text-white transition-all overflow-visible"
+                      className="absolute top-1 right-1 bg-white rounded-full shadow p-1 hover:bg-red-500 hover:text-white transition-all"
                       title="Remove image"
                     >
                       <X className="w-4 h-4" />
@@ -139,7 +145,7 @@ const EditBrand: React.FC = () => {
                         e.preventDefault();
                         removeLogo();
                       }}
-                      className="absolute top-1 right-1 bg-white rounded-full shadow p-1 hover:bg-red-500 hover:text-white transition-all overflow-visible"
+                      className="absolute top-1 right-1 bg-white rounded-full shadow p-1 hover:bg-red-500 hover:text-white transition-all"
                       title="Remove image"
                     >
                       <X className="w-4 h-4" />
@@ -157,16 +163,20 @@ const EditBrand: React.FC = () => {
                 onChange={handleLogoChange}
               />
             </label>
-            <span className="text-sm text-blue-600 font-medium">Upload Brand Photo</span>
+            <span className="text-sm text-blue-600 font-medium">
+              {t("brand.logo")}
+            </span>
           </div>
 
           {/* Brand Name */}
           <div>
             <div className="flex justify-between items-center mb-1">
               <label className="text-sm font-medium">
-                Brand Name <span className="text-red-500">*</span>
+                {t("brand.name")} <span className="text-red-500">*</span>
               </label>
-              {errors.name && <span className="text-red-500 text-xs">{errors.name}</span>}
+              {errors.name && (
+                <span className="text-red-500 text-xs">{errors.name}</span>
+              )}
             </div>
             <input
               type="text"
@@ -180,9 +190,11 @@ const EditBrand: React.FC = () => {
           <div>
             <div className="flex justify-between items-center mb-1">
               <label className="text-sm font-medium">
-                Description <span className="text-red-500">*</span>
+                {t("brand.description")} <span className="text-red-500">*</span>
               </label>
-              {errors.description && <span className="text-red-500 text-xs">{errors.description}</span>}
+              {errors.description && (
+                <span className="text-red-500 text-xs">{errors.description}</span>
+              )}
             </div>
             <textarea
               value={description}
@@ -195,9 +207,11 @@ const EditBrand: React.FC = () => {
           <div>
             <div className="flex justify-between items-center mb-1">
               <label className="text-sm font-medium">
-                Website Link <span className="text-red-500">*</span>
+                {t("brand.website")} <span className="text-red-500">*</span>
               </label>
-              {errors.link && <span className="text-red-500 text-xs">{errors.link}</span>}
+              {errors.link && (
+                <span className="text-red-500 text-xs">{errors.link}</span>
+              )}
             </div>
             <input
               type="url"
@@ -211,9 +225,13 @@ const EditBrand: React.FC = () => {
           <div>
             <div className="flex justify-between items-center mb-1">
               <label className="text-sm font-medium">
-                Opening Hour <span className="text-red-500">*</span>
+                {t("brand.opening")} <span className="text-red-500">*</span>
               </label>
-              {errors.openingHour && <span className="text-red-500 text-xs">{errors.openingHour}</span>}
+              {errors.openingHour && (
+                <span className="text-red-500 text-xs">
+                  {errors.openingHour}
+                </span>
+              )}
             </div>
             <input
               type="time"
@@ -227,9 +245,13 @@ const EditBrand: React.FC = () => {
           <div>
             <div className="flex justify-between items-center mb-1">
               <label className="text-sm font-medium">
-                Closing Hour <span className="text-red-500">*</span>
+                {t("brand.closed")} <span className="text-red-500">*</span>
               </label>
-              {errors.closingHour && <span className="text-red-500 text-xs">{errors.closingHour}</span>}
+              {errors.closingHour && (
+                <span className="text-red-500 text-xs">
+                  {errors.closingHour}
+                </span>
+              )}
             </div>
             <input
               type="time"
@@ -241,14 +263,14 @@ const EditBrand: React.FC = () => {
 
           {/* Status */}
           <div className="space-y-1">
-            <label className="text-sm font-medium block">Status</label>
+            <label className="text-sm font-medium block">{t("brand.status")}</label>
             <Select value={status} onValueChange={setStatus}>
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select status" />
+                <SelectValue placeholder={t("brand.search.status")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Active">Active</SelectItem>
-                <SelectItem value="Inactive">Inactive</SelectItem>
+                <SelectItem value="Active">{t("brand.active")}</SelectItem>
+                <SelectItem value="Inactive">{t("brand.inactive")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -259,7 +281,7 @@ const EditBrand: React.FC = () => {
               type="submit"
               className="bg-blue-500 text-white px-8 py-2 rounded-md hover:bg-blue-600"
             >
-              Update
+              {t("brand.editBrand")}
             </button>
           </div>
         </form>

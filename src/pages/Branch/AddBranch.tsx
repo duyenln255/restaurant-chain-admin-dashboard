@@ -17,13 +17,15 @@ import { useAppDispatch } from "../../redux/hooks";
 import { fetchBranches } from "../../redux/slices/branchSlice";
 import { toast } from "react-toastify";
 import { getAllEmployees, type Employee } from "../../services/employee.service";
+import { useTranslation } from "react-i18next";
+
 interface AddBranchProps {
   brandId: string;
 }
 
-
 const AddBranch: React.FC<AddBranchProps> = ({ brandId }) => {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
   const [managers, setManagers] = useState<Employee[]>([]);
   const [form, setForm] = useState({
     name: "",
@@ -80,15 +82,15 @@ const AddBranch: React.FC<AddBranchProps> = ({ brandId }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <button className="bg-blue-500 text-white px-5 py-2 rounded-md">Add New Branch</button>
+        <button className="bg-blue-500 text-white px-5 py-2 rounded-md">{t("branch.addNewBranch")}</button>
       </DialogTrigger>
       <DialogContent>
-        <DialogTitle>Add Branch</DialogTitle>
+        <DialogTitle>{t("branch.addBranch")}</DialogTitle>
         <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
           {/* Name */}
           <div>
-            <label className="text-sm font-medium block mb-1">Name</label>
-            <input
+          <label className="text-sm font-medium block mb-1">{t("branch.name")}</label>
+          <input
               value={form.name}
               onChange={(e) => handleChange("name", e.target.value)}
               className="w-full px-4 py-2 border border-neutral-300 rounded-md bg-gray-100"
@@ -97,8 +99,8 @@ const AddBranch: React.FC<AddBranchProps> = ({ brandId }) => {
 
           {/* Location */}
           <div>
-            <label className="text-sm font-medium block mb-1">Location</label>
-            <input
+          <label className="text-sm font-medium block mb-1">{t("branch.city")}</label>
+          <input
               value={form.location}
               onChange={(e) => handleChange("location", e.target.value)}
               className="w-full px-4 py-2 border border-neutral-300 rounded-md bg-gray-100"
@@ -107,8 +109,8 @@ const AddBranch: React.FC<AddBranchProps> = ({ brandId }) => {
 
           {/* Address */}
           <div className="sm:col-span-2">
-            <label className="text-sm font-medium block mb-1">Address</label>
-            <input
+          <label className="text-sm font-medium block mb-1">{t("branch.address")}</label>
+          <input
               value={form.address}
               onChange={(e) => handleChange("address", e.target.value)}
               className="w-full px-4 py-2 border border-neutral-300 rounded-md bg-gray-100"
@@ -117,10 +119,10 @@ const AddBranch: React.FC<AddBranchProps> = ({ brandId }) => {
 
           {/* Manager */}
           <div>
-            <label className="text-sm font-medium block mb-1">Manager</label>
-            <Select value={form.manager} onValueChange={(val) => handleChange("manager", val)}>
+          <label className="text-sm font-medium block mb-1">{t("branch.manager")}</label>
+          <Select value={form.manager} onValueChange={(val) => handleChange("manager", val)}>
               <SelectTrigger className="w-full bg-gray-100">
-                <SelectValue placeholder="Select manager" />
+              <SelectValue placeholder={t("branch.search.allManagers") || "Select manager"} />
               </SelectTrigger>
               <SelectContent>
                 {managers.map((m) => (
@@ -134,8 +136,8 @@ const AddBranch: React.FC<AddBranchProps> = ({ brandId }) => {
 
           {/* Quantity */}
           <div>
-            <label className="text-sm font-medium block mb-1">Quantity Employees</label>
-            <input
+          <label className="text-sm font-medium block mb-1">{t("branch.staffCount")}</label>
+          <input
               value={form.quantity}
               onChange={(e) => handleChange("quantity", e.target.value)}
               className="w-full px-4 py-2 border border-neutral-300 rounded-md bg-gray-100"
@@ -144,10 +146,10 @@ const AddBranch: React.FC<AddBranchProps> = ({ brandId }) => {
 
           {/* Status */}
           <div>
-            <label className="text-sm font-medium block mb-1">Status</label>
-            <Select value={form.status} onValueChange={(val) => handleChange("status", val)}>
+          <label className="text-sm font-medium block mb-1">{t("branch.status")}</label>
+          <Select value={form.status} onValueChange={(val) => handleChange("status", val)}>
               <SelectTrigger className="w-full bg-gray-100">
-                <SelectValue placeholder="Select status" />
+              <SelectValue placeholder={t("branch.search.status") || "Select status"} />
               </SelectTrigger>
               <SelectContent>
                 {statuses.map((s) => (
@@ -162,7 +164,7 @@ const AddBranch: React.FC<AddBranchProps> = ({ brandId }) => {
           {/* Submit */}
           <div className="sm:col-span-2 mt-4 text-center">
             <button type="submit" className="bg-blue-500 text-white px-8 py-3 rounded-xl font-semibold">
-              Add Branch
+            {t("branch.addBranch")}
             </button>
           </div>
         </form>

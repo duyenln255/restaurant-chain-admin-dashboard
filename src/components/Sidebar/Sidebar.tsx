@@ -27,7 +27,7 @@ const sidebarItems = [
   { key: "feedback.title", icon: MessageSquare, link: "/feedback" },
   { key: "products.title", icon: Package, link: "/product" },
   { key: "brand.title", icon: LayoutGrid, link: "/brand" },
-  { key: "branch.title", icon: Share2, link: "/branch" },
+  // { key: "branch.title", icon: Share2, link: "/branch" },
   { key: "employee.title", icon: Users, link: "/employee" },
   { key: "vouchers.title", icon: Ticket, link: "/voucher" },
 ];

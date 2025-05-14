@@ -1,9 +1,12 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import type { BranchItem } from '../../types/BranchItem';
 import GenericTable from '../../components/Table/GenericTable';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import EditBranch from './EditBranch'
+import { useTranslation } from "react-i18next";
+import { deleteBranch } from "../../services/branch.service";
+import { toast } from "react-toastify";
 
 interface BranchTableProps {
   items: BranchItem[];
@@ -11,10 +14,28 @@ interface BranchTableProps {
 
 const BranchTable: React.FC<BranchTableProps> = ({ items }) => {
   const [editingBranch, setEditingBranch] = useState<BranchItem | null>(null)
-
-  const handleDelete = (item: BranchItem) => {
-    console.log('Delete:', item);
+  const { t } = useTranslation();
+  useEffect(() => {
+    if (editingBranch) {
+      document.getElementById("__editBranchTrigger__")?.click();
+    }
+  }, [editingBranch]);
+  
+  const handleDelete = async (item: BranchItem) => {
+    const confirmDelete = window.confirm(
+      `${t("branch.deleteConfirm")} "${item.name}"`
+    );
+    if (!confirmDelete) return;
+  
+    try {
+      await deleteBranch(item.id);
+      toast.success(`${t("branch.branchDeleted")} "${item.name}"`);
+      window.location.reload(); // hoặc refetch
+    } catch (error) {
+      toast.error(t("branch.deleteError"));
+    }
   };
+  
 
   const renderStatus = (status: BranchItem['status']) => {
     const colorMap: Record<string, string> = {
@@ -26,8 +47,8 @@ const BranchTable: React.FC<BranchTableProps> = ({ items }) => {
 
     return (
       <span className={`inline-block px-3 py-1 rounded-full text-sm ${colorMap[status] || 'bg-gray-200 text-gray-600'} whitespace-nowrap`}>
-        {status}
-      </span>
+    {t(`branch.${status.toLowerCase()}`)}
+    </span>
     );
   };
 
@@ -39,13 +60,13 @@ const BranchTable: React.FC<BranchTableProps> = ({ items }) => {
   }[] = [
     {
       key: '_index',
-      label: 'No.',
+      label: t("common.no") || "No.",
       align: 'left',
       render: (item) => <span className="text-gray-600 text-sm">{items.findIndex(i => i.id === item.id) + 1}</span>,
     },
     {
       key: "location",
-      label: "Location",
+      label: t("branch.city"),
       render: (item) => (
         <div className="text-sm text-wrap" title={item.location}>
           {item.location}
@@ -63,7 +84,7 @@ const BranchTable: React.FC<BranchTableProps> = ({ items }) => {
     // },
     {
       key: "brand",
-      label: "Brand",
+      label: t("branch.brand"),
       align : 'center',
       render: (item) => (
         <div className="text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.brand}>
@@ -73,7 +94,7 @@ const BranchTable: React.FC<BranchTableProps> = ({ items }) => {
     },
     {
       key: "manager",
-      label: "Manager",
+      label: t("branch.manager"),
       align : 'center',
       render: (item) => (
         <div className="text-sm overflow-hidden whitespace-nowrap text-ellipsis" title={item.manager}>
@@ -83,7 +104,7 @@ const BranchTable: React.FC<BranchTableProps> = ({ items }) => {
     },
     {
       key: "employees",
-      label: "Employees",
+      label: t("branch.staffCount"),
       align : 'center',
       render: (item) => (
         <div className="text-sm">{item.employees}</div>
@@ -92,12 +113,12 @@ const BranchTable: React.FC<BranchTableProps> = ({ items }) => {
 
     {
       key: "status",
-      label: "Status",
+      label: t("branch.status"),
       render: (item) => renderStatus(item.status),
     },
     {
       key: 'action',
-      label: 'Action',
+      label: t("common.action") || "Action",
       align: "center",
       render: (item) => (
         <div className="flex justify-center space-x-4">
@@ -125,7 +146,9 @@ const BranchTable: React.FC<BranchTableProps> = ({ items }) => {
       {editingBranch && (
         <EditBranch
           branch={editingBranch}
-          trigger={<></>} // No external trigger, opened via state
+          trigger={
+            <button className="hidden" id="__editBranchTrigger__" />
+          }
         />
       )}
     </div>

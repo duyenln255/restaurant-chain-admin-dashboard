@@ -1,5 +1,7 @@
 {
   "common": {
+    "reset": "Xoá",
+    "no": "STT",
     "update": "Cập nhật",
     "dashboard": "Trang chủ",
     "products": "Sản phẩm",
@@ -185,6 +187,8 @@
     }
   },
   "brand": {
+    "createdDate": "Ngày tạo",
+    "no": "STT",
     "title": "Thương hiệu",
     "brandList": "Danh sách thương hiệu",
     "addBrand": "Thêm thương hiệu",
@@ -212,6 +216,7 @@
     "loadingBrands": "Đang tải thương hiệu...",
     "noBrandsFound": "Không tìm thấy thương hiệu nào.",
     "search": {
+      "dateAdded":"Ngày tạo",
       "placeholder": "Tìm kiếm theo tên thương hiệu",
       "status": "Lọc theo trạng thái",
       "allStatuses": "Tất cả trạng thái",
@@ -537,7 +542,7 @@
     "orderDeleted": "Xóa đơn hàng thành công",
     "loadingOrders": "Đang tải đơn hàng...",
     "noOrdersFound": "Không tìm thấy đơn hàng nào.",
-    "id": "Id",
+    "id": "ID",
     "action": "Thao tác",
     "search": {
       "allTypes": "Tất cả loại",
@@ -558,7 +563,7 @@
   "vouchers": {
     "addError": "Không thể thêm mã giảm giá. Vui lòng thử lại.",
     "no": "No.",
-    "id": "Id",
+    "id": "ID",
     "title": "Mã giảm giá",
     "voucherList": "Danh sách mã giảm giá",
     "addVoucher": "Thêm mã giảm giá",
@@ -619,7 +624,7 @@
     "createAt": "Ngày tạo",
     "updateAt": "Ngày cập nhật",
     "action": "Thao tác",
-    "id": "Id",
+    "id": "ID",
     "no": "STT",
     "title": "Phản hồi",
     "feedbackList": "Danh sách phản hồi",

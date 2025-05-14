@@ -26,6 +26,7 @@
     "brandDeleted": "Xóa thương hiệu thành công",
     "loadingBrands": "Đang tải thương hiệu...",
     "noBrandsFound": "Không tìm thấy thương hiệu nào.",
+    "createdDate": "Ngày tạo",
     "search": {
       "placeholder": "Tìm kiếm theo tên thương hiệu",
       "status": "Lọc theo trạng thái",

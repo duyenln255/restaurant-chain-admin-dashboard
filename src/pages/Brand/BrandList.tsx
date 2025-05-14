@@ -1,19 +1,21 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import FilterBar from './FilterBar';
-import FilterBarBlog from './Blog/FilterBarBlog';
 import BrandTable from './BrandTable';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { fetchBrands } from '../../redux/slices/brandSlice';
 import type { RootState } from '../../redux/store';
 import type { BrandItem } from '../../types/BrandItem';
-import { useNavigate } from "react-router-dom"; 
-import { Button } from "../../components/ui/button"
+import { useNavigate } from "react-router-dom";
+import { Button } from "../../components/ui/button";
 import { getFilteredBrands } from "../../services/brand.service";
+import { useTranslation } from "react-i18next";
 
 const BrandList: React.FC = () => {
   const dispatch = useAppDispatch();
   const { items: rawBrands, loading, error } = useAppSelector((state: RootState) => state.brands);
   const navigate = useNavigate();
+  const { t } = useTranslation();
+
   const brands = useMemo<BrandItem[]>(
     () =>
       rawBrands.map((b) => ({
@@ -76,12 +78,14 @@ const BrandList: React.FC = () => {
         <div className="space-y-4">
           {/* Header */}
           <div className="flex justify-between items-center">
-            <h1 className="text-xl sm:text-2xl font-bold text-neutral-800">Brand Lists</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-neutral-800">
+              {t("brand.brandList")}
+            </h1>
             <Button
               onClick={() => navigate("/brand/add")}
               className="bg-blue-500 text-white text-sm sm:text-base px-4 py-2 rounded-md"
             >
-              Add New Brand
+              {t("brand.addNewBrand")}
             </Button>
           </div>
 
@@ -89,15 +93,24 @@ const BrandList: React.FC = () => {
           <FilterBar onFilterChange={setFilters} />
 
           {/* States */}
-          {loading && <p className="text-sm">Loading brands...</p>}
+          {loading && <p className="text-sm">{t("brand.loadingBrands")}</p>}
           {error && <p className="text-sm text-red-500">{error}</p>}
           {!loading && brands.length === 0 && (
-            <p className="text-sm text-gray-500">No brands found.</p>
+            <p className="text-sm text-gray-500">{t("brand.noBrandsFound")}</p>
           )}
 
           {/* Table */}
-          <BrandTable items={filteredBrands.length > 0 || filters.brandId || filters.status !== "all" || filters.dateAdded ? filteredBrands : brands} />
-          </div>
+          <BrandTable
+            items={
+              filteredBrands.length > 0 ||
+              filters.brandId ||
+              filters.status !== "all" ||
+              filters.dateAdded
+                ? filteredBrands
+                : brands
+            }
+          />
+        </div>
       </div>
     </div>
   );

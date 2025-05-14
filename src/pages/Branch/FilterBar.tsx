@@ -1,29 +1,30 @@
-"use client"
+"use client";
 
-import React, { useEffect, useState } from "react"
-import { ComboboxCustom } from "../../components/Combobox/Combobox"
-import { Button } from "../../components/ui/button"
+import React, { useEffect, useState } from "react";
+import { ComboboxCustom } from "../../components/Combobox/Combobox";
+import { Button } from "../../components/ui/button";
 import {
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
-} from "../../components/ui/select"
-import { getAllBrands } from "../../services/brand.service"
-// import { getAllManagers } from "../../services/manager.service"
-// import { getAllLocations } from "../../services/location.service"
+} from "../../components/ui/select";
+import { getAllBrands } from "../../services/brand.service";
+import { useTranslation } from "react-i18next";
 
 const FilterBar: React.FC = () => {
-  const [keyword, setKeyword] = useState("")
-  const [selectedBrand, setSelectedBrand] = useState("")
-  const [selectedManager, setSelectedManager] = useState("")
-  const [selectedLocation, setSelectedLocation] = useState("")
-  const [status, setStatus] = useState("all")
+  const { t } = useTranslation();
 
-  const [brands, setBrands] = useState([])
-  const [managers, setManagers] = useState([])
-  const [locations, setLocations] = useState([])
+  const [keyword, setKeyword] = useState("");
+  const [selectedBrand, setSelectedBrand] = useState("");
+  const [selectedManager, setSelectedManager] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState("");
+  const [status, setStatus] = useState("all");
+
+  const [brands, setBrands] = useState<any[]>([]);
+  const [managers, setManagers] = useState<any[]>([]);
+  const [locations, setLocations] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,43 +33,43 @@ const FilterBar: React.FC = () => {
           getAllBrands(),
           // getAllManagers(),
           // getAllLocations()
-        ])
-        // setBrands(brandData)
-        // setManagers(managerData)
-        // setLocations(locationData)
+        ]);
+        setBrands(brandData);
+        // setManagers(managerData);
+        // setLocations(locationData);
       } catch (error) {
-        console.error("Fetch filter data error:", error)
+        console.error("Fetch filter data error:", error);
       }
-    }
+    };
 
-    fetchData()
-  }, [])
+    fetchData();
+  }, []);
 
   const statusOptions = [
-    { value: "all", label: "--- All Status ---" },
-    { value: "active", label: "Active" },
-    { value: "inactive", label: "Inactive" },
-  ]
+    { value: "all", label: t("brand.search.allStatuses") },
+    { value: "active", label: t("brand.active") },
+    { value: "inactive", label: t("brand.inactive") },
+  ];
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-md flex flex-col sm:flex-row flex-wrap gap-4">
-      {/* Keyword Search as ComboboxCustom */}
+      {/* Keyword Search */}
       <ComboboxCustom
-        data={[{ value: "", label: "Search keyword..." }]} // optional dataset
+        data={[]}
         value={keyword}
         onChange={setKeyword}
-        placeholder="Search keyword..."
+        placeholder={t("brand.search.placeholder")}
         className="w-full sm:flex-1 border border-neutral-300"
       />
 
       {/* Location */}
       <Select value={selectedLocation} onValueChange={setSelectedLocation}>
         <SelectTrigger className="w-full sm:flex-1 border border-neutral-300 bg-white">
-          <SelectValue placeholder="--- All Locations ---" />
+          <SelectValue placeholder={t("branch.search.allLocations")} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">--- All Locations ---</SelectItem>
-          {locations.map((loc: any) => (
+          <SelectItem value="all">{t("branch.search.allLocations")}</SelectItem>
+          {locations.map((loc) => (
             <SelectItem key={loc.id} value={loc.id}>
               {loc.name}
             </SelectItem>
@@ -79,11 +80,11 @@ const FilterBar: React.FC = () => {
       {/* Manager */}
       <Select value={selectedManager} onValueChange={setSelectedManager}>
         <SelectTrigger className="w-full sm:flex-1 border border-neutral-300 bg-white">
-          <SelectValue placeholder="--- All Managers ---" />
+          <SelectValue placeholder={t("branch.search.allManagers")} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">--- All Managers ---</SelectItem>
-          {managers.map((mgr: any) => (
+          <SelectItem value="all">{t("branch.search.allManagers")}</SelectItem>
+          {managers.map((mgr) => (
             <SelectItem key={mgr.id} value={mgr.id}>
               {mgr.name}
             </SelectItem>
@@ -94,11 +95,11 @@ const FilterBar: React.FC = () => {
       {/* Brand */}
       <Select value={selectedBrand} onValueChange={setSelectedBrand}>
         <SelectTrigger className="w-full sm:flex-1 border border-neutral-300 bg-white">
-          <SelectValue placeholder="--- All Brands ---" />
+          <SelectValue placeholder={t("branch.search.allBrands")} />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">--- All Brands ---</SelectItem>
-          {brands.map((b: any) => (
+          <SelectItem value="all">{t("branch.search.allBrands")}</SelectItem>
+          {brands.map((b) => (
             <SelectItem key={b.id} value={b.id}>
               {b.name}
             </SelectItem>
@@ -109,7 +110,7 @@ const FilterBar: React.FC = () => {
       {/* Status */}
       <Select value={status} onValueChange={setStatus}>
         <SelectTrigger className="w-full sm:flex-1 border border-neutral-300 bg-white">
-          <SelectValue placeholder="--- All Status ---" />
+          <SelectValue placeholder={t("branch.search.allStatuses")} />
         </SelectTrigger>
         <SelectContent>
           {statusOptions.map((s) => (
@@ -134,24 +135,24 @@ const FilterBar: React.FC = () => {
             })
           }
         >
-          Search
+          {t("common.search")}
         </Button>
         <Button
           variant="outline"
           className="border-red-500 text-red-500"
           onClick={() => {
-            setKeyword("")
-            setSelectedLocation("")
-            setSelectedManager("")
-            setSelectedBrand("")
-            setStatus("all")
+            setKeyword("");
+            setSelectedLocation("");
+            setSelectedManager("");
+            setSelectedBrand("");
+            setStatus("all");
           }}
         >
-          Reset
+          {t("common.reset")}
         </Button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default FilterBar
+export default FilterBar;

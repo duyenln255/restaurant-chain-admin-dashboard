@@ -4,13 +4,14 @@ import type { BrandItem } from '../../types/BrandItem';
 import GenericTable from '../../components/Table/GenericTable';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPen, faTrash, faFileAlt, faLink } from "@fortawesome/free-solid-svg-icons";
-import BlogListModal from "./Blog/BlogListModal";  
+import BlogListModal from "./Blog/BlogListModal";
 import { deleteBrand } from "../../services/brand.service";
-import { useAppDispatch } from "../../redux/hooks";         
+import { useAppDispatch } from "../../redux/hooks";
 import { fetchBrands } from "../../redux/slices/brandSlice";
 import { LuImageUp } from "react-icons/lu";
-import { Share2 } from "lucide-react"; // 
+import { Share2 } from "lucide-react";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 interface BrandTableProps {
   items: BrandItem[];
@@ -20,22 +21,23 @@ const BrandTable: React.FC<BrandTableProps> = ({ items }) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [showBlogModal, setShowBlogModal] = useState(false);
+  const { t } = useTranslation();
 
   const handleEdit = (item: BrandItem) => {
     navigate(`/brand/edit/${item.id}`);
   };
 
   const handleDelete = async (item: BrandItem) => {
-    const confirmed = window.confirm(`Do you really want to delete brand "${item.name}"?`);
+    const confirmed = window.confirm(`${t("brand.deleteConfirm")} "${item.name}"?`);
     if (!confirmed) return;
 
     try {
       await deleteBrand(item.id);
-      toast.success(`Deleted brand "${item.name}" successfully!`);
+      toast.success(`${t("brand.brandDeleted")}: "${item.name}"`);
       dispatch(fetchBrands());
     } catch (error) {
       console.error("Delete failed:", error);
-      toast.error("Failed to delete brand.");
+      toast.error(t("brand.deleteError"));
     }
   };
 
@@ -47,7 +49,7 @@ const BrandTable: React.FC<BrandTableProps> = ({ items }) => {
   }[] = [
     {
       key: '_index',
-      label: 'No.',
+      label: t("brand.no"),
       align: 'left',
       render: (item) => <span className="text-gray-600 text-sm">{items.findIndex(i => i.id === item.id) + 1}</span>,
     },
@@ -61,7 +63,7 @@ const BrandTable: React.FC<BrandTableProps> = ({ items }) => {
     },
     {
       key: "logo",
-      label: "Logo",
+      label: t("brand.logo"),
       align: 'center',
       render: (item) => (
         <div className="flex justify-center w-12 h-12">
@@ -79,14 +81,14 @@ const BrandTable: React.FC<BrandTableProps> = ({ items }) => {
     },
     {
       key: "name",
-      label: "Brand Name",
+      label: t("brand.name"),
       render: (item) => (
         <div className="text-sm font-semibold">{item.name}</div>
       ),
     },
     {
       key: "link",
-      label: "Link",
+      label: t("brand.website"),
       render: (item) => (
         <a
           href={item.link}
@@ -100,38 +102,38 @@ const BrandTable: React.FC<BrandTableProps> = ({ items }) => {
     },
     {
       key: "description",
-      label: "Description",
+      label: t("brand.description"),
       render: (item) => (
         <div className="text-sm">{item.description}</div>
       ),
     },
     {
       key: "opening_hours",
-      label: "Opening",
+      label: t("brand.opening"),
       render: (item) => (
         <span className="font-medium text-green-600">{item.opening_hours}</span>
       ),
     },
     {
       key: "closed_hours",
-      label: "Closed",
+      label: t("brand.closed"),
       render: (item) => (
         <span className="font-medium text-red-600">{item.closed_hours}</span>
       ),
     },
     {
       key: "date_added",
-      label: "Created Date",
+      label: t("brand.createdDate") || "Created Date",
       align: "center",
       render: (item) => (
         <span className="text-sm text-gray-700">
           {new Date(item.date_added).toLocaleDateString()}
         </span>
       ),
-    },    
+    },
     {
       key: "status",
-      label: "Status",
+      label: t("brand.status"),
       render: (item) => {
         const colorMap: Record<string, string> = {
           Active: 'bg-green-100 text-green-700',
@@ -139,40 +141,39 @@ const BrandTable: React.FC<BrandTableProps> = ({ items }) => {
         };
         return (
           <span className={`inline-block px-3 py-1 rounded-full text-sm ${colorMap[item.status] || 'bg-gray-200 text-gray-600'} whitespace-nowrap`}>
-            {item.status}
+            {t(`brand.${item.status.toLowerCase()}`)}
           </span>
         );
       },
     },
     {
       key: 'action',
-      label: 'Action',
+      label: t("common.action"),
       align: "center",
       render: (item) => (
         <div className="flex justify-center space-x-4">
           <button onClick={() => handleEdit(item)} className="text-blue-500 hover:text-blue-700">
             <FontAwesomeIcon icon={faPen} size="sm" />
           </button>
-    
+
           <button onClick={() => handleDelete(item)} className="text-red-500 hover:text-red-700">
             <FontAwesomeIcon icon={faTrash} size="sm" />
           </button>
-    
+
           <button onClick={() => setShowBlogModal(true)} className="text-gray-600 hover:text-gray-800">
             <FontAwesomeIcon icon={faFileAlt} size="sm" />
           </button>
-    
+
           <button
             onClick={() => navigate(`/branch?brandId=${item.id}`)}
             className="text-green-600 hover:text-green-800"
-            title="Go to Branch"
+            title={t("brand.branches")}
           >
             <Share2 className="w-4 h-4" />
           </button>
         </div>
       ),
     }
-    
   ];
 
   return (

@@ -1,5 +1,7 @@
 {
   "common": {
+    "no": "No", 
+    "reset": "Reset",
     "update": "Update",
     "action": "Action",
     "dashboard": "Dashboard",
@@ -185,6 +187,8 @@
     }
   },
   "brand": {
+    "no":"No.",
+    "createdDate": "Created Date",
     "title": "Brands",
     "brandList": "Brand Lists",
     "addBrand": "Add Brand",
@@ -212,6 +216,7 @@
     "loadingBrands": "Loading brands...",
     "noBrandsFound": "No brands found.",
     "search": {
+      "dateAdded": "Date Added",
       "placeholder": "Search by brand name",
       "status": "Filter by status",
       "allStatuses": "All Statuses",
@@ -220,6 +225,10 @@
     }
   },
   "branch": {
+    "deleteConfirm": "Are you sure you want to delete this branch?",
+    "deleteError": "Failed to delete branch. Please try again.",
+    "branchDeleted": "Branch deleted successfully",
+    "branchUpdated": "Branch updated successfully",
     "title": "Branches",
     "branchList": "Branch Lists",
     "addBranch": "Add Branch",

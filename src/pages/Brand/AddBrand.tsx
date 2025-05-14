@@ -11,9 +11,11 @@ import { LuImageUp } from "react-icons/lu";
 import { X } from "lucide-react";
 import { createBrand } from "../../services/brand.service";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 const AddBrand: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [logo, setLogo] = useState<File | null>(null);
   const [name, setName] = useState("");
@@ -38,27 +40,26 @@ const AddBrand: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-  
+
     const newBrand = {
       name,
       description,
       opening_hours: openingHour,
       closed_hours: closingHour,
-      logo_url: "", // nếu chưa có API upload logo
+      logo_url: "",
       website_url: link,
       status,
     };
-  
+
     try {
       await createBrand(newBrand);
-      toast.success("Brand created successfully!");
+      toast.success(t("brand.brandAdded"));
       navigate("/brand");
     } catch (err) {
       console.error("Error creating brand:", err);
-      toast.error("Failed to create brand. Please try again.");
+      toast.error(t("brand.deleteError"));
     }
   };
-  
 
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -72,10 +73,10 @@ const AddBrand: React.FC = () => {
         className="text-sm text-blue-600 cursor-pointer"
         onClick={() => navigate("/brand")}
       >
-        ← Back to Brand List
+        ← {t("brand.brandList")}
       </div>
 
-      <h1 className="text-3xl font-bold text-neutral-800">Add New Brand</h1>
+      <h1 className="text-3xl font-bold text-neutral-800">{t("brand.addNewBrand")}</h1>
 
       <div className="bg-white rounded-xl p-8 shadow-md">
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -115,7 +116,7 @@ const AddBrand: React.FC = () => {
               />
             </label>
             <span className="text-sm text-blue-600 font-medium">
-              Upload Brand Photo <span className="text-red-500">*</span>
+              {t("brand.logo")} <span className="text-red-500">*</span>
             </span>
             {errors.logo && (
               <span className="text-red-500 text-xs">{errors.logo}</span>
@@ -126,7 +127,7 @@ const AddBrand: React.FC = () => {
           <div>
             <div className="flex justify-between items-center mb-1">
               <label className="text-sm font-medium">
-                Brand Name <span className="text-red-500">*</span>
+                {t("brand.name")} <span className="text-red-500">*</span>
               </label>
               {errors.name && (
                 <span className="text-red-500 text-xs">{errors.name}</span>
@@ -134,7 +135,7 @@ const AddBrand: React.FC = () => {
             </div>
             <input
               type="text"
-              placeholder="Enter brand name"
+              placeholder={t("brand.search.placeholder")}
               className="text-sm w-full border border-neutral-300 rounded-md px-4 py-2"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -145,27 +146,25 @@ const AddBrand: React.FC = () => {
           <div>
             <div className="flex justify-between items-center mb-1">
               <label className="text-sm font-medium">
-                Description <span className="text-red-500">*</span>
+                {t("brand.description")} <span className="text-red-500">*</span>
               </label>
               {errors.description && (
-                <span className="text-red-500 text-xs">
-                  {errors.description}
-                </span>
+                <span className="text-red-500 text-xs">{errors.description}</span>
               )}
             </div>
             <textarea
-              placeholder="Enter description"
+              placeholder={t("brand.description")}
               className="text-sm w-full border border-neutral-300 rounded-md px-4 py-2 min-h-30"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
           </div>
 
-          {/* Website Link */}
+          {/* Website */}
           <div>
             <div className="flex justify-between items-center mb-1">
               <label className="text-sm font-medium">
-                Website Link <span className="text-red-500">*</span>
+                {t("brand.website")} <span className="text-red-500">*</span>
               </label>
               {errors.link && (
                 <span className="text-red-500 text-xs">{errors.link}</span>
@@ -184,7 +183,7 @@ const AddBrand: React.FC = () => {
           <div>
             <div className="flex justify-between items-center mb-1">
               <label className="text-sm font-medium">
-                Opening Hour <span className="text-red-500">*</span>
+                {t("brand.opening")} <span className="text-red-500">*</span>
               </label>
               {errors.openingHour && (
                 <span className="text-red-500 text-xs">{errors.openingHour}</span>
@@ -202,7 +201,7 @@ const AddBrand: React.FC = () => {
           <div>
             <div className="flex justify-between items-center mb-1">
               <label className="text-sm font-medium">
-                Closing Hour <span className="text-red-500">*</span>
+                {t("brand.closed")} <span className="text-red-500">*</span>
               </label>
               {errors.closingHour && (
                 <span className="text-red-500 text-xs">{errors.closingHour}</span>
@@ -218,14 +217,14 @@ const AddBrand: React.FC = () => {
 
           {/* Status */}
           <div className="space-y-1">
-            <label className="text-sm font-medium block">Status</label>
+            <label className="text-sm font-medium block">{t("brand.status")}</label>
             <Select value={status} onValueChange={setStatus}>
               <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select status" />
+                <SelectValue placeholder={t("brand.search.status")} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Active">Active</SelectItem>
-                <SelectItem value="Inactive">Inactive</SelectItem>
+                <SelectItem value="Active">{t("brand.active")}</SelectItem>
+                <SelectItem value="Inactive">{t("brand.inactive")}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -236,7 +235,7 @@ const AddBrand: React.FC = () => {
               type="submit"
               className="bg-blue-500 text-white px-8 py-2 rounded-md hover:bg-blue-600"
             >
-              Add Now
+              {t("brand.addBrand")}
             </button>
           </div>
         </form>
