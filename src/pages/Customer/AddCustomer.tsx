@@ -82,7 +82,7 @@ const AddCustomer: React.FC = () => {
       navigate("/customer");
     } catch (error) {
       console.error("Failed to add customer:", error);
-      alert(t("customer.deleteError"));
+      alert(t("customer.addError"));
     } finally {
       setLoading(false);
     }

@@ -14,21 +14,18 @@ const EditVoucher: React.FC = () => {
     (state: RootState) => state.vouchers
   );
 
+  const [title, setTitle] = useState("");
   const [code, setCode] = useState("");
   const [description, setDescription] = useState("");
-  const [discountAmount, setDiscountAmount] = useState("");
-  const [discountType, setDiscountType] = useState<"percentage" | "fixed">(
-    "percentage"
-  );
-  const [minOrderAmount, setMinOrderAmount] = useState("");
-  const [maxDiscountAmount, setMaxDiscountAmount] = useState("");
+  const [discountPercent, setDiscountPercent] = useState("");
+  const [discountType, setDiscountType] = useState("Drink");
+  const [type, setType] = useState("Promotion");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [usageLimit, setUsageLimit] = useState("");
-  const [usedCount, setUsedCount] = useState(0);
-  const [status, setStatus] = useState<"active" | "inactive" | "expired">(
-    "active"
-  );
+  const [status, setStatus] = useState("Active");
+  const [brandId, setBrandId] = useState(
+    "68b50680-d17d-4470-b2cf-306dd234e982"
+  ); // Default brand ID
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
@@ -42,35 +39,49 @@ const EditVoucher: React.FC = () => {
 
   useEffect(() => {
     if (selectedVoucher) {
-      setCode(selectedVoucher.code);
-      setDescription(selectedVoucher.description);
-      setDiscountAmount(selectedVoucher.discount_amount.toString());
-      setDiscountType(selectedVoucher.discount_type);
-      setMinOrderAmount(selectedVoucher.min_order_amount.toString());
-      setMaxDiscountAmount(selectedVoucher.max_discount_amount.toString());
-      setStartDate(selectedVoucher.start_date.split("T")[0]); // Format date for input
-      setEndDate(selectedVoucher.end_date.split("T")[0]); // Format date for input
-      setUsageLimit(selectedVoucher.usage_limit.toString());
-      setUsedCount(selectedVoucher.used_count);
-      setStatus(selectedVoucher.status);
+      console.log("Selected voucher:", selectedVoucher);
+      setTitle(selectedVoucher.title || "");
+      setCode(selectedVoucher.code || "");
+      setDescription(selectedVoucher.description || "");
+      setDiscountPercent(selectedVoucher.discount_percent?.toString() || "");
+      setDiscountType(selectedVoucher.discount_type || "Drink");
+      setType(selectedVoucher.type || "Promotion");
+      setStartDate(
+        selectedVoucher.start_date
+          ? selectedVoucher.start_date.split("T")[0]
+          : ""
+      ); // Format date for input
+      setEndDate(
+        selectedVoucher.end_date ? selectedVoucher.end_date.split("T")[0] : ""
+      ); // Format date for input
+      setStatus(selectedVoucher.status || "Active");
+      setBrandId(selectedVoucher.brand_id || "");
     }
   }, [selectedVoucher]);
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
+    if (!title.trim()) newErrors.title = "Required";
     if (!code.trim()) newErrors.code = "Required";
     if (!description.trim()) newErrors.description = "Required";
-    if (!discountAmount.trim()) newErrors.discountAmount = "Required";
-    if (!minOrderAmount.trim()) newErrors.minOrderAmount = "Required";
-    if (discountType === "percentage" && !maxDiscountAmount.trim())
-      newErrors.maxDiscountAmount = "Required";
+    if (!discountPercent.trim()) newErrors.discountPercent = "Required";
     if (!startDate) newErrors.startDate = "Required";
     if (!endDate) newErrors.endDate = "Required";
-    if (!usageLimit.trim()) newErrors.usageLimit = "Required";
+    if (!type.trim()) newErrors.type = "Required";
+    if (!discountType.trim()) newErrors.discountType = "Required";
+    if (!brandId.trim()) newErrors.brandId = "Required";
 
     // Validate dates
     if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
       newErrors.endDate = "End date must be after start date";
+    }
+
+    // Validate discount percent
+    if (
+      discountPercent &&
+      (Number(discountPercent) <= 0 || Number(discountPercent) > 100)
+    ) {
+      newErrors.discountPercent = "Discount percent must be between 1 and 100";
     }
 
     setErrors(newErrors);
@@ -88,16 +99,16 @@ const EditVoucher: React.FC = () => {
         editVoucher({
           id,
           voucher: {
+            title,
             code,
             description,
-            discount_amount: Number(discountAmount),
+            discount_percent: Number(discountPercent),
             discount_type: discountType,
-            min_order_amount: Number(minOrderAmount),
-            max_discount_amount: Number(maxDiscountAmount || 0),
+            type,
             start_date: startDate,
             end_date: endDate,
-            usage_limit: Number(usageLimit),
             status,
+            brand_id: brandId,
           },
         })
       ).unwrap();
@@ -135,6 +146,27 @@ const EditVoucher: React.FC = () => {
               <div className="bg-white rounded-xl p-8 shadow-md px-[250px]">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Title */}
+                    <div>
+                      <div className="flex justify-between mb-1">
+                        <label className="text-sm font-medium">
+                          Title <span className="text-red-500">*</span>
+                        </label>
+                        {errors.title && (
+                          <span className="text-red-500 text-xs">
+                            {errors.title}
+                          </span>
+                        )}
+                      </div>
+                      <input
+                        type="text"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        className="w-full border border-gray-300 rounded-md px-4 py-2"
+                        placeholder="e.g. Spring Specials"
+                      />
+                    </div>
+
                     {/* Voucher Code */}
                     <div>
                       <div className="flex justify-between mb-1">
@@ -152,8 +184,31 @@ const EditVoucher: React.FC = () => {
                         value={code}
                         onChange={(e) => setCode(e.target.value)}
                         className="w-full border border-gray-300 rounded-md px-4 py-2"
-                        placeholder="e.g. SUMMER2023"
+                        placeholder="e.g. SPRING25DRINKS"
                       />
+                    </div>
+
+                    {/* Voucher Type */}
+                    <div>
+                      <div className="flex justify-between mb-1">
+                        <label className="text-sm font-medium">
+                          Voucher Type <span className="text-red-500">*</span>
+                        </label>
+                        {errors.type && (
+                          <span className="text-red-500 text-xs">
+                            {errors.type}
+                          </span>
+                        )}
+                      </div>
+                      <select
+                        value={type}
+                        onChange={(e) => setType(e.target.value)}
+                        className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white"
+                      >
+                        <option value="Promotion">Promotion</option>
+                        <option value="Coupon">Coupon</option>
+                        <option value="Discount">Discount</option>
+                      </select>
                     </div>
 
                     {/* Discount Type */}
@@ -162,96 +217,46 @@ const EditVoucher: React.FC = () => {
                         <label className="text-sm font-medium">
                           Discount Type <span className="text-red-500">*</span>
                         </label>
+                        {errors.discountType && (
+                          <span className="text-red-500 text-xs">
+                            {errors.discountType}
+                          </span>
+                        )}
                       </div>
                       <select
                         value={discountType}
-                        onChange={(e) =>
-                          setDiscountType(
-                            e.target.value as "percentage" | "fixed"
-                          )
-                        }
+                        onChange={(e) => setDiscountType(e.target.value)}
                         className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white"
                       >
-                        <option value="percentage">Percentage (%)</option>
-                        <option value="fixed">Fixed Amount</option>
+                        <option value="Drink">Drink</option>
+                        <option value="Food">Food</option>
+                        <option value="All">All</option>
                       </select>
                     </div>
 
-                    {/* Discount Amount */}
+                    {/* Discount Percent */}
                     <div>
                       <div className="flex justify-between mb-1">
                         <label className="text-sm font-medium">
-                          {discountType === "percentage"
-                            ? "Discount Percentage"
-                            : "Discount Amount"}{" "}
+                          Discount Percent{" "}
                           <span className="text-red-500">*</span>
                         </label>
-                        {errors.discountAmount && (
+                        {errors.discountPercent && (
                           <span className="text-red-500 text-xs">
-                            {errors.discountAmount}
+                            {errors.discountPercent}
                           </span>
                         )}
                       </div>
                       <input
                         type="number"
-                        value={discountAmount}
-                        onChange={(e) => setDiscountAmount(e.target.value)}
+                        value={discountPercent}
+                        onChange={(e) => setDiscountPercent(e.target.value)}
                         className="w-full border border-gray-300 rounded-md px-4 py-2"
-                        placeholder={
-                          discountType === "percentage" ? "e.g. 10" : "e.g. 50"
-                        }
-                        min="0"
-                        max={discountType === "percentage" ? "100" : undefined}
+                        placeholder="e.g. 25"
+                        min="1"
+                        max="100"
                       />
                     </div>
-
-                    {/* Min Order Amount */}
-                    <div>
-                      <div className="flex justify-between mb-1">
-                        <label className="text-sm font-medium">
-                          Minimum Order Amount{" "}
-                          <span className="text-red-500">*</span>
-                        </label>
-                        {errors.minOrderAmount && (
-                          <span className="text-red-500 text-xs">
-                            {errors.minOrderAmount}
-                          </span>
-                        )}
-                      </div>
-                      <input
-                        type="number"
-                        value={minOrderAmount}
-                        onChange={(e) => setMinOrderAmount(e.target.value)}
-                        className="w-full border border-gray-300 rounded-md px-4 py-2"
-                        placeholder="e.g. 100"
-                        min="0"
-                      />
-                    </div>
-
-                    {/* Max Discount Amount (only for percentage) */}
-                    {discountType === "percentage" && (
-                      <div>
-                        <div className="flex justify-between mb-1">
-                          <label className="text-sm font-medium">
-                            Maximum Discount Amount{" "}
-                            <span className="text-red-500">*</span>
-                          </label>
-                          {errors.maxDiscountAmount && (
-                            <span className="text-red-500 text-xs">
-                              {errors.maxDiscountAmount}
-                            </span>
-                          )}
-                        </div>
-                        <input
-                          type="number"
-                          value={maxDiscountAmount}
-                          onChange={(e) => setMaxDiscountAmount(e.target.value)}
-                          className="w-full border border-gray-300 rounded-md px-4 py-2"
-                          placeholder="e.g. 50"
-                          min="0"
-                        />
-                      </div>
-                    )}
 
                     {/* Start Date */}
                     <div>
@@ -293,43 +298,6 @@ const EditVoucher: React.FC = () => {
                       />
                     </div>
 
-                    {/* Usage Limit */}
-                    <div>
-                      <div className="flex justify-between mb-1">
-                        <label className="text-sm font-medium">
-                          Usage Limit <span className="text-red-500">*</span>
-                        </label>
-                        {errors.usageLimit && (
-                          <span className="text-red-500 text-xs">
-                            {errors.usageLimit}
-                          </span>
-                        )}
-                      </div>
-                      <input
-                        type="number"
-                        value={usageLimit}
-                        onChange={(e) => setUsageLimit(e.target.value)}
-                        className="w-full border border-gray-300 rounded-md px-4 py-2"
-                        placeholder="e.g. 100"
-                        min="1"
-                      />
-                    </div>
-
-                    {/* Used Count (read-only) */}
-                    <div>
-                      <div className="flex justify-between mb-1">
-                        <label className="text-sm font-medium">
-                          Used Count
-                        </label>
-                      </div>
-                      <input
-                        type="number"
-                        value={usedCount}
-                        readOnly
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 bg-gray-100"
-                      />
-                    </div>
-
                     {/* Status */}
                     <div>
                       <label className="block text-sm mb-1 font-medium">
@@ -337,16 +305,11 @@ const EditVoucher: React.FC = () => {
                       </label>
                       <select
                         value={status}
-                        onChange={(e) =>
-                          setStatus(
-                            e.target.value as "active" | "inactive" | "expired"
-                          )
-                        }
+                        onChange={(e) => setStatus(e.target.value)}
                         className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white"
                       >
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                        <option value="expired">Expired</option>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
                       </select>
                     </div>
 

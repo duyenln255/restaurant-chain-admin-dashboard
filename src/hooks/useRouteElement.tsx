@@ -28,6 +28,9 @@ import AddFeedback from "../pages/Feedback/AddFeedback";
 import EditFeedback from "../pages/Feedback/EditFeedback";
 import AddBranch from "../pages/Branch/AddBranch";
 import EditBranch from "../pages/Branch/EditBranch";
+import AddVoucher from "../pages/Voucher/AddVoucher";
+import EditVoucher from "../pages/Voucher/EditVoucher";
+import EmailInput from "../pages/ForgotPassword/EmailInput";
 
 export default function useRouteElement() {
   const routes = useRoutes([
@@ -38,6 +41,10 @@ export default function useRouteElement() {
     {
       path: "/login",
       element: <Login />,
+    },
+    {
+      path: "/forgot-password",
+      element: <EmailInput />,
     },
     {
       element: (
@@ -71,6 +78,8 @@ export default function useRouteElement() {
         { path: "/feedback/edit/:id", element: <EditFeedback /> },
         { path: "/branch/add", element: <AddBranch /> },
         { path: "/branch/edit/:id", element: <EditBranch /> },
+        { path: "/voucher/add", element: <AddVoucher /> },
+        { path: "/voucher/edit/:id", element: <EditVoucher /> },
       ],
     },
   ]);

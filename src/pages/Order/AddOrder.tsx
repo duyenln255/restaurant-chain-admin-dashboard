@@ -90,7 +90,7 @@ const AddOrder: React.FC = () => {
       navigate("/order-list");
     } catch (error) {
       console.error("Failed to add order:", error);
-      alert(t("orders.deleteError"));
+      alert(t("orders.addError"));
     } finally {
       setLoading(false);
     }

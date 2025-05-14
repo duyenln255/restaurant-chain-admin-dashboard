@@ -136,6 +136,7 @@
     "hidden": "Hidden"
   },
   "customer": {
+    "addError": "Failed to add custome  r. Please try again.",
     "title": "Customers",
     "customerList": "Customer Lists",
     "addCustomer": "Add Customer",
@@ -399,6 +400,7 @@
     }
   },
   "orders": {
+    "addError": "Failed to add order. Please try again.",
     "id": "ID",
     "name": "Name",
     "address": "Address",
@@ -472,6 +474,7 @@
     }
   },
   "vouchers": {
+    "addError": "Failed to add voucher. Please try again.",
     "id": "ID",
     "no": "No.",
     "description": "Description",

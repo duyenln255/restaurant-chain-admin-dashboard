@@ -136,6 +136,7 @@
     "hidden": "Ẩn"
   },
   "customer": {
+    "addError": "Không thể thêm khách hàng. Vui lòng thử lại.",
     "title": "Khách hàng",
     "customerList": "Danh sách khách hàng",
     "addCustomer": "Thêm khách hàng",
@@ -480,6 +481,7 @@
     }
   },
   "orders": {
+    "addError": "Không thể thêm đơn hàng. Vui lòng thử lại.",
     "loaction": "Địa điểm",
     "dateTime": "Ngày giờ",
     "phone": "Số điện thoại",
@@ -554,6 +556,7 @@
     }
   },
   "vouchers": {
+    "addError": "Không thể thêm mã giảm giá. Vui lòng thử lại.",
     "no": "No.",
     "id": "Id",
     "title": "Mã giảm giá",
