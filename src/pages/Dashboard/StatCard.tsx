@@ -1,8 +1,15 @@
-import React from 'react';
-import type { StatCardProps } from '../../types/StatCardProps';
-import './StatCard.css';
+import React from "react";
+import type { StatCardProps } from "../../types/StatCardProps";
+import "./StatCard.css";
 
-const StatCard: React.FC<StatCardProps> = ({ title, value, change, changeText, icon, bgColor }) => {
+const StatCard: React.FC<StatCardProps> = ({
+  title,
+  value,
+  change,
+  changeText,
+  icon,
+  bgColor,
+}) => {
   return (
     <div className="stat-card">
       <div className="stat-card-content">

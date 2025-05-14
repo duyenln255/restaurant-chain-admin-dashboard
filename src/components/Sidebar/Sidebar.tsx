@@ -1,6 +1,7 @@
-import React from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FaTimes } from 'react-icons/fa';
+import React from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { FaTimes } from "react-icons/fa";
+import { useTranslation } from "react-i18next";
 import {
   Home,
   List,
@@ -12,22 +13,23 @@ import {
   Share2,
   Users,
   Ticket,
-  LogOut
-} from 'lucide-react';
+  LogOut,
+} from "lucide-react";
 
 import { logout } from "../../services/auth.service";
 
+// Sidebar items with translation keys
 const sidebarItems = [
-  { name: 'Dashboard', icon: Home, link: '/dashboard' },
-  { name: 'Order List', icon: List, link: '/order-list' },
-  { name: 'Customer', icon: User, link: '/customer' },
-  { name: 'Reservation', icon: BookOpen, link: '/reservation' },
-  { name: 'Feedback', icon: MessageSquare, link: '/feedback' },
-  { name: 'Product', icon: Package, link: '/product' },
-  { name: 'Brand', icon: LayoutGrid, link: '/brand' },
-  { name: 'Branch', icon: Share2, link: '/branch' },
-  { name: 'Employee', icon: Users, link: '/employee' },
-  { name: 'Voucher', icon: Ticket, link: '/voucher' },
+  { key: "common.dashboard", icon: Home, link: "/dashboard" },
+  { key: "orders.title", icon: List, link: "/order-list" },
+  { key: "customer.title", icon: User, link: "/customer" },
+  { key: "common.reservation", icon: BookOpen, link: "/reservation" },
+  { key: "feedback.title", icon: MessageSquare, link: "/feedback" },
+  { key: "products.title", icon: Package, link: "/product" },
+  { key: "brand.title", icon: LayoutGrid, link: "/brand" },
+  { key: "branch.title", icon: Share2, link: "/branch" },
+  { key: "employee.title", icon: Users, link: "/employee" },
+  { key: "vouchers.title", icon: Ticket, link: "/voucher" },
 ];
 
 interface SidebarProps {
@@ -38,6 +40,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const isMobile = !!onClose;
+  const { t } = useTranslation();
 
   const handleLogout = () => {
     logout();
@@ -45,35 +48,35 @@ const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
   };
 
   return (
-    <div className={`fixed top-0 left-0 z-40 h-screen bg-white flex flex-col overflow-y-auto
-      ${isMobile ? 'w-full' : 'w-64'} p-6 border-r border-gray-200`}>
-      
-    {/* Logo + Close */}
-    <div className="flex items-start justify-start gap-2 mb-6">
-      {/* Logo + Text */}
-      <div className="flex items-center gap-2 ml-5">
-        <img
-          src="/utopia_logo.svg"
-          alt="Utopia Logo"
-          className="object-contain w-8 h-8"
-        />
-        <h1 className="font-bold text-xl leading-none flex items-center">
-          <span className="text-blue-600">UTO</span>
-          <span className="text-[#4B5563]">PIA</span>
-        </h1>
+    <div
+      className={`fixed top-0 left-0 z-40 h-screen bg-white flex flex-col overflow-y-auto
+      ${isMobile ? "w-full" : "w-64"} p-6 border-r border-gray-200`}
+    >
+      {/* Logo + Close */}
+      <div className="flex items-start justify-start gap-2 mb-6">
+        {/* Logo + Text */}
+        <div className="flex items-center gap-2 ml-5">
+          <img
+            src="/utopia_logo.svg"
+            alt="Utopia Logo"
+            className="object-contain w-8 h-8"
+          />
+          <h1 className="font-bold text-xl leading-none flex items-center">
+            <span className="text-blue-600">UTO</span>
+            <span className="text-[#4B5563]">PIA</span>
+          </h1>
+        </div>
+
+        {/* Close button (mobile only) */}
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="ml-auto text-gray-600 hover:text-black"
+          >
+            <FaTimes className="w-5 h-5" />
+          </button>
+        )}
       </div>
-
-      {/* Close button (mobile only) */}
-      {onClose && (
-        <button
-          onClick={onClose}
-          className="ml-auto text-gray-600 hover:text-black"
-        >
-          <FaTimes className="w-5 h-5" />
-        </button>
-      )}
-    </div>
-
 
       {/* Sidebar Item */}
       <nav className="flex flex-col items-start gap-3 pb-6 flex-grow">
@@ -87,17 +90,17 @@ const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
               onClick={onClose}
               className={`flex items-center w-full rounded-md transition-all px-3 md:px-3 sm:px-4 py-2 md:py-2 sm:py-3 text-sm sm:text-base ${
                 isActive
-                  ? 'bg-blue-100 text-blue-700 font-semibold'
-                  : 'text-gray-700 hover:bg-gray-100 hover:text-blue-700'
+                  ? "bg-blue-100 text-blue-700 font-semibold"
+                  : "text-gray-700 hover:bg-gray-100 hover:text-blue-700"
               }`}
             >
               <div
                 className={`w-1 h-5 rounded bg-blue-600 mr-3 ${
-                  isActive ? 'block' : 'invisible'
+                  isActive ? "block" : "invisible"
                 }`}
               ></div>
               <Icon className="w-4 h-4 sm:w-5 sm:h-5 mr-3" strokeWidth={2} />
-              <span>{item.name}</span>
+              <span>{t(item.key)}</span>
             </Link>
           );
         })}
@@ -110,7 +113,7 @@ const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
           className="flex items-center gap-3 text-sm sm:text-lg px-3 md:px-3 sm:px-4 py-2 md:py-2 sm:py-3 text-red-500 hover:text-red-600 hover:bg-red-50 rounded-md transition-all"
         >
           <LogOut className="w-5 h-5 sm:w-6 sm:h-6" />
-          <span>Logout</span>
+          <span>{t("common.logout")}</span>
         </button>
       </div>
     </div>

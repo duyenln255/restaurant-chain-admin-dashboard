@@ -33,19 +33,28 @@ export const getAllEmployees = async (): Promise<Employee[]> => {
 export const getEmployeeById = async (id: string): Promise<Employee> => {
   const response = await axiosInstance.get<{ staff: Employee }>(`/staff/${id}`);
   return response.data.staff;
-}
+};
 
 // API: Create a new employee
 export const createEmployee = async (employee: Employee): Promise<Employee> => {
-  const response = await axiosInstance.post<{ staff: Employee }>("/staff", employee);
+  const response = await axiosInstance.post<{ staff: Employee }>(
+    "/staff",
+    employee
+  );
   return response.data.staff;
-}
+};
 
 // API: Update an employee by ID
-export const updateEmployee = async (id: string, employee: Employee): Promise<Employee> => {
-  const response = await axiosInstance.put<{ staff: Employee }>(`/staff/${id}`, employee);
+export const updateEmployee = async (
+  id: string,
+  employee: Employee
+): Promise<Employee> => {
+  const response = await axiosInstance.put<{ staff: Employee }>(
+    `/staff/${id}`,
+    employee
+  );
   return response.data.staff;
-}
+};
 
 // API: Delete an employee by ID
 export const deleteEmployee = async (id: string): Promise<void> => {

@@ -1,5 +1,6 @@
 export interface CustomerItem {
   id: string;
+  customer_id: string;
   displayId: string;
   fullName: string;
   email: string;

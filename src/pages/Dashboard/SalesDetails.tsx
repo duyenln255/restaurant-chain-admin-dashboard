@@ -1,16 +1,45 @@
-import React from 'react';
-import './SalesDetails.css';
-import { useTranslation } from 'react-i18next';
+import React, { useEffect, useState } from "react";
+import "./SalesDetails.css";
+import { useTranslation } from "react-i18next";
+import { getSalesData } from "../../services/dashboard.service";
 
 const SalesDetails: React.FC = () => {
   const { t } = useTranslation();
+  const [salesData, setSalesData] = useState<{
+    labels: string[];
+    data: number[];
+  }>({
+    labels: [],
+    data: [],
+  });
+  const [loading, setLoading] = useState(true);
+  const [currentMonth, setCurrentMonth] = useState(t("dashboard.month.oct"));
+
+  useEffect(() => {
+    const fetchSalesData = async () => {
+      try {
+        setLoading(true);
+        const data = await getSalesData();
+        setSalesData(data);
+      } catch (error) {
+        console.error("Error fetching sales data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSalesData();
+  }, []);
+
+  // Calculate max value for scaling
+  const maxValue = Math.max(...salesData.data, 0);
 
   return (
     <div className="sales-details">
       <div className="sales-details-header">
-        <h2>{t('dashboard.sales_details')}</h2>
+        <h2>{t("dashboard.sales_details")}</h2>
         <div className="month-selector">
-          <span>{t('dashboard.month.oct')}</span>
+          <span>{currentMonth}</span>
           <img src="/assets/icons/chevron-down.png" alt="Calendar" />
         </div>
       </div>
@@ -23,31 +52,39 @@ const SalesDetails: React.FC = () => {
           <div>20%</div>
         </div>
         <div className="chart-content">
-          <img
-            src="/assets/images/sales-graph-bg.png"
-            alt="Sales graph background"
-            className="chart-background"
-          />
-          <img
-            src="/assets/images/sales-graph.png"
-            alt="Sales graph"
-            className="chart-line"
-          />
+          {loading ? (
+            <div className="flex items-center justify-center h-full">
+              <p>{t("common.loading")}</p>
+            </div>
+          ) : (
+            <>
+              <img
+                src="/assets/images/sales-graph-bg.png"
+                alt="Sales graph background"
+                className="chart-background"
+              />
+              <div className="chart-bars">
+                {salesData.data.map((value, index) => (
+                  <div
+                    key={index}
+                    className="chart-bar"
+                    style={{
+                      height: `${(value / maxValue) * 100}%`,
+                      width: `${100 / salesData.data.length}%`,
+                      left: `${(index / salesData.data.length) * 100}%`,
+                    }}
+                    title={`${salesData.labels[index]}: ${value}`}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
       <div className="chart-x-axis">
-        <div>5k</div>
-        <div>10k</div>
-        <div>15k</div>
-        <div>20k</div>
-        <div>25k</div>
-        <div>30k</div>
-        <div>35k</div>
-        <div>40k</div>
-        <div>45k</div>
-        <div>50k</div>
-        <div>55k</div>
-        <div>60k</div>
+        {salesData.labels.map((label, index) => (
+          <div key={index}>{label}</div>
+        ))}
       </div>
     </div>
   );

@@ -1,14 +1,21 @@
 {
-    "dashboard": {
-      "title": "Bảng điều khiển",
-      "total_customers": "Tổng khách hàng",
-      "total_orders": "Tổng đơn hàng",
-      "total_sales": "Doanh thu",
-      "total_staff": "Tổng nhân viên",
-      "up_from_yesterday": "Tăng so với hôm qua",
-      "up_from_last_week": "Tăng so với tuần trước",
-      "down_from_yesterday": "Giảm so với hôm qua",
-      "sales_details": "Chi tiết doanh số"
-
+  "dashboard": {
+    "title": "Trang chủ",
+    "welcome": "Chào mừng trở lại",
+    "totalSales": "Tổng doanh thu",
+    "totalOrders": "Tổng đơn hàng",
+    "totalCustomers": "Tổng khách hàng",
+    "totalStaff": "Tổng nhân viên",
+    "recentOrders": "Đơn hàng gần đây",
+    "topProducts": "Sản phẩm bán chạy",
+    "salesOverview": "Tổng quan doanh thu",
+    "sales_details": "Chi tiết doanh thu",
+    "deals_details": "Chi tiết giao dịch",
+    "up_from_yesterday": "tăng so với hôm qua",
+    "down_from_yesterday": "giảm so với hôm qua",
+    "up_from_last_week": "tăng so với tuần trước",
+    "month": {
+      "oct": "Tháng 10"
     }
   }
+}

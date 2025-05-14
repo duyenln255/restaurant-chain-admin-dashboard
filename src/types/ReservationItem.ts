@@ -3,11 +3,21 @@ export interface ReservationItem {
   displayId: string;
   fullName: string;
   phoneNumber: string;
-  dateTime: string;
-  branchAddress: string;
-  brandName: string;
-  number_of_customer: number;
-  place: string;
+  branchId: string;
+  reservationDate: string;
+  reservationTime: string;
+  numberOfCustomers: number;
   status: string;
+  place: string;
+  dateAdded: string;
+  brandName: string;
+  branchAddress: string;
 
+  // Các trường bổ sung cho UI
+  customerName?: string;
+  customerId?: string;
+  branchName?: string;
+  partySize?: number;
+  specialRequests?: string;
+  dateTime?: string;
 }

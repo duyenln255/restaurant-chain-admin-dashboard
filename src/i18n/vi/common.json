@@ -1,18 +1,37 @@
 {
-    
-    "month": {
-        "january": "Tháng 1",
-        "february": "Tháng 2",
-        "march": "Tháng 3",
-        "april": "Tháng 4",
-        "may": "Tháng 5",
-        "june": "Tháng 6",
-        "july": "Tháng 7",
-        "august": "Tháng 8",
-        "september": "Tháng 9",
-        "october": "Tháng 10",
-        "november": "Tháng 11",
-        "december": "Tháng 12"
-    }
-      
+  "common": {
+    "dashboard": "Trang chủ",
+    "products": "Sản phẩm",
+    "check": "Kiểm tra",
+    "orders": "Đơn hàng",
+    "customers": "Khách hàng",
+    "feedback": "Phản hồi",
+    "settings": "Cài đặt",
+    "logout": "Đăng xuất",
+    "search": "Tìm kiếm",
+    "notifications": "Thông báo",
+    "profile": "Hồ sơ",
+    "language": "Ngôn ngữ",
+    "english": "Tiếng Anh",
+    "vietnamese": "Tiếng Việt",
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "edit": "Sửa",
+    "add": "Thêm",
+    "view": "Xem",
+    "status": "Trạng thái",
+    "actions": "Thao tác",
+    "loading": "Đang tải...",
+    "noData": "Không tìm thấy dữ liệu",
+    "error": "Lỗi",
+    "brand": "Thương hiệu",
+    "branch": "Chi nhánh",
+    "employee": "Nhân viên",
+    "voucher": "Voucher",
+    "reservation": "Đặt chỗ",
+    "password": "Mật khẩu",
+    "enter": "Nhập",
+    "action": "Thao tác"
+  }
 }
