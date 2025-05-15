@@ -254,11 +254,7 @@
     "revenue": "Revenue",
     "expenses": "Expenses",
     "profit": "Profit",
-    "deleteConfirm": "Are you sure you want to delete this branch?",
-    "deleteError": "Failed to delete branch. Please try again.",
     "branchAdded": "Branch added successfully",
-    "branchUpdated": "Branch updated successfully",
-    "branchDeleted": "Branch deleted successfully",
     "loadingBranches": "Loading branches...",
     "noBranchesFound": "No branches found.",
     "search": {
@@ -274,6 +270,14 @@
     }
   },
   "employee": {
+    "editTitle": "Edit Employee",
+    "backToList": "← Back to Employee List",
+    "uploadPhoto": "Upload Photo",
+    "username": "Username",
+    "password": "Password",
+    "brand": "Brand",
+    "dob": "Date of Birth",
+    "update": "Update",
     "title": "Employees",
     "employeeList": "Employee Lists",
     "addEmployee": "Add Employee",
@@ -340,7 +344,16 @@
       "to": "To",
       "reset": "Reset",
       "search": "Search"
-    }
+    },
+    "placeholder": {
+    "selectBrand": "Select Brand",
+    "selectBranch": "Select Branch",
+    "selectGender": "--- Choose Gender ---",
+    "selectDate": "Select date"
+  },
+  "common": {
+    "required": "Required"
+  }
   },
   "products": {
     "type": "Type",

@@ -270,6 +270,14 @@
     }
   },
   "employee": {
+    "editTitle": "Chỉnh sửa nhân viên",
+    "backToList": "← Quay lại danh sách nhân viên",
+    "uploadPhoto": "Tải ảnh lên",
+    "username": "Tên đăng nhập",
+    "password": "Mật khẩu",
+    "brand": "Thương hiệu",
+    "dob": "Ngày sinh",
+    "update": "Cập nhật",
     "title": "Nhân viên",
     "employeeList": "Danh sách nhân viên",
     "addEmployee": "Thêm nhân viên",
@@ -336,6 +344,15 @@
       "to": "Đến",
       "reset": "Đặt lại",
       "search": "Tìm kiếm"
+    },
+    "placeholder": {
+      "selectBrand": "Chọn thương hiệu",
+      "selectBranch": "Chọn chi nhánh",
+      "selectGender": "--- Chọn giới tính ---",
+      "selectDate": "Chọn ngày"
+    },
+    "common": {
+      "required": "Bắt buộc"
     }
   },
   "productOld": {

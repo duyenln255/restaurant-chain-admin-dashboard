@@ -30,7 +30,7 @@ import AddBranch from "../pages/Branch/AddBranch";
 import EditBranch from "../pages/Branch/EditBranch";
 import AddVoucher from "../pages/Voucher/AddVoucher";
 import EditVoucher from "../pages/Voucher/EditVoucher";
-import EmailInput from "../pages/ForgotPassword/EmailInput";
+import EmailInput from "../pages/Login/ForgotPassword/EmailInput";
 
 export default function useRouteElement() {
   const routes = useRoutes([

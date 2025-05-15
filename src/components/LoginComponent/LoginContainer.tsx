@@ -28,7 +28,7 @@ export const LoginContainer: React.FC = () => {
   };
 
   const handleForgotPassword = () => {
-    console.log('Forgot password clicked');
+    navigate("/forgot-password");
   };
 
   const handleRegister = () => {

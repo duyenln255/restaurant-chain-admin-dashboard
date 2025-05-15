@@ -11,62 +11,70 @@ import {
   SelectContent,
   SelectItem,
 } from "../../components/ui/select"
-import { getAllBrands } from "../../services/brand.service";
-import { getAllBranches } from "../../services/branch.service";
+import { getAllBrands } from "../../services/brand.service"
+import { getAllBranches } from "../../services/branch.service"
 import type { Brand } from "../../services/brand.service"
 import type { Branch } from "../../services/branch.service"
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 
 const EmployeeList: React.FC = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const dispatch = useAppDispatch()
+  const { t } = useTranslation()
+
   const { items: rawEmployees, loading, error } = useAppSelector(
     (state: RootState) => state.employees
   )
-  const [brands, setBrands] = useState<Brand[]>([]);
-  const [branches, setBranches] = useState<Branch[]>([]);
-  
+
+  const [brands, setBrands] = useState<Brand[]>([])
+  const [branches, setBranches] = useState<Branch[]>([])
+  const [employeeBranch, setEmployeeBranch] = useState("all")
+  const [employeeBrand, setEmployeeBrand] = useState("all")
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 8
+
   useEffect(() => {
     const fetchFilters = async () => {
       try {
         const [brandData, branchData] = await Promise.all([
           getAllBrands(),
           getAllBranches(),
-        ]);
-        setBrands(brandData);
-        setBranches(branchData);
+        ])
+        setBrands(brandData)
+        setBranches(branchData)
       } catch (error) {
-        console.error("Failed to fetch brand or branch filters:", error);
+        console.error("Failed to fetch brand or branch filters:", error)
       }
-    };
-  
-    fetchFilters();
-  }, []);
-  
-  const [employeeBranch, setEmployeeBranch] = useState("all")
-  const [employeeBrand, setEmployeeBrand] = useState("all")
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 8
+    }
 
-  const employees = useMemo(() =>
-    rawEmployees
-      .filter(e =>
-        (employeeBranch === "all" || e.branch_address === employeeBranch) &&
-        (employeeBrand === "all" || e.brand_name === employeeBrand)
-      )
-      .map(e => ({
-        id: e.id,
-        name: e.full_name,
-        role: e.role,
-        phone: e.phone,
-        branch: e.branch_address,
-        email: e.email,
-        avatarUrl: e.avatar || null,
-        brandLogo: e.logo_url || null,
-      })),
+    fetchFilters()
+  }, [])
+
+  useEffect(() => {
+    dispatch(fetchEmployees())
+  }, [dispatch])
+
+  const employees = useMemo(
+    () =>
+      rawEmployees
+        .filter(
+          (e) =>
+            (employeeBranch === "all" || e.branch_address === employeeBranch) &&
+            (employeeBrand === "all" || e.brand_name === employeeBrand)
+        )
+        .map((e) => ({
+          id: e.id,
+          name: e.full_name,
+          role: e.role,
+          phone: e.phone,
+          branch: e.branch_address,
+          email: e.email,
+          avatarUrl: e.avatar || null,
+          brandLogo: e.logo_url || null,
+        })),
     [rawEmployees, employeeBranch, employeeBrand]
   )
-
 
   const totalPages = Math.ceil(employees.length / itemsPerPage)
   const paginatedItems = employees.slice(
@@ -74,62 +82,70 @@ const EmployeeList: React.FC = () => {
     currentPage * itemsPerPage
   )
 
-  useEffect(() => {
-    dispatch(fetchEmployees())
-  }, [dispatch])
-
   return (
     <div className="bg-gray-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="space-y-4">
           {/* Header + Filter */}
           <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h1 className="text-xl sm:text-2xl font-bold text-neutral-800">Employees</h1>
-            <button 
-              onClick={() => navigate("/employee/add")} 
-              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm sm:text-base"
-            >
-              Add New Employee
-            </button>
-          </div>
-
-          <div className="flex flex-wrap gap-4">
-            {/* BRAND Select */}
-            <Select value={employeeBrand} onValueChange={setEmployeeBrand}>
-              <SelectTrigger className="bg-white w-full sm:w-56 border border-neutral-300">
-                <SelectValue placeholder="--- All Brands ---" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">--- All Brands ---</SelectItem>
-                {brands.map((b) => (
-                  <SelectItem key={b.id} value={b.name}>{b.name}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            {/* BRANCH Select */}
-            <Select value={employeeBranch} onValueChange={setEmployeeBranch}>
-              <SelectTrigger className="bg-white w-full sm:w-56 border border-neutral-300">
-                <SelectValue placeholder="--- All Branches ---" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">--- All Branches ---</SelectItem>
-                {branches.map((br) => (
-                  <SelectItem key={br.id} value={br.address}>{br.address}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-              </div>
+            <div className="flex justify-between items-center">
+              <h1 className="text-xl sm:text-2xl font-bold text-neutral-800">
+                {t("employee.title")}
+              </h1>
+              <button
+                onClick={() => navigate("/employee/add")}
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm sm:text-base"
+              >
+                {t("employee.addEmployee")}
+              </button>
             </div>
 
+            <div className="flex flex-wrap gap-4">
+              {/* BRAND Select */}
+              <Select value={employeeBrand} onValueChange={setEmployeeBrand}>
+                <SelectTrigger className="bg-white w-full sm:w-56 border border-neutral-300">
+                  <SelectValue placeholder={t("employee.search.allBrands")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">
+                    {t("employee.search.allBrands")}
+                  </SelectItem>
+                  {brands.map((b) => (
+                    <SelectItem key={b.id} value={b.name}>
+                      {b.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              {/* BRANCH Select */}
+              <Select value={employeeBranch} onValueChange={setEmployeeBranch}>
+                <SelectTrigger className="bg-white w-full sm:w-56 border border-neutral-300">
+                  <SelectValue placeholder={t("employee.search.allBranches")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">
+                    {t("employee.search.allBranches")}
+                  </SelectItem>
+                  {branches.map((br) => (
+                    <SelectItem key={br.id} value={br.address}>
+                      {br.address}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
 
           {/* Status */}
-          {loading && <p className="text-sm">Loading employees...</p>}
-          {error && <p className="text-sm text-red-500">{error}</p>}
+          {loading && <p className="text-sm">{t("common.loading")}</p>}
+          {error && (
+            <p className="text-sm text-red-500">{t("common.error")}</p>
+          )}
           {!loading && employees.length === 0 && (
-            <p className="text-sm text-gray-500">No employees found.</p>
+            <p className="text-sm text-gray-500">
+              {t("employee.noEmployeesFound")}
+            </p>
           )}
 
           {/* Grid */}

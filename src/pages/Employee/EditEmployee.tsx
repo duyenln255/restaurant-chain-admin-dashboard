@@ -13,8 +13,11 @@ import { getEmployeeById } from "../../services/employee.service";
 import { updateEmployee } from "../../services/employee.service";
 import { format } from "date-fns";
 import { CustomDatePicker } from "../../components/CustomDatePicker/CustomDatePicker";
+import { useTranslation } from "react-i18next";
+import { getAllBranches } from "../../services/branch.service";
 
 const EditEmployee: React.FC = () => {
+  const { t } = useTranslation();
   const { id } = useParams();
   const navigate = useNavigate();
   const convertToBase64 = (file: File): Promise<string> =>
@@ -66,15 +69,15 @@ const EditEmployee: React.FC = () => {
   
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
-    if (!fullName) newErrors.fullName = "Required";
-    if (!username) newErrors.username = "Required";
-    if (!password) newErrors.password = "Required";
-    if (!email) newErrors.email = "Required";
-    if (!phoneNumber) newErrors.phoneNumber = "Required";
-    if (!brand) newErrors.brand = "Required";
-    if (!branch) newErrors.branch = "Required";
-    if (!position) newErrors.position = "Required";
-    if (!salary) newErrors.salary = "Required";
+    if (!fullName) newErrors.fullName = t("common.required");
+    if (!username) newErrors.username = t("common.required");
+    if (!password) newErrors.password = t("common.required");
+    if (!email) newErrors.email = t("common.required");
+    if (!phoneNumber) newErrors.phoneNumber = t("common.required");
+    if (!brand) newErrors.brand = t("common.required");
+    if (!branch) newErrors.branch = t("common.required");
+    if (!position) newErrors.position = t("common.required");
+    if (!salary) newErrors.salary = t("common.required");
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -121,10 +124,12 @@ const EditEmployee: React.FC = () => {
   return (
     <div className="p-6 mx-auto space-y-6">
       <div className="text-sm text-blue-600 cursor-pointer" onClick={() => navigate("/employee")}>
-        ← Back to Employee List
+      {t("employee.backToList")}
       </div>
 
-      <h1 className="text-3xl font-bold text-neutral-800">Edit Employee</h1>
+      <h1 className="text-3xl font-bold text-neutral-800">
+      {t("employee.editTitle")}
+      </h1>
 
       <div className="bg-white rounded-xl p-8 shadow-md">
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -174,7 +179,7 @@ const EditEmployee: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Full Name */}
             <div>
-              <label className="text-sm font-medium">Full Name <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium"> {t("employee.fullName")} <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 value={fullName}
@@ -186,7 +191,7 @@ const EditEmployee: React.FC = () => {
 
             {/* Username */}
             <div>
-              <label className="text-sm font-medium">Username <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t("employee.username")} <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 value={username}
@@ -198,7 +203,7 @@ const EditEmployee: React.FC = () => {
 
             {/* Password */}
             <div>
-              <label className="text-sm font-medium">Password <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium"> {t("employee.password")} <span className="text-red-500">*</span></label>
               <input
                 type="password"
                 value={password}
@@ -210,7 +215,7 @@ const EditEmployee: React.FC = () => {
 
             {/* Email */}
             <div>
-              <label className="text-sm font-medium">Email <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t("employee.email")} <span className="text-red-500">*</span></label>
               <input
                 type="email"
                 value={email}
@@ -234,7 +239,7 @@ const EditEmployee: React.FC = () => {
 
             {/* Brand */}
             <div>
-              <label className="text-sm font-medium">Brand <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t("employee.brand")} <span className="text-red-500">*</span></label>
               <Select value={brand} onValueChange={setBrand}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select Brand" />
@@ -248,7 +253,7 @@ const EditEmployee: React.FC = () => {
 
             {/* Branch */}
             <div>
-              <label className="text-sm font-medium">Branch <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t("employee.branch")} <span className="text-red-500">*</span></label>
               <Select value={branch} onValueChange={setBranch}>
                 <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select Branch" />
@@ -262,7 +267,7 @@ const EditEmployee: React.FC = () => {
 
             {/* Position */}
             <div>
-              <label className="text-sm font-medium">Position <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t('employee.position')} <span className="text-red-500">*</span></label>
               <input
                 type="text"
                 value={position}
@@ -274,7 +279,7 @@ const EditEmployee: React.FC = () => {
 
             {/* Salary */}
             <div>
-              <label className="text-sm font-medium">Salary <span className="text-red-500">*</span></label>
+              <label className="text-sm font-medium">{t("employee.salary")} <span className="text-red-500">*</span></label>
               <input
                 type="number"
                 value={salary}
@@ -286,7 +291,7 @@ const EditEmployee: React.FC = () => {
 
             {/* DOB */}
             <div>
-            <label className="text-sm font-medium">Date of Birth</label>
+            <label className="text-sm font-medium">{t("employee.dob")}</label>
             <CustomDatePicker
                 value={dob}
                 onChange={setDob}
