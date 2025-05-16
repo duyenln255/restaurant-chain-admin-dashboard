@@ -1,5 +1,7 @@
 {
   "customer": {
+    "deleteSuccess": "Customer deleted successfully!",
+    "addError": "Failed to add customer. Please try again.",
     "title": "Customers",
     "customerList": "Customer Lists",
     "addCustomer": "Add Customer",

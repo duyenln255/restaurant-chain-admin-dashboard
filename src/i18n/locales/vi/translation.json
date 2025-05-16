@@ -48,7 +48,7 @@
     "topProducts": "Sản phẩm bán chạy",
     "salesOverview": "Tổng quan doanh thu",
     "sales_details": "Chi tiết doanh thu",
-    "deals_details": "Chi tiết giao dịch",
+    "deals_details": "Doanh thu chi nhánh",
     "up_from_yesterday": "tăng so với hôm qua",
     "down_from_yesterday": "giảm so với hôm qua",
     "up_from_last_week": "tăng so với tuần trước",
@@ -518,7 +518,7 @@
     "no": "STT",
     "orderType": "Loại đơn hàng",
     "products": "Sản phẩm",
-
+    "branch":"Chi nhánh",
     "orderId": "Mã đơn hàng",
     "customer": "Khách hàng",
     "date": "Ngày",

@@ -21,6 +21,14 @@ const FilterBar: React.FC = () => {
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-md flex flex-col sm:flex-row flex-wrap gap-4">
+      {/* Name input */}
+      <ComboboxCustom
+        data={[]} // TODO: populate with keyword suggestions if needed
+        value={keyword}
+        onChange={setKeyword}
+        placeholder="Search product name..."
+        className="w-full sm:flex-1 border border-neutral-300"
+      />      
       {/* Brand */}
       <Select value={ProductBrand} onValueChange={setProductBrand}>
         <SelectTrigger className="bg-white w-full sm:flex-1 border border-neutral-300">
@@ -32,14 +40,7 @@ const FilterBar: React.FC = () => {
         </SelectContent>
       </Select>
 
-      {/* Keyword input */}
-      <ComboboxCustom
-        data={[]} // TODO: populate with keyword suggestions if needed
-        value={keyword}
-        onChange={setKeyword}
-        placeholder="Search keyword..."
-        className="w-full sm:flex-1 border border-neutral-300"
-      />
+
 
       {/* Date picker */}
       <CustomDatePicker

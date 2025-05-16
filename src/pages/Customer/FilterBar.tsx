@@ -11,10 +11,17 @@ import {
   SelectItem,
 } from "../../components/ui/select"
 import { ComboboxCustom } from "../../components/Combobox/Combobox"
+import type { ComboboxItem } from "../../components/Combobox/Combobox";
 
-const FilterBar: React.FC = () => {
+interface FilterBarProps {
+  onSearch: (params: { keyword?: string; status?: string; dateAdded?: string }) => void;
+  keywordOptions: ComboboxItem[]; // ← sửa ở đây
+}
+
+
+const FilterBar: React.FC<FilterBarProps> = ({ onSearch, keywordOptions }) => {
   const [keyword, setKeyword] = useState("all")
-  const [date, setDate] = useState<Date | undefined>(undefined)
+  const [date, setDate] = useState<Date | undefined>(undefined);
   const [status, setStatus] = useState("all")
   const [customerType, setCustomerType] = useState("all")
   const [customerEmployee, setCustomerEmployee] = useState("all")
@@ -24,10 +31,10 @@ const FilterBar: React.FC = () => {
     <div className="bg-white p-4 rounded-lg shadow-md flex flex-col sm:flex-row flex-wrap gap-4">
       {/* Keyword input */}
       <ComboboxCustom
-        data={[]} // TODO: populate with keyword suggestions if needed
+        data={keywordOptions}
         value={keyword}
         onChange={setKeyword}
-        placeholder="Search keyword..."
+        placeholder="Search customer..."
         className="w-full sm:flex-1 border border-neutral-300"
       />
 
@@ -35,33 +42,28 @@ const FilterBar: React.FC = () => {
       <CustomDatePicker
         value={date}
         onChange={setDate}
-        placeholder="Select created date"
+        placeholder="Select joined date"
       />
 
       {/* Responsible Branch */}
-      <Select value={customerBranch} onValueChange={setCustomerBranch}>
+      {/* <Select value={customerBranch} onValueChange={setCustomerBranch}>
         <SelectTrigger className="bg-white w-full sm:flex-1 border border-neutral-300">
-          <SelectValue placeholder="--- All Branches ---" />
+          <SelectValue placeholder="--- All Brands ---" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">--- All Branches ---</SelectItem>
-          {/* Dynamically populate branches here if needed */}
+          <SelectItem value="all">--- All Brands ---</SelectItem>
         </SelectContent>
-      </Select>
+      </Select> */}
 
       {/* Status */}
-      <Select value={status} onValueChange={setStatus}>
+      {/* <Select value={status} onValueChange={setStatus}>
         <SelectTrigger className="bg-white w-full sm:flex-1 border border-neutral-300">
           <SelectValue placeholder="--- All Status ---" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">--- All Status ---</SelectItem>
-          <SelectItem value="Pending">Pending</SelectItem>
-          <SelectItem value="Done">Done</SelectItem>
-          <SelectItem value="Cancel">Cancel</SelectItem>
-          <SelectItem value="Verify">Verify</SelectItem>
         </SelectContent>
-      </Select>
+      </Select> */}
 
       {/* Buttons */}
       <div className="flex gap-2 flex-wrap">
@@ -85,12 +87,13 @@ const FilterBar: React.FC = () => {
           variant="outline"
           className="border-red-500 text-red-500 hover:bg-red-50"
           onClick={() => {
+            setStatus("all")
             setKeyword("all")
             setDate(undefined)
-            setStatus("all")
             setCustomerType("all")
             setCustomerEmployee("all")
-            setCustomerBranch("all")
+            onSearch({});
+            // setCustomerBranch("all")
           }}
         >
           Reset

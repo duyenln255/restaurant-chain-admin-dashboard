@@ -116,7 +116,7 @@ const ReservationTable: React.FC<ReservationTableProps> = ({
     },
     {
       key: "branchAddress",
-      label: "Location",
+      label: "Branch",
       render: (item) => (
         <div
           className="max-w-40 text-sm overflow-hidden whitespace-nowrap text-ellipsis"

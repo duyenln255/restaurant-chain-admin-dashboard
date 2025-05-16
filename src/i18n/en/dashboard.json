@@ -10,12 +10,14 @@
     "topProducts": "Top Products",
     "salesOverview": "Sales Overview",
     "sales_details": "Sales Details",
-    "deals_details": "Deals Details",
+    "deals_details": "Branch Revenue",
     "up_from_yesterday": "up from yesterday",
     "down_from_yesterday": "down from yesterday",
     "up_from_last_week": "up from last week",
     "month": {
+      
       "oct": "October"
+
     }
   }
 }

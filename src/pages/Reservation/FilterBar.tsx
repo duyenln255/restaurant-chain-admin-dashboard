@@ -27,7 +27,7 @@ const FilterBar: React.FC = () => {
         data={[]} // TODO: populate with keyword suggestions if needed
         value={keyword}
         onChange={setKeyword}
-        placeholder="Search keyword..."
+        placeholder="Search customer..."
         className="w-full sm:flex-1 border border-neutral-300"
       />
 
@@ -35,7 +35,7 @@ const FilterBar: React.FC = () => {
       <CustomDatePicker
         value={date}
         onChange={setDate}
-        placeholder="Select created date"
+        placeholder="Select reservation date"
       />
 
       {/* Reservation Type */}

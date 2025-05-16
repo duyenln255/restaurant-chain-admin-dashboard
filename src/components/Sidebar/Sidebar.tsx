@@ -20,10 +20,10 @@ import { logout } from "../../services/auth.service";
 
 // Sidebar items with translation keys
 const sidebarItems = [
-  { key: "common.dashboard", icon: Home, link: "/dashboard" },
+  { key: "dashboard.title", icon: Home, link: "/dashboard" },
   { key: "orders.title", icon: List, link: "/order-list" },
   { key: "customer.title", icon: User, link: "/customer" },
-  { key: "common.reservation", icon: BookOpen, link: "/reservation" },
+  { key: "reservation.title", icon: BookOpen, link: "/reservation" },
   { key: "feedback.title", icon: MessageSquare, link: "/feedback" },
   { key: "products.title", icon: Package, link: "/product" },
   { key: "brand.title", icon: LayoutGrid, link: "/brand" },

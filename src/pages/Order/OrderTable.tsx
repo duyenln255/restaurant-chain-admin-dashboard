@@ -99,6 +99,18 @@ const OrderTable: React.FC<OrderTableProps> = ({ items, onEdit, onDelete }) => {
         </div>
       ),
     },
+        {
+      key: "branch_address",
+      label: t("orders.branch"),
+      render: (item) => (
+        <div
+          className="max-w-30 text-sm overflow-hidden whitespace-nowrap text-ellipsis"
+          title={item.branch_address}
+        >
+          {item.branch_address}
+        </div>
+      ),
+    },
     {
       key: "date",
       label: t("orders.date"),

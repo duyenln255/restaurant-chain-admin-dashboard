@@ -27,15 +27,8 @@ const FilterBar: React.FC = () => {
         data={[]} // TODO: populate with keyword suggestions if needed
         value={keyword}
         onChange={setKeyword}
-        placeholder="Search keyword..."
+        placeholder="Search customer..."
         className="w-full sm:flex-1 border border-neutral-300"
-      />
-
-      {/* Date picker */}
-      <CustomDatePicker
-        value={date}
-        onChange={setDate}
-        placeholder="Select created date"
       />
 
       {/* Feedback Type */}
@@ -45,8 +38,6 @@ const FilterBar: React.FC = () => {
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">--- All Feedback Types ---</SelectItem>
-          <SelectItem value="KHIẾU NẠI">KHIẾU NẠI</SelectItem>
-          <SelectItem value="GÓP Ý">GÓP Ý</SelectItem>
         </SelectContent>
       </Select>
 
@@ -71,7 +62,12 @@ const FilterBar: React.FC = () => {
           {/* Dynamically populate branches here if needed */}
         </SelectContent>
       </Select>
-
+      {/* Date picker */}
+      <CustomDatePicker
+        value={date}
+        onChange={setDate}
+        placeholder="Select created date"
+      />
       {/* Status */}
       <Select value={status} onValueChange={setStatus}>
         <SelectTrigger className="bg-white w-full sm:flex-1 border border-neutral-300">
@@ -79,10 +75,6 @@ const FilterBar: React.FC = () => {
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">--- All Status ---</SelectItem>
-          <SelectItem value="Pending">Pending</SelectItem>
-          <SelectItem value="Done">Done</SelectItem>
-          <SelectItem value="Cancel">Cancel</SelectItem>
-          <SelectItem value="Verify">Verify</SelectItem>
         </SelectContent>
       </Select>
 

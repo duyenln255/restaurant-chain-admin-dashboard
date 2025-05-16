@@ -1,9 +1,12 @@
 {
   "common": {
     "no": "No",
+    "reset": "Reset",
+    "update": "Update",
+    "action": "Action",
     "dashboard": "Dashboard",
-    "products": "Products",
     "check": "Check",
+    "products": "Products",
     "orders": "Orders",
     "customers": "Customers",
     "feedback": "Feedback",
@@ -33,7 +36,7 @@
     "reservation": "Reservation",
     "password": "Password",
     "enter": "Enter",
-    "action": "Action"
+    "required": "Required"
   },
   "month": {
     "january": "January",

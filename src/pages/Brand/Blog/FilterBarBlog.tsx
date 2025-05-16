@@ -38,7 +38,7 @@ const FilterBarBlog: React.FC = () => {
         data={keywordOptions}
         value={selectedKeyword}
         onChange={setSelectedKeyword}
-        placeholder="Search keyword..."
+        placeholder="Search blog..."
         className="w-full sm:flex-1 border border-neutral-300 focus-visible:ring-1 focus-visible:ring-blue-500"
       />
 

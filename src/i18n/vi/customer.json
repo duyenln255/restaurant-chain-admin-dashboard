@@ -1,5 +1,6 @@
 {
   "customer": {
+    "deleteSuccess":"Xoá khách hàng thành công",
     "title": "Khách hàng",
     "customerList": "Danh sách khách hàng",
     "addCustomer": "Thêm khách hàng",

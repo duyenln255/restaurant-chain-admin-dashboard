@@ -118,11 +118,11 @@ const CustomerTable: React.FC<CustomerTableProps> = ({
     //   key: "totalReservation",
     //   label: t("common.reservation"),
     // },
-    {
-      key: "status",
-      label: t("customer.status"),
-      render: (item) => renderStatus(item.status),
-    },
+    // {
+    //   key: "status",
+    //   label: t("customer.status"),
+    //   render: (item) => renderStatus(item.status),
+    // },
     {
       key: "action",
       label: t("common.actions"),

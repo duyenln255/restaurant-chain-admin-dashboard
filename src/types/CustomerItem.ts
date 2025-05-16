@@ -5,13 +5,15 @@ export interface CustomerItem {
   fullName: string;
   email: string;
   phone: string;
-  dateJoined: string;
-  status: string;
-  password: string;
   gender: string;
-  dateOfBirth?: string;
-  address: string;
   avatar: string;
   username: string;
+  role: string;
+  address: string;
+  brandId: string;
   brandName: string;
+  status: string;
+  totalOrder: number;
+  dateJoined: string;
+  dateOfBirth: string;
 }

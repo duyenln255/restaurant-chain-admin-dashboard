@@ -12,6 +12,9 @@ import {
 import type { RootState } from "../../redux/store";
 import type { CustomerItem } from "../../types/CustomerItem";
 import { useLoading } from "../../contexts/LoadingContext";
+import type { ComboboxItem } from "../../components/Combobox/Combobox";
+import { useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const CustomerList: React.FC = () => {
   const navigate = useNavigate();
@@ -23,40 +26,43 @@ const CustomerList: React.FC = () => {
     loading,
     error,
   } = useAppSelector((state: RootState) => state.customers);
+  const location = useLocation();
+  const [filters, setFilters] = useState<{ keyword?: string; status?: string; dateAdded?: string }>({});
 
-  // Map API data → CustomerItem (UI)
-  const customers = useMemo<CustomerItem[]>(
-    () =>
-      rawCustomers.map((c) => ({
-        id: c.customer_id,
-        displayId: c.display_id,
-        customer_id: c.customer_id,
-        fullName: c.full_name,
-        email: c.email,
-        phone: c.phone,
-        dateJoined: new Date(c.date_added).toLocaleDateString(),
-        totalOrder: 0,
-        totalReservation: "",
-        status: c.status,
-        password: c.password,
-        gender: c.gender,
-        dateOfBirth: "",
-      })),
+  const customers = useMemo<CustomerItem[]>(() =>
+    rawCustomers.map((c) => ({
+      id: c.customer_id,
+      displayId: c.display_id,
+      customer_id: c.customer_id,
+      fullName: c.full_name,
+      email: c.email,
+      phone: c.phone,
+      gender: c.gender,
+      avatar: c.avatar,
+      dateOfBirth: c.dob ? new Date(c.dob).toLocaleDateString() : "",
+      address: c.address,
+      username: c.username,
+      role: c.role,
+      brandId: c.brand_id,
+      brandName: c.brand_name,
+      status: c.status,
+      totalOrder: Number(c.total_orders || 0),
+      dateJoined: new Date(c.date_added).toLocaleDateString(),
+    })),
     [rawCustomers]
   );
 
   useEffect(() => {
     setLoading(true);
-    dispatch(fetchCustomers()).finally(() => {
-      setLoading(false);
-    });
-  }, []);
+    dispatch(fetchCustomers(filters)).finally(() => setLoading(false));
+  }, [dispatch, filters]);
 
   const handleDeleteCustomer = async (id: string) => {
     if (window.confirm(t("customer.deleteConfirm"))) {
       try {
         setLoading(true);
         await dispatch(removeCustomer(id)).unwrap();
+        toast.success(t("customer.deleteSuccess")); // ✅ Thêm dòng này
       } catch (error) {
         console.error("Failed to delete customer:", error);
         alert(t("customer.deleteError"));
@@ -65,7 +71,35 @@ const CustomerList: React.FC = () => {
       }
     }
   };
+  
+  const keywordOptions = useMemo<ComboboxItem[]>(
+    () =>
+      rawCustomers.map((c) => ({
+        label: `${c.full_name}`, // hiển thị trong dropdown
+        value: `${c.full_name}`, // giá trị khi chọn
+      })),
+    [rawCustomers]
+  );
 
+
+  const handleSearch = (searchFilters: { keyword?: string; status?: string; date?: Date }) => {
+    const dateAdded = searchFilters.date ? searchFilters.date.toISOString().split("T")[0] : undefined;
+    setFilters({
+      keyword: searchFilters.keyword,
+      status: searchFilters.status,
+      dateAdded,
+    });
+  };
+  useEffect(() => {
+    if (location.state?.updated) {
+      setLoading(true);
+      dispatch(fetchCustomers(filters)).finally(() => {
+        setLoading(false);
+        // Reset state để không refetch liên tục
+        navigate(location.pathname, { replace: true });
+      });
+    }
+  }, [location]);
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-4">
       <div className="flex justify-between items-center">
@@ -80,9 +114,8 @@ const CustomerList: React.FC = () => {
         </button>
       </div>
 
-      <FilterBar />
+      <FilterBar onSearch={handleSearch} keywordOptions={keywordOptions} />
 
-      {/* Status */}
       {loading && <p>{t("customer.loadingCustomers")}</p>}
       {error && <p className="text-red-500">{error}</p>}
       {!loading && customers.length === 0 && (
@@ -95,7 +128,6 @@ const CustomerList: React.FC = () => {
         onDelete={handleDeleteCustomer}
       />
     </div>
-
   );
 };
 

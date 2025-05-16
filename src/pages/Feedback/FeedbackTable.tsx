@@ -80,7 +80,7 @@ const FeedbackTable: React.FC<FeedbackTableProps> = ({
     },
     {
       key: "fullName",
-      label: t("feedback.fullName"),
+      label: t("feedback.customerName"),
       render: (item) => (
         <div
           className="text-sm overflow-hidden whitespace-nowrap text-ellipsis"
@@ -118,8 +118,9 @@ const FeedbackTable: React.FC<FeedbackTableProps> = ({
         <div className="text-xs sm:text-sm leading-snug space-y-1">
           {item.brandName && (
             <div>
-              <span className="font-semibold text-blue-600">Brand:</span>{' '}
-              {item.brandName}
+              <span className="font-semibold text-blue-600">              
+                {item.brandName}
+              </span>
             </div>
           )}
           {item.branchAddress && (
@@ -130,8 +131,8 @@ const FeedbackTable: React.FC<FeedbackTableProps> = ({
           )}
           {item.staffName && (
             <div>
-              <span className="font-semibold text-orange-500">Staff:</span>{' '}
-              {item.staffName}
+              <span className="font-semibold">Staff:</span>{' '}
+              <span className="font-semibold text-orange-500">{item.staffName}</span>
             </div>
           )}
         </div>

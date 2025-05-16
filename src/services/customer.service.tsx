@@ -1,8 +1,8 @@
 import axiosInstance from "../lib/axiosInstance";
 
 export interface Customer {
-  id: string;
   display_id: string;
+  customer_id: string;
   full_name: string;
   username: string;
   password: string;
@@ -16,69 +16,83 @@ export interface Customer {
   brand_id: string;
   brand_name: string;
   status: string;
-  cart: {
-    items: any[];
-    total_price: number;
-  };
-  reset_token: string;
-  reset_token_expires: string;
-  reset_code: string;
-  reset_code_expires: string;
   avatar: string;
+  member_id: string;
+  dob: string;
+  total_orders: number;
 }
 
-/**
- * [GET] /customer
- * Get all customers
- */
-export const getAllCustomers = async (): Promise<Customer[]> => {
+export interface CustomerInput {
+  full_name: string;
+  username: string;
+  password: string;
+  role: string;
+  email: string;
+  phone: string;
+  gender: string;
+  dob: string;
+  avatar: string;
+  address: string;
+  brand_id: string;
+  member_information_id: string;
+  brand_name: string;
+  status: string;
+}
+export interface RegisterCustomerInput {
+  full_name: string;
+  username: string;
+  password: string;
+  email: string;
+  phone: string;
+  gender: string;
+  address: string;
+  brand_id: string;
+  dob: string;
+}
+
+
+export const getFilteredCustomers = async (params: {
+  keyword?: string;
+  status?: string;
+  dateAdded?: string;
+}): Promise<Customer[]> => {
+  const query = new URLSearchParams();
+  if (params.keyword && params.keyword !== "all") query.append("keyword", params.keyword);
+  if (params.status && params.status !== "all") query.append("status", params.status);
+  if (params.dateAdded) query.append("date_added", params.dateAdded);
+
   const response = await axiosInstance.get<{ customer: Customer[] }>(
-    "/customer"
+    `/customer?${query.toString()}`
   );
-  return response.data.customer;
+  return Array.isArray(response.data.customer)
+    ? response.data.customer
+    : [response.data.customer];
 };
 
-/**
- * [GET] /customer/:id
- * Get customer by ID
- */
+export const getAllCustomers = async (): Promise<Customer[]> => {
+  const response = await axiosInstance.get<{ customer: Customer[] }>("/customer");
+  return Array.isArray(response.data.customer) ? response.data.customer : [response.data.customer];
+};
+
 export const getCustomerById = async (id: string): Promise<Customer> => {
-  const response = await axiosInstance.get<{ customer: Customer }>(
-    `/customer/${id}`
-  );
+  const response = await axiosInstance.get<{ customer: Customer }>(`/customer/${id}`);
   return response.data.customer;
 };
 
-/**
- * [POST] /customer
- * Create new customer
- */
 export const createCustomer = async (
-  customer: Omit<Customer, "id" | "date_added" | "cart">
-): Promise<Customer> => {
-  const response = await axiosInstance.post<Customer>("/customer", customer);
-  return response.data;
+  customer: RegisterCustomerInput
+): Promise<void> => {
+  await axiosInstance.post("/register/customer", customer);
 };
 
-/**
- * [PUT] /customer/:id
- * Update customer by ID
- */
 export const updateCustomer = async (
   id: string,
-  customer: Partial<Omit<Customer, "id" | "date_added" | "cart">>
+  customer: Partial<Customer>
 ): Promise<Customer> => {
-  const response = await axiosInstance.put<Customer>(
-    `/customer/${id}`,
-    customer
-  );
-  return response.data;
+  const response = await axiosInstance.put<{ customer: Customer }>(`/customer/${id}`, customer);
+  return response.data.customer;
 };
 
-/**
- * [DELETE] /customer/:id
- * Delete customer by ID
- */
-export const deleteCustomerById = async (id: string): Promise<void> => {
+export const deleteCustomer = async (id: string): Promise<void> => {
   await axiosInstance.delete(`/customer/${id}`);
 };

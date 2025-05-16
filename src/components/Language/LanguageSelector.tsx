@@ -9,8 +9,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../../components/ui/dropdown-menu";
-import { Button } from "../../components/ui/button";
+} from "../ui/dropdown-menu";
+import { Button } from "../ui/button";
 import { countries } from "../../constants/country";
 import type { Country } from "../../constants/country";
 import type { Dispatch, SetStateAction } from "react";
