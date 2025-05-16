@@ -14,8 +14,8 @@
     "up_from_yesterday": "tăng so với hôm qua",
     "down_from_yesterday": "giảm so với hôm qua",
     "up_from_last_week": "tăng so với tuần trước",
-    "month": {
-      "oct": "Tháng 10"
-    }
+    "sales_vnd": "Doanh thu (VND)",
+    "month": "Tháng"
+
   }
 }

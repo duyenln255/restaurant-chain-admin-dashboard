@@ -1,91 +1,57 @@
-import React, { useEffect, useState } from "react";
-import "./SalesDetails.css";
+import React from "react";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
 import { useTranslation } from "react-i18next";
-import { getSalesData } from "../../services/dashboard.service";
 
 const SalesDetails: React.FC = () => {
   const { t } = useTranslation();
-  const [salesData, setSalesData] = useState<{
-    labels: string[];
-    data: number[];
-  }>({
-    labels: [],
-    data: [],
-  });
-  const [loading, setLoading] = useState(true);
-  const [currentMonth, setCurrentMonth] = useState(t("dashboard.month.oct"));
 
-  useEffect(() => {
-    const fetchSalesData = async () => {
-      try {
-        setLoading(true);
-        const data = await getSalesData();
-        setSalesData(data);
-      } catch (error) {
-        console.error("Error fetching sales data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSalesData();
-  }, []);
-
-  // Calculate max value for scaling
-  const maxValue = Math.max(...salesData.data, 0);
+  const chartOptions: Highcharts.Options = {
+    title: { text: t("dashboard.sales_details") },
+    xAxis: {
+      categories: [
+        t("month.january"),
+        t("month.february"),
+        t("month.march"),
+        t("month.april"),
+        t("month.may"),
+        t("month.june"),
+        t("month.july"),
+        t("month.august"),
+        t("month.september"),
+        t("month.october"),
+        t("month.november"),
+        t("month.december"),
+      ],
+      title: { text: t("dashboard.month") },
+    },
+    yAxis: {
+      title: { text: t("dashboard.sales_vnd") },
+    },
+    series: [
+      {
+        type: "line",
+        name: t("dashboard.totalSales"),
+        data: [
+          25000, 30000, 28000, 32000, 40000, 42000,
+          39000, 45000, 47000, 50000, 52000, 55000,
+        ],
+      },
+    ],
+    credits: { enabled: false },
+    tooltip: {
+      valueSuffix: " VND",
+    },
+  };
 
   return (
-    <div className="sales-details">
-      <div className="sales-details-header">
-        <h2>{t("dashboard.sales_details")}</h2>
-        <div className="month-selector">
-          <span>{currentMonth}</span>
-          <img src="/assets/icons/chevron-down.png" alt="Calendar" />
-        </div>
+    <div className="bg-white rounded-xl p-6 shadow-sm mb-6">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg sm:text-xl font-bold text-gray-800">
+          {t("dashboard.sales_details")}
+        </h2>
       </div>
-      <div className="sales-chart">
-        <div className="chart-y-axis">
-          <div>100%</div>
-          <div>80%</div>
-          <div>60%</div>
-          <div>40%</div>
-          <div>20%</div>
-        </div>
-        <div className="chart-content">
-          {loading ? (
-            <div className="flex items-center justify-center h-full">
-              <p>{t("common.loading")}</p>
-            </div>
-          ) : (
-            <>
-              <img
-                src="/assets/images/sales-graph-bg.png"
-                alt="Sales graph background"
-                className="chart-background"
-              />
-              <div className="chart-bars">
-                {salesData.data.map((value, index) => (
-                  <div
-                    key={index}
-                    className="chart-bar"
-                    style={{
-                      height: `${(value / maxValue) * 100}%`,
-                      width: `${100 / salesData.data.length}%`,
-                      left: `${(index / salesData.data.length) * 100}%`,
-                    }}
-                    title={`${salesData.labels[index]}: ${value}`}
-                  />
-                ))}
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-      <div className="chart-x-axis">
-        {salesData.labels.map((label, index) => (
-          <div key={index}>{label}</div>
-        ))}
-      </div>
+      <HighchartsReact highcharts={Highcharts} options={chartOptions} />
     </div>
   );
 };

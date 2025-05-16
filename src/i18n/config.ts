@@ -23,6 +23,7 @@ import en_voucher from './en/voucher.json'
 import vi_employee from './vi/employee.json'
 import en_employee from './en/employee.json'
 
+
 i18next.use(initReactI18next).init({
   lng: 'vi', 
   fallbackLng: "en",

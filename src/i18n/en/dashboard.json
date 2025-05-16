@@ -14,10 +14,7 @@
     "up_from_yesterday": "up from yesterday",
     "down_from_yesterday": "down from yesterday",
     "up_from_last_week": "up from last week",
-    "month": {
-      
-      "oct": "October"
-
-    }
+    "month": "Month",
+    "sales_vnd": "Sales (VND)"
   }
 }

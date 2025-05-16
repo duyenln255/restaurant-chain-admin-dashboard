@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import SalesDetails from "./SalesDetails";
-import DealsDetails from "./DealsDetails";
+import BranchRevenue from "./BranchRevenue";
 import StatCard from "./StatCard";
-
+import { Users, PackageCheck, TrendingUp, UserCog } from "lucide-react";
 import type { StatCardProps } from "../../types/StatCardProps";
-
 import { useLoading } from "../../contexts/LoadingContext";
 import { getDashboardStats } from "../../services/dashboard.service";
 
@@ -30,16 +29,19 @@ const Dashboard: React.FC = () => {
             value: stats.totalCustomers.toLocaleString(),
             change: stats.customerGrowth,
             changeText: t("dashboard.up_from_yesterday"),
-            icon: "/assets/icons/totalusers.png",
-            bgColor: "bg-indigo-400 bg-opacity-20",
+            iconElement: <Users className="w-6 h-6 text-white" />,
+            bgColor: "bg-indigo-500",
+            icon: "",
           },
           {
             title: t("dashboard.totalOrders"),
             value: stats.totalOrders.toLocaleString(),
             change: stats.orderGrowth,
             changeText: t("dashboard.up_from_last_week"),
-            icon: "/assets/icons/totalorders.png",
-            bgColor: "bg-amber-300 bg-opacity-20",
+            iconElement: <PackageCheck className="w-6 h-6 text-white" />,
+            bgColor: "bg-yellow-400",
+            icon: "",
+
           },
           {
             title: t("dashboard.totalSales"),
@@ -49,18 +51,21 @@ const Dashboard: React.FC = () => {
               Number(stats.salesGrowth.replace("%", "")) >= 0
                 ? t("dashboard.up_from_yesterday")
                 : t("dashboard.down_from_yesterday"),
-            icon: "/assets/icons/totalsales.png",
-            bgColor: "bg-green-400 bg-opacity-20",
+            iconElement: <TrendingUp className="w-6 h-6 text-white" />,
+            bgColor: "bg-green-500",
+            icon: "",
           },
           {
             title: t("dashboard.totalStaff"),
             value: stats.totalStaff.toLocaleString(),
             change: stats.staffGrowth,
             changeText: t("dashboard.up_from_yesterday"),
-            icon: "/assets/icons/totalpending.png",
-            bgColor: "bg-red-400 bg-opacity-20",
+            iconElement: <UserCog className="w-6 h-6 text-white" />,
+            bgColor: "bg-red-500",
+            icon: "",
           },
         ];
+
 
         setStatCards(formattedStats);
       } catch (error) {
@@ -74,29 +79,33 @@ const Dashboard: React.FC = () => {
   }, []);
 
   return (
-    <div className="flex min-h-screen">
-      <div className="flex-1">
-        <div className="dashboard-body p-6">
-          <div className="mx-auto space-y-4">
-            <div className="flex justify-between items-center">
-              <h1 className="text-2xl font-bold text-neutral-800">
-                {t("dashboard.title")}
-              </h1>
-            </div>
+    <div className="bg-gray-50">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="space-y-4">
+          {/* Header */}
+          <div className="flex justify-between items-center flex-wrap gap-2">
+            <h1 className="text-xl sm:text-2xl font-bold text-neutral-800">
+              {t("dashboard.title")}
+            </h1>
+          </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 mb-5">
-              {statCards.map((card, index) => (
-                <StatCard key={index} {...card} />
-              ))}
-            </div>
+          {/* Stat Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
+            {statCards.map((card, index) => (
+              <StatCard key={index} {...card} />
+            ))}
+          </div>
 
+          {/* Details Section */}
+          <div className="space-y-6">
             <SalesDetails />
-            <DealsDetails />
+            <BranchRevenue />
           </div>
         </div>
       </div>
     </div>
   );
+
 };
 
 export default Dashboard;
