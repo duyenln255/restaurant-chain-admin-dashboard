@@ -9,9 +9,11 @@ import branchReducer from "./slices/branchSlice";
 import blogReducer from "./slices/blogSlice";
 import voucherReducer from "./slices/voucherSlice";
 import employeeReducer from "./slices/employeeSlice";
+import authReducer from "./slices/authSlice";
 
 export const store = configureStore({
   reducer: {
+    auth: authReducer, 
     orders: orderReducer,
     products: productReducer, 
     customers: customerReducer,

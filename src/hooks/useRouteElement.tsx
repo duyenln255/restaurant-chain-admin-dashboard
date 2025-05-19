@@ -30,7 +30,8 @@ import AddBranch from "../pages/Branch/AddBranch";
 import EditBranch from "../pages/Branch/EditBranch";
 import AddVoucher from "../pages/Voucher/AddVoucher";
 import EditVoucher from "../pages/Voucher/EditVoucher";
-import EmailInput from "../pages/Login/ForgotPassword/EmailInput";
+import ResetFlowContainer from "../pages/Login/ForgotPassword/ResetFlowContainer";
+
 
 export default function useRouteElement() {
   const routes = useRoutes([
@@ -44,7 +45,7 @@ export default function useRouteElement() {
     },
     {
       path: "/forgot-password",
-      element: <EmailInput />,
+      element: <ResetFlowContainer />,
     },
     {
       element: (
@@ -76,8 +77,8 @@ export default function useRouteElement() {
         { path: "/reservation/edit/:id", element: <EditReservation /> },
         { path: "/feedback/add", element: <AddFeedback /> },
         { path: "/feedback/edit/:id", element: <EditFeedback /> },
-        { path: "/branch/add", element: <AddBranch /> },
-        { path: "/branch/edit/:id", element: <EditBranch /> },
+        // { path: "/branch/add", element: <AddBranch /> },
+        // { path: "/branch/edit/:id", element: <EditBranch /> },
         { path: "/voucher/add", element: <AddVoucher /> },
         { path: "/voucher/edit/:id", element: <EditVoucher /> },
       ],

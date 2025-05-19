@@ -1,14 +1,20 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import grinderImage from "../../../../public/assets/images/coffee-grinder.png";
+import { forgotPassword } from "../../../services/auth.service"; // import API
 
-export default function EmailInput() {
-  const navigate = useNavigate();
+
+export default function EmailInput({ onSuccess }: { onSuccess: (email: string) => void }) {
   const [email, setEmail] = useState("");
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const navigate = useNavigate();
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    navigate("/verify-code");
+    try {
+      await forgotPassword(email);
+      onSuccess(email); // Gọi callback truyền lên
+    } catch (err) {
+      alert("Email không hợp lệ hoặc không tồn tại");
+    }
   };
 
   return (

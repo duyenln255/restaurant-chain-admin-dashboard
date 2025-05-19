@@ -1,32 +1,47 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import grinderImage from "../../../../public/assets/images/coffee-grinder.png"; // Đảm bảo đúng path
+import { useSelector } from "react-redux";
+import type { RootState } from "../../../redux/store";
+import { resetPassword } from "../../../services/auth.service";
 
-export default function ResetPassword() {
+
+export default function ResetPassword({
+  email,
+  token,
+}: {
+  email: string;
+  token: string;
+}) {  
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirm) {
       setError("Mật khẩu xác nhận không khớp");
       return;
     }
 
-    console.log("Resetting password to:", password);
-    navigate("/", {
-      replace: true,
-      state: {
-        resetSuccess: true,
-      },
-    });
+    try {
+      await resetPassword(email, token, password, confirm);
+      navigate("/", {
+        replace: true,
+        state: {
+          resetSuccess: true,
+        },
+      });
+    } catch (err) {
+      setError("Đặt lại mật khẩu thất bại. Token không hợp lệ hoặc đã hết hạn.");
+    }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#FCE2D1] px-4">
-      <div className="flex flex-col md:flex-row w-full max-w-6xl shadow-lg overflow-hidden bg-white rounded-lg">
+      <div className="flex flex-col md:flex-row w-full max-w-6xl shadow-lg overflow-hidden bg-white">
         {/* Left: Form */}
         <div className="w-full md:w-1/2 p-8 md:p-14 flex flex-col justify-center bg-[#F1F2FE] relative">
           <button

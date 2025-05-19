@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { LoginForm } from './LoginForm';
-import { SocialAuth } from './SocialAuth';
 import type { LoginFormData } from '../../types/AuthType';
 import { useNavigate } from "react-router-dom";
 import { login } from "../../services/auth.service";
@@ -42,48 +41,40 @@ export const LoginContainer: React.FC = () => {
   ];
 
   return (
-<div className="flex bg-indigo-50 max-md:flex-col w-4xl">
-  {/* Left column - Login */}
-  <div className="flex flex-col justify-center items-center w-1/2 max-md:w-full py-16 px-8">
-    <img
-      src="/assets/images/logo.png"
-      alt="Welcome logo"
-      className="w-[100px] mb-2"
-    />
-    <h2 className="text-lg font-bold text-zinc-800 mb-6 text-center">
-      Restaurant Chain Management System
-    </h2>
-    <h1 className="text-2xl font-bold mb-6 text-zinc-900 text-center">
-      Welcome Back!
-    </h1>
+    <div className="min-h-screen flex items-center justify-center bg-[#FCE2D1] px-4">
+      <div className="flex flex-col md:flex-row w-full max-w-6xl shadow-lg overflow-hidden bg-white">
+        
+        {/* Left Section: Form */}
+        <div className="w-full md:w-1/2 p-8 md:p-14 flex flex-col justify-center bg-[#F1F2FE] relative">
+          <img
+            src="/assets/images/logo.png"
+            alt="Welcome logo"
+            className="w-25 mb-4 self-center"
+          />
+          <h2 className="text-xl font-semibold text-[#4B3B39] mb-2 text-center">
+            Restaurant Chain Management System
+          </h2>
+          <h1 className="text-2xl font-bold text-[#4B3B39] mb-6 text-center">
+            Welcome Back!
+          </h1>
 
-    <div className="w-full max-w-md space-y-8">
-      <LoginForm
-        onSubmit={handleLogin}
-        onForgotPassword={handleForgotPassword}
-      />
+          <div className="w-full max-w-md mx-auto">
+            <LoginForm
+              onSubmit={handleLogin}
+              onForgotPassword={handleForgotPassword}
+            />
+          </div>
+        </div>
 
-      {/* <p className="text-center text-sm text-gray-500">
-        Forgot your password?{" "}
-        <button
-          onClick={handleForgotPassword}
-          className="text-indigo-600 hover:underline"
-        >
-          Reset here
-        </button>
-      </p> */}
+        {/* Right Section: Image */}
+        <div className="hidden md:block md:w-1/2 bg-stone-700 relative">
+          <img
+            src="/assets/images/login-bg.png"
+            alt="Login illustration"
+            className="w-full h-full object-contain"
+          />
+        </div>
+      </div>
     </div>
-  </div>
-
-  {/* Right column - Image */}
-  <div className="flex justify-center items-center w-1/2 max-md:w-full bg-stone-700 py-16 px-8">
-    <img
-      src="/assets/images/login-bg.png"
-      alt="Login illustration"
-      className="object-contain max-h-[400px] w-auto"
-    />
-  </div>
-</div>
-
   );
 };

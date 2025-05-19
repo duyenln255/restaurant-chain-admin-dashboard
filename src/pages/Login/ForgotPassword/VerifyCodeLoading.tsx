@@ -1,21 +1,25 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import grinderImage from "../../../../public/assets/images/coffee-grinder.png"; // Đảm bảo path đúng
 import emailIllustration from "../../../../public/assets/images/email.png"; // Icon minh hoạ
 
 export default function VerifyCodeLoading() {
   const navigate = useNavigate();
+const location = useLocation();
+const email = location.state?.email;
+const token = location.state?.token;
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      navigate("/reset-password");
-    }, 2000);
-    return () => clearTimeout(timeout);
-  }, [navigate]);
+useEffect(() => {
+  setTimeout(() => {
+    navigate("/reset-password", {
+      state: { email, token }
+    });
+  }, 2000);
+}, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#FCE2D1] px-4">
-      <div className="flex flex-col md:flex-row w-full max-w-6xl shadow-lg overflow-hidden bg-white rounded-lg">
+      <div className="flex flex-col md:flex-row w-full max-w-6xl shadow-lg overflow-hidden bg-white">
         {/* Left: Loading text & animation */}
         <div className="w-full md:w-1/2 flex flex-col justify-center items-center bg-[#F1F2FE] px-8 relative">
           <button

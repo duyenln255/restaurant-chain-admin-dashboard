@@ -33,3 +33,36 @@ export const logout = () => {
   localStorage.removeItem("user");
 };
 
+export const getProfile = async () => {
+  const response = await axiosInstance.get("/auth/profile");
+  return response.data;
+};
+
+export const getToken = (): string | null => {
+  return localStorage.getItem("token");
+};
+
+// [POST] /login/forgot_password
+export const forgotPassword = async (email: string) => {
+  return axiosInstance.post("/login/forgot_password", { email });
+};
+
+// [POST] /login/verify_reset_code
+export const verifyResetCode = async (email: string, code: string) => {
+  return axiosInstance.post("/login/verify_reset_code", { email, code });
+};
+
+// [POST] /login/reset_password
+export const resetPassword = async (
+  email: string,
+  token: string,
+  newPassword: string,
+  confirmPassword: string
+) => {
+  return axiosInstance.post("/login/reset_password", {
+    email,
+    token,
+    newPassword,
+    confirmPassword,
+  });
+};

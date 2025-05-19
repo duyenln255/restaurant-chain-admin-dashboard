@@ -1,13 +1,32 @@
 import { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import grinderImage from "../../../../public/assets/images/coffee-grinder.png"; // Đảm bảo đúng path
 import emailIllustration from "../../../../public/assets/images/email.png"; // Email icon minh hoạ
+import { useSelector, useDispatch } from "react-redux";
+import type { RootState } from "../../../redux/store";
+import { verifyResetCode } from "../../../services/auth.service";
+import { setResetToken } from "../../../redux/slices/authSlice";
+import { useLocation, useNavigate } from "react-router-dom";
 
-export default function VerifyCode() {
+export default function VerifyCode({
+  email,
+  onVerified,
+}: {
+  email: string;
+  onVerified: (token: string) => void;
+}) {  
   const navigate = useNavigate();
   const [values, setValues] = useState<string[]>(Array(6).fill(""));
   const inputsRef = useRef<Array<HTMLInputElement | null>>(Array(6).fill(null));
-
+  const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      const code = values.join("");
+      try {
+        const res = await verifyResetCode(email, code);
+        onVerified(res.data.token); // Gửi token lên cha
+      } catch {
+        alert("Sai mã xác minh");
+      }
+    };
   const handleChange = (index: number, value: string) => {
     if (!/^\d?$/.test(value)) return;
 
@@ -26,17 +45,10 @@ export default function VerifyCode() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const code = values.join("");
-    if (code.length === 6) {
-      navigate("/loading");
-    }
-  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#FCE2D1] px-4">
-      <div className="flex flex-col md:flex-row w-full max-w-6xl shadow-lg overflow-hidden bg-white rounded-lg">
+      <div className="flex flex-col md:flex-row w-full max-w-6xl shadow-lg overflow-hidden bg-white ">
         {/* Left Section */}
         <div className="w-full md:w-1/2 p-8 md:p-14 flex flex-col justify-center bg-[#F1F2FE] relative">
           <button
@@ -63,23 +75,24 @@ export default function VerifyCode() {
               onSubmit={handleSubmit}
               className="flex flex-col items-center w-full"
             >
-              <div className="flex gap-3 justify-center mb-6">
-                {values.map((val, i) => (
-                  <input
-                    key={i}
-                    ref={(el) => {
-                      (inputsRef.current[i] as HTMLInputElement | null) = el;
-                    }}
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={1}
-                    value={val}
-                    onChange={(e) => handleChange(i, e.target.value)}
-                    onKeyDown={(e) => handleKeyDown(e, i)}
-                    className="w-12 h-14 md:w-14 md:h-16 border-2 border-gray-400 rounded-xl text-center text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#4B3B39]"
-                  />
-                ))}
-              </div>
+            <div className="grid grid-cols-6 gap-2 w-full max-w-xs mb-6">
+              {values.map((val, i) => (
+                <input
+                  key={i}
+                  ref={(el) => {
+                    (inputsRef.current[i] as HTMLInputElement | null) = el;
+                  }}
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={1}
+                  value={val}
+                  onChange={(e) => handleChange(i, e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(e, i)}
+                  className="aspect-square w-full border-2 border-gray-400 rounded-xl text-center text-lg font-semibold focus:outline-none focus:ring-2 focus:ring-[#4B3B39]"
+                />
+              ))}
+            </div>
+
 
               <button
                 type="submit"
