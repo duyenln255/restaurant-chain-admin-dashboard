@@ -39,13 +39,14 @@ const BrandList: React.FC = () => {
 
   const [filteredBrands, setFilteredBrands] = useState<BrandItem[]>([]);
   const [filters, setFilters] = useState<{
-    brandId: string;
+    name: string;
     status: string;
     dateAdded?: string;
   }>({
-    brandId: "",
+    name: "",
     status: "all",
   });
+
 
   const fetchFiltered = async () => {
     try {
@@ -103,7 +104,7 @@ const BrandList: React.FC = () => {
           <BrandTable
             items={
               filteredBrands.length > 0 ||
-              filters.brandId ||
+              filters.name ||
               filters.status !== "all" ||
               filters.dateAdded
                 ? filteredBrands

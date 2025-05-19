@@ -24,12 +24,13 @@ export interface BrandInput {
   status: string;
 }
 export const getFilteredBrands = async (params: {
-  brandId?: string;
+  name?: string;
   status?: string;
   dateAdded?: string;
 }): Promise<Brand[]> => {
   const query = new URLSearchParams();
-  if (params.brandId) query.append("brandId", params.brandId);
+
+  if (params.name) query.append("name", params.name);
   if (params.status && params.status !== "all") query.append("status", params.status);
   if (params.dateAdded) query.append("date_added", params.dateAdded);
 
@@ -51,10 +52,15 @@ export const getBrandById = async (id: string): Promise<Brand> => {
   return response.data.brand;
 };
 
-export const createBrand = async (brand: BrandInput): Promise<Brand> => {
-  const response = await axiosInstance.post<{ brand: Brand }>("/brand", brand);
+export const createBrand = async (formData: FormData): Promise<Brand> => {
+  const response = await axiosInstance.post<{ brand: Brand }>("/brand", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
   return response.data.brand;
 };
+
 
 export const updateBrand = async (id: string, brand: BrandInput): Promise<Brand> => {
   const response = await axiosInstance.put<{ brand: Brand }>(`/brand/${id}`, {

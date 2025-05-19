@@ -25,9 +25,21 @@ const AddBrand: React.FC = () => {
   const [openingHour, setOpeningHour] = useState("");
   const [closingHour, setClosingHour] = useState("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const convertToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const result = reader.result as string;
+        resolve(result);
+      };
+      reader.onerror = (error) => reject(error);
+    });
+  };
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
+    if (!logo) newErrors.logo = "Logo is required";
     if (!name.trim()) newErrors.name = "Required";
     if (!description.trim()) newErrors.description = "Required";
     if (!link.trim()) newErrors.link = "Required";
@@ -37,29 +49,28 @@ const AddBrand: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validateForm()) return;
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  if (!validateForm()) return;
 
-    const newBrand = {
-      name,
-      description,
-      opening_hours: openingHour,
-      closed_hours: closingHour,
-      logo_url: "",
-      website_url: link,
-      status,
-    };
+  try {
+    const formData = new FormData();
+    if (logo) formData.append("logo_url", logo); // gửi file gốc
+    formData.append("name", name);
+    formData.append("description", description);
+    formData.append("opening_hours", openingHour);
+    formData.append("closed_hours", closingHour);
+    formData.append("website_url", link);
+    formData.append("status", status);
 
-    try {
-      await createBrand(newBrand);
-      toast.success(t("brand.brandAdded"));
-      navigate("/brand");
-    } catch (err) {
-      console.error("Error creating brand:", err);
-      toast.error(t("brand.deleteError"));
-    }
-  };
+    await createBrand(formData); // gọi hàm mới bên service
+    toast.success(t("brand.brandAdded"));
+    navigate("/brand");
+  } catch (err) {
+    console.error("Error creating brand:", err);
+    toast.error(t("brand.deleteError"));
+  }
+};
 
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {

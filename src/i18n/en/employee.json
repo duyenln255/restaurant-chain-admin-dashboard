@@ -81,6 +81,7 @@
       "of": "of"
     },
     "search": {
+      "allBrands": "All Brands",
       "placeholder": "Search by name, email or phone",
       "status": "Filter by status",
       "department": "Filter by department",

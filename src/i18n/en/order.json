@@ -1,5 +1,8 @@
 {
   "orders": {
+    "customerName": "Customer Name",
+    "customerEmail": "Customer Email",
+    "customerPhone": "Customer Phone",
     "title": "Orders",
     "orderList": "Order Lists",
     "addOrder": "Add Order",

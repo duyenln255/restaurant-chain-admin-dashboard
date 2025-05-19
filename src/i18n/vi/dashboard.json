@@ -15,7 +15,13 @@
     "down_from_yesterday": "giảm so với hôm qua",
     "up_from_last_week": "tăng so với tuần trước",
     "sales_vnd": "Doanh thu (VND)",
-    "month": "Tháng"
+    "month": "Tháng",
+    "up_from_last_month": "tăng so với tháng trước",
+    "down_from_last_month": "giảm so với tháng trước",
+    "branch_address": "Địa chỉ chi nhánh",
+    "revenue": "Doanh thu",
+    "orders": "Đơn hàng",
+    "staffs": "Nhân viên"
 
   }
 }

@@ -2,11 +2,20 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { addOrder } from "../../redux/slices/orderSlice";
 import { fetchProducts } from "../../redux/slices/productSlice";
+import { fetchBranches } from "../../redux/slices/branchSlice";
+import { fetchCustomers } from "../../redux/slices/customerSlice";
+import { addOrder } from "../../redux/slices/orderSlice";
 import { useLoading } from "../../contexts/LoadingContext";
 import type { RootState } from "../../redux/store";
-import type { OrderCreateRequest } from "../../services/order.service.tsx";
+import type { OrderCreateRequest } from "../../services/order.service";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "../../components/ui/select";
 
 interface CartItem {
   id: string;
@@ -19,46 +28,52 @@ const AddOrder: React.FC = () => {
   const dispatch = useAppDispatch();
   const { setLoading } = useLoading();
   const { t } = useTranslation();
-  const { items: products } = useAppSelector(
-    (state: RootState) => state.products
-  );
 
-  const [customerPhone, setCustomerPhone] = useState("");
-  const [customerName, setCustomerName] = useState("");
+  const products = useAppSelector((state: RootState) => state.products.items);
+  const branches = useAppSelector((state: RootState) => state.branches.items);
+  const customers = useAppSelector((state: RootState) => state.customers.items);
+
+  const [selectedCustomerId, setSelectedCustomerId] = useState("");
   const [address, setAddress] = useState("");
-  const [email, setEmail] = useState("");
-  const [category, setCategory] = useState("");
+  const [preorderTime, setPreorderTime] = useState("");
+  const [orderType, setOrderType] = useState("AT STORE");
+  const [status, setStatus] = useState("Processing");
+  const [branchId, setBranchId] = useState("");
   const [selectedProduct, setSelectedProduct] = useState("");
-  const [orderType, setOrderType] = useState<"AT STORE" | "ONLINE">("AT STORE");
   const [quantity, setQuantity] = useState(1);
-  const [status, setStatus] = useState<
-    "Completed" | "Processing" | "Rejected" | "On Hold" | "In Transit"
-  >("Processing");
-  const [voucher, setVoucher] = useState("");
-  const [notes, setNotes] = useState("");
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     dispatch(fetchProducts());
+    dispatch(fetchBranches());
+    dispatch(fetchCustomers());
   }, [dispatch]);
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
-    if (!customerPhone.trim()) newErrors.customerPhone = "Required";
-    if (!customerName.trim()) newErrors.customerName = "Required";
-
+    if (!selectedCustomerId) newErrors.customerId = "Required";
+    if (!branchId) newErrors.branchId = "Required";
+    if (cartItems.length === 0) newErrors.cart = "Cart cannot be empty";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleCheckPhone = () => {
-    // Simulate checking phone number in database
-    console.log("Checking phone:", customerPhone);
-    // In a real app, you would fetch customer data based on phone number
-    // For now, we'll just set a dummy name if phone is valid
-    if (customerPhone.length >= 10) {
-      setCustomerName("John Doe");
+  const handleAddToCart = () => {
+    if (!selectedProduct || quantity <= 0) return;
+    const existingIndex = cartItems.findIndex((item) => item.id === selectedProduct);
+    if (existingIndex !== -1) {
+      const updated = [...cartItems];
+      updated[existingIndex].quantity += quantity;
+      setCartItems(updated);
+    } else {
+      const product = products.find((p) => p.id === selectedProduct);
+      if (product) {
+        setCartItems([...cartItems, { id: product.id, name: product.name, quantity }]);
+      }
     }
+    setSelectedProduct("");
+    setQuantity(1);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -67,29 +82,20 @@ const AddOrder: React.FC = () => {
 
     try {
       setLoading(true);
-
       const orderData: OrderCreateRequest = {
-        full_name: customerName,
-        address: address,
+        customer_id: selectedCustomerId,
+        address,
         type: orderType,
-        status: status,
-        cart: {
-          items: [
-            {
-              id: selectedProduct || "1",
-              name:
-                products.find((p) => p.id === selectedProduct)?.name ||
-                "Product",
-              quantity: quantity,
-            },
-          ],
-        },
+        status,
+        preorder_time: preorderTime,
+        payment_method: "Cash",
+        branch_id: branchId,
+        cart: { items: cartItems },
       };
-
       await dispatch(addOrder(orderData)).unwrap();
       navigate("/order-list");
     } catch (error) {
-      console.error("Failed to add order:", error);
+      console.error("Failed to create order:", error);
       alert(t("orders.addError"));
     } finally {
       setLoading(false);
@@ -97,251 +103,193 @@ const AddOrder: React.FC = () => {
   };
 
   return (
-    <div className="dashboard">
-      <div className="dashboard-content">
-        <div className="main-content">
-          <div className="dashboard-body p-6">
-            <div className="mx-auto">
-              <h1 className="text-2xl font-bold text-neutral-800 mb-6">
-                {t("orders.addNewOrder")}
-              </h1>
+    <div className="p-6 mx-auto space-y-6">
+      <div
+        className="text-sm text-blue-600 cursor-pointer"
+        onClick={() => navigate("/order-list")}
+      >
+        ← {t("orders.orderList")}
+      </div>
 
-              <div className="bg-white rounded-xl p-8 shadow-md">
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Customer Phone */}
-                    <div>
-                      <label className="block text-sm font-medium mb-1">
-                        {t("orders.phone")} {t("orders.customer")}
-                        <span className="text-red-500">*</span>
-                      </label>
-                      <div className="flex">
-                        <input
-                          type="text"
-                          value={customerPhone}
-                          onChange={(e) => setCustomerPhone(e.target.value)}
-                          className="flex-1 border border-gray-300 rounded-l-md px-4 py-2"
-                          placeholder="XXX-XXX-XXXX"
-                        />
-                        <button
-                          type="button"
-                          onClick={handleCheckPhone}
-                          className="bg-blue-500 text-white px-4 py-2 rounded-r-md hover:bg-blue-600"
-                        >
-                          {t("common.check")}
-                        </button>
-                      </div>
-                      {errors.customerPhone && (
-                        <span className="text-red-500 text-xs mt-1">
-                          {errors.customerPhone}
-                        </span>
-                      )}
-                    </div>
+      <h1 className="text-3xl font-bold text-neutral-800">{t("orders.addNewOrder")}</h1>
 
-                    {/* Customer Name */}
-                    <div>
-                      <label className="block text-sm font-medium mb-1">
-                        {t("orders.customer")} {t("orders.name")}{" "}
-                        <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        value={customerName}
-                        onChange={(e) => setCustomerName(e.target.value)}
-                        className="w-full border border-gray-300 rounded-md px-4 py-2"
-                        placeholder={`${t("common.enter")} ${t("orders.name")}`}
-                      />
-                      {errors.customerName && (
-                        <span className="text-red-500 text-xs mt-1">
-                          {errors.customerName}
-                        </span>
-                      )}
-                    </div>
+      <div className="bg-white rounded-xl p-8 shadow-md">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Customer Select */}
+            <div>
+              <label className="text-sm font-medium block mb-1">
+                {t("common.customer")} <span className="text-red-500">*</span>
+              </label>
+              <Select value={selectedCustomerId} onValueChange={setSelectedCustomerId}>
+                <SelectTrigger className="w-full border border-neutral-300">
+                  <SelectValue placeholder={t("common.selectCustomer")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {customers.map((c) => (
+                    <SelectItem key={c.customer_id} value={c.customer_id}>
+                      {c.full_name} - {c.phone}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {errors.customerId && <p className="text-red-500 text-xs">{errors.customerId}</p>}
+            </div>
 
-                    {/* Address */}
-                    <div>
-                      <label className="block text-sm font-medium mb-1">
-                        {t("orders.address")}
-                      </label>
-                      <input
-                        type="text"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                        className="w-full border border-gray-300 rounded-md px-4 py-2"
-                        placeholder={`${t("common.enter")} ${t("orders.address")}`}
-                      />
-                    </div>
+            {/* Address */}
+            <div>
+              <label className="text-sm font-medium block mb-1">{t("orders.address")}</label>
+              <input
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                className="text-sm w-full border border-neutral-300 rounded-md px-4 py-2"
+              />
+            </div>
 
-                    {/* Email */}
-                    <div>
-                      <label className="block text-sm font-medium mb-1">
-                        {t("employee.email")}
-                      </label>
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full border border-gray-300 rounded-md px-4 py-2"
-                        placeholder={`${t("common.enter")} ${t("employee.email")}`}
-                      />
-                    </div>
+            {/* Branch */}
+            <div>
+              <label className="text-sm font-medium block mb-1">{t("orders.branch")} <span className="text-red-500">*</span></label>
+              <Select value={branchId} onValueChange={setBranchId}>
+                <SelectTrigger className="w-full border border-neutral-300">
+                  <SelectValue placeholder={t("orders.selectBranch")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {branches.map((b) => (
+                    <SelectItem key={b.id} value={b.id}>
+                      {b.address}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {errors.branchId && <p className="text-red-500 text-xs">{errors.branchId}</p>}
+            </div>
 
-                    {/* Category */}
-                    <div>
-                      <label className="block text-sm font-medium mb-1">
-                        {t("products.category")}{" "}
-                        <span className="text-red-500">*</span>
-                      </label>
-                      <select
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white"
-                      >
-                        <option value="">
-                          {t("products.search.allCategories")}
-                        </option>
-                        <option value="coffee">Coffee</option>
-                        <option value="tea">Tea</option>
-                        <option value="pastry">Pastry</option>
-                      </select>
-                    </div>
+            {/* Preorder Time */}
+            <div>
+              <label className="text-sm font-medium block mb-1">{t("orders.preorderTime")}</label>
+              <input
+                type="datetime-local"
+                value={preorderTime}
+                onChange={(e) => setPreorderTime(e.target.value)}
+                className="text-sm w-full border border-neutral-300 rounded-md px-4 py-2"
+              />
+            </div>
 
-                    {/* Product */}
-                    <div>
-                      <label className="block text-sm font-medium mb-1">
-                        {t("orders.products")}{" "}
-                        <span className="text-red-500">*</span>
-                      </label>
-                      <select
-                        value={selectedProduct}
-                        onChange={(e) => setSelectedProduct(e.target.value)}
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white"
-                      >
-                        <option value="">
-                          {t("products.search.allProducts")}
-                        </option>
-                        {products.map((product) => (
-                          <option key={product.id} value={product.id}>
-                            {product.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
+            {/* Order Type */}
+            <div>
+              <label className="text-sm font-medium block mb-1">{t("orders.type")}</label>
+              <Select value={orderType} onValueChange={setOrderType}>
+                <SelectTrigger className="w-full border border-neutral-300">
+                  <SelectValue placeholder={t("orders.type")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="AT STORE">{t("orders.atStore")}</SelectItem>
+                  <SelectItem value="ONLINE">{t("orders.online")}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
 
-                    {/* Order Type */}
-                    <div>
-                      <label className="block text-sm font-medium mb-1">
-                        {t("orders.orderType")}{" "}
-                        <span className="text-red-500">*</span>
-                      </label>
-                      <select
-                        value={orderType}
-                        onChange={(e) =>
-                          setOrderType(e.target.value as "AT STORE" | "ONLINE")
-                        }
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white"
-                      >
-                        <option value="">{t("orders.search.allTypes")}</option>
-                        <option value="AT STORE">AT STORE</option>
-                        <option value="ONLINE">ONLINE</option>
-                      </select>
-                    </div>
-
-                    {/* Quantity */}
-                    <div>
-                      <label className="block text-sm font-medium mb-1">
-                        {t("orders.quantity")}{" "}
-                        <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="number"
-                        value={quantity}
-                        onChange={(e) => setQuantity(Number(e.target.value))}
-                        className="w-full border border-gray-300 rounded-md px-4 py-2"
-                        min="1"
-                      />
-                    </div>
-
-                    {/* Status */}
-                    <div>
-                      <label className="block text-sm font-medium mb-1">
-                        {t("orders.status")}
-                      </label>
-                      <select
-                        value={status}
-                        onChange={(e) =>
-                          setStatus(
-                            e.target.value as
-                              | "Completed"
-                              | "Processing"
-                              | "Rejected"
-                              | "On Hold"
-                              | "In Transit"
-                          )
-                        }
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white"
-                      >
-                        <option value="Processing">
-                          {t("orders.processing")}
-                        </option>
-                        <option value="Completed">
-                          {t("orders.completed")}
-                        </option>
-                        <option value="Rejected">
-                          {t("orders.cancelled")}
-                        </option>
-                        <option value="On Hold">{t("orders.onHold")}</option>
-                        <option value="In Transit">
-                          {t("orders.shipped")}
-                        </option>
-                      </select>
-                    </div>
-
-                    {/* Voucher */}
-                    <div>
-                      <label className="block text-sm font-medium mb-1">
-                        {t("vouchers.title")}
-                      </label>
-                      <select
-                        value={voucher}
-                        onChange={(e) => setVoucher(e.target.value)}
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 bg-white"
-                      >
-                        <option value="">
-                          {t("vouchers.search.allTypes")}
-                        </option>
-                        <option value="SUMMER10">SUMMER10 - 10% OFF</option>
-                        <option value="WELCOME20">WELCOME20 - 20% OFF</option>
-                      </select>
-                    </div>
-
-                    {/* Notes */}
-                    <div className="md:col-span-2">
-                      <label className="block text-sm font-medium mb-1">
-                        {t("orders.notes")}
-                      </label>
-                      <textarea
-                        value={notes}
-                        onChange={(e) => setNotes(e.target.value)}
-                        className="w-full border border-gray-300 rounded-md px-4 py-2 h-32"
-                        placeholder={`${t("common.enter")} ${t("orders.notes")}`}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="text-center pt-4">
-                    <button
-                      type="submit"
-                      className="bg-blue-500 text-white px-8 py-2 rounded-md hover:bg-blue-600"
-                    >
-                      {t("orders.addOrder")}
-                    </button>
-                  </div>
-                </form>
-              </div>
+            {/* Status */}
+            <div>
+              <label className="text-sm font-medium block mb-1">{t("orders.status")}</label>
+              <Select value={status} onValueChange={setStatus}>
+                <SelectTrigger className="w-full border border-neutral-300">
+                  <SelectValue placeholder={t("orders.status")} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Processing">{t("orders.processing")}</SelectItem>
+                  <SelectItem value="Completed">{t("orders.completed")}</SelectItem>
+                  <SelectItem value="Rejected">{t("orders.rejected")}</SelectItem>
+                  <SelectItem value="On Hold">{t("orders.onHold")}</SelectItem>
+                  <SelectItem value="In Transit">{t("orders.inTransit")}</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
-        </div>
+
+          {/* Cart Section */}
+          <div className="space-y-3">
+            <label className="text-base font-semibold">{t("orders.cart")}</label>
+
+            <div className="flex flex-col md:flex-row md:items-end gap-4">
+              <div className="flex-1">
+                <label className="text-sm font-medium block mb-1">{t("orders.product")}</label>
+                <Select value={selectedProduct} onValueChange={setSelectedProduct}>
+                  <SelectTrigger className="w-full border border-neutral-300">
+                    <SelectValue placeholder={t("products.selectProduct")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {products.map((p) => (
+                      <SelectItem key={p.id} value={p.id}>
+                        {p.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <label className="text-sm font-medium block mb-1">{t("orders.quantity")}</label>
+                <input
+                  type="number"
+                  min={1}
+                  value={quantity}
+                  onChange={(e) => setQuantity(Number(e.target.value))}
+                  className="w-full border border-neutral-300 rounded-md px-4 py-2"
+                />
+              </div>
+
+              <button
+                type="button"
+                onClick={handleAddToCart}
+                className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md h-[42px]"
+              >
+                {t("orders.addProduct")}
+              </button>
+            </div>
+
+            {cartItems.length > 0 && (
+              <table className="w-full text-sm mt-4 border border-gray-200 rounded-md">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th className="text-left px-3 py-2">{t("orders.product")}</th>
+                    <th className="text-left px-3 py-2">{t("orders.quantity")}</th>
+                    <th className="text-center px-3 py-2">{t("common.action")}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {cartItems.map((item, idx) => (
+                    <tr key={idx} className="border-t border-gray-200">
+                      <td className="px-3 py-2">{item.name}</td>
+                      <td className="px-3 py-2">{item.quantity}</td>
+                      <td className="px-3 py-2 text-center">
+                        <button
+                          type="button"
+                          className="text-red-500 hover:underline text-xs"
+                          onClick={() => {
+                            const updated = cartItems.filter((_, i) => i !== idx);
+                            setCartItems(updated);
+                          }}
+                        >
+                          {t("common.remove")}
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+            {errors.cart && <p className="text-red-500 text-xs">{errors.cart}</p>}
+          </div>
+
+          {/* Submit */}
+          <div className="text-center pt-4">
+            <button type="submit" className="bg-blue-500 text-white px-8 py-2 rounded-md hover:bg-blue-600">
+              {t("orders.addOrder")}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

@@ -16,7 +16,7 @@ export default function EmailInput() {
       <div className="flex flex-col md:flex-row w-full max-w-6xl shadow-lg overflow-hidden bg-white">
         {/* Left: Form */}
         <div className="w-full md:w-1/2 p-8 md:p-14 flex flex-col justify-center bg-[#F1F2FE] relative">
-          {/* ✅ Fix vị trí nút Back */}
+          {/*  Fix vị trí nút Back */}
           <button
             onClick={() => navigate(-1)}
             className="absolute top-6 left-6 text-sm text-gray-600 hover:underline"
@@ -67,7 +67,7 @@ export default function EmailInput() {
           <img
             src={grinderImage}
             alt="Coffee Grinder"
-            className="w-full h-full object-contain p-10"
+            className="w-full h-full object-contain"
           />
         </div>
       </div>

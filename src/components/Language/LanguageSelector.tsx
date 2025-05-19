@@ -64,7 +64,7 @@ export default function SelectLanguage({
 
       <DropdownMenuContent
         align="end"
-        className="w-44 border border-neutral-300 shadow-lg rounded-md"
+        className="w-44 border border-neutral-300 shadow-md rounded-md bg-white"
       >
         {countries.map((country) => (
           <DropdownMenuItem

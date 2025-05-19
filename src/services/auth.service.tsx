@@ -33,11 +33,3 @@ export const logout = () => {
   localStorage.removeItem("user");
 };
 
-export const getProfile = async () => {
-  const response = await axiosInstance.get("/auth/profile");
-  return response.data;
-};
-
-export const getToken = (): string | null => {
-  return localStorage.getItem("token");
-};

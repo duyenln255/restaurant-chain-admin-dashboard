@@ -1,5 +1,12 @@
 import React from "react";
 import type { BlogCardItem } from "../../../types/BlogCardItem";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "../../../components/ui/carousel";
 
 interface BlogCardProps {
   post: BlogCardItem;
@@ -8,6 +15,8 @@ interface BlogCardProps {
 }
 
 const BlogCard: React.FC<BlogCardProps> = ({ post, onReadMore, onDelete }) => {
+  console.log("post.photoUrl", post.photoUrl)
+
   return (
     <div
       className={`flex flex-col bg-white rounded-xl shadow-md overflow-hidden w-full transition-transform duration-300 ${
@@ -15,13 +24,24 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, onReadMore, onDelete }) => {
       }`}
     >
       {/* Image */}
+
       <div className="pt-4 px-4 pb-2">
-        <img
-          loading="lazy"
-          src={post.photoUrl}
-          alt="Blog post cover"
-          className="w-full object-cover rounded-md"
-        />
+        <Carousel>
+          <CarouselContent>
+            {post.photoUrl.map((url, index) => (
+              <CarouselItem key={index}>
+                <img
+                  loading="lazy"
+                  src={url}
+                  alt={`Blog image ${index + 1}`}
+                  className="w-full h-52 object-cover rounded-md"
+                />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
       </div>
 
       <div className="p-4 flex flex-col flex-grow">

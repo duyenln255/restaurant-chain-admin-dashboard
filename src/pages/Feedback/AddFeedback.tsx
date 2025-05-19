@@ -97,7 +97,7 @@ const AddFeedback: React.FC = () => {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Status */}
-                    <div>
+                    {/* <div>
                       <label className="block text-sm font-medium mb-1">
                         {t("feedback.status")}
                       </label>
@@ -114,11 +114,11 @@ const AddFeedback: React.FC = () => {
                           {t("feedback.inProgress")}
                         </option>
                       </select>
-                    </div>
+                    </div> */}
                     <div className="hidden md:block"></div>{" "}
                     {/* Empty div for grid alignment */}
                     {/* Customer Phone */}
-                    <div>
+                    {/* <div>
                       <label className="block text-sm font-medium mb-1">
                         {t("feedback.customerPhone")}{" "}
                         <span className="text-red-500">*</span>
@@ -144,8 +144,8 @@ const AddFeedback: React.FC = () => {
                           {errors.customerPhone}
                         </span>
                       )}
-                    </div>
-                    {/* Customer Name */}
+                    </div> */}
+                    {/* Customer Name - CHUYỂN THÀNH SELECT ĐỂ LẤY NAME +ID BE CHỈ CHO PHÉP  GỬI PAYLOAD VS CUSTOMER_IID */}
                     <div>
                       <label className="block text-sm font-medium mb-1">
                         {t("feedback.customerName")}{" "}

@@ -7,7 +7,7 @@ import {
   TableBody,
   TableCell
 } from '../../components/ui/table'
-
+import { useTranslation } from "react-i18next";
 import CustomPagination from "../../components/CustomPagination/CustomPagination"
 
 interface TableProps<T extends Record<string, any>> {
@@ -33,6 +33,7 @@ const GenericTable = <T extends Record<string, any>>({
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   )
+  const { t } = useTranslation();
 
   return (
     <div className="bg-white rounded-lg border border-neutral-300 p-4 shadow-md">
@@ -58,6 +59,13 @@ const GenericTable = <T extends Record<string, any>>({
             </TableRow>
           </TableHeader>
           <TableBody>
+            {paginatedItems.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={columns.length} className="text-center py-6 text-gray-500">
+                  {t("common.noData")}
+                </TableCell>
+              </TableRow>
+            )}
             {paginatedItems.map((item, index) => (
               <TableRow key={index}>
                 {columns.map((col) => (

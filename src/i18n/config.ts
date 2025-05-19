@@ -22,7 +22,8 @@ import vi_voucher from './vi/voucher.json'
 import en_voucher from './en/voucher.json'
 import vi_employee from './vi/employee.json'
 import en_employee from './en/employee.json'
-
+import vi_blog from './vi/blog.json'
+import en_blog from './en/blog.json'
 
 i18next.use(initReactI18next).init({
   lng: 'vi', 
@@ -42,6 +43,7 @@ i18next.use(initReactI18next).init({
         ...en_feedback,
         ...en_voucher,
         ...en_employee,
+        ...en_blog
       }
     },
     vi: {
@@ -56,7 +58,8 @@ i18next.use(initReactI18next).init({
         ...vi_brand_branch,
         ...vi_feedback,
         ...vi_voucher,
-        ...vi_employee
+        ...vi_employee,
+        ...vi_blog
       }
     }
   },

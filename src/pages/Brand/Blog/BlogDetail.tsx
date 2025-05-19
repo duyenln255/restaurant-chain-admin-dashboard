@@ -1,11 +1,17 @@
 import React from "react";
 import type { BlogCardItem } from "../../../types/BlogCardItem";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "../../../components/ui/carousel";
 
 interface BlogDetailProps {
   blog: BlogCardItem;
   onClose: () => void;
 }
-
 const BlogDetail: React.FC<BlogDetailProps> = ({ blog, onClose }) => {
   const formattedDate = blog.date
     ? new Date(blog.date).toLocaleString()
@@ -48,13 +54,24 @@ const BlogDetail: React.FC<BlogDetailProps> = ({ blog, onClose }) => {
 
         {/* Content */}
         <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
-          {blog.photoUrl && (
-            <img
-              src={blog.photoUrl}
-              alt="preview"
-              className="w-full h-auto object-contain rounded"
-            />
+          {blog.photoUrl && blog.photoUrl.length > 0 && (
+            <Carousel>
+              <CarouselContent>
+                {blog.photoUrl.map((url, index) => (
+                  <CarouselItem key={index}>
+                    <img
+                      src={url}
+                      alt={`Detail image ${index + 1}`}
+                      className="w-full object-contain rounded max-h-[400px]"
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
           )}
+
 
           <div
             className="text-gray-700 leading-relaxed"

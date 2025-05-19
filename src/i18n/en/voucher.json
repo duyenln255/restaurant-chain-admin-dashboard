@@ -36,6 +36,7 @@
     "loadingVouchers": "Loading vouchers...",
     "noVouchersFound": "No vouchers found.",
     "addError": "Failed to add voucher. Please try again.",
+    "discountType": "Discount Type",
     "search": {
       "placeholder": "Search by code",
       "status": "Filter by status",

@@ -1,5 +1,8 @@
 {
   "orders": {
+    "customerName": "Tên khách hàng",
+    "customerEmail": "Email khách hàng",
+    "customerPhone": "Số điện thoại khách hàng",    
     "title": "Đơn hàng",
     "orderList": "Danh sách đơn hàng",
     "addOrder": "Thêm đơn hàng",

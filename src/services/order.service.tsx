@@ -37,10 +37,13 @@ export interface APIOrderResponse {
 }
 
 export interface OrderCreateRequest {
-  full_name: string;
   address: string;
   type: string;
   status: string;
+  preorder_time: string;
+  payment_method: string;
+  branch_id: string;
+  customer_id: string;
   cart: {
     items: {
       id: string;
@@ -64,12 +67,22 @@ export interface OrderUpdateRequest {
   };
 }
 
-export const fetchAllOrdersApi = async (): Promise<
-  APIOrderResponse["order"][]
-> => {
+export const fetchAllOrdersApi = async (filters?: {
+  full_name?: string;
+  date_added?: string;
+  branch?: string;
+  status?: string;
+  type?: string;
+}): Promise<APIOrderResponse["order"][]> => {
   try {
-    const response = await axiosInstance.get("/order");
-    // API trả về { "order": [...] }
+    const query = new URLSearchParams();
+    if (filters?.full_name) query.append("full_name", filters.full_name);
+    if (filters?.date_added) query.append("date_added", filters.date_added);
+    if (filters?.branch) query.append("branch", filters.branch);
+    if (filters?.status) query.append("status", filters.status);
+    if (filters?.type) query.append("type", filters.type);
+
+    const response = await axiosInstance.get(`/order?${query.toString()}`);
     return Array.isArray(response.data.order) ? response.data.order : [];
   } catch (error) {
     console.error("Error fetching orders:", error);
@@ -119,22 +132,4 @@ export const deleteOrder = async (id: string): Promise<void> => {
     console.error(`Error deleting order with id ${id}:`, error);
     throw error;
   }
-};
-export const fetchOrderByIdApi = async (id: string): Promise<Order> => {
-  const response = await axiosInstance.get(`/order/${id}`);
-  return response.data.order;
-};
-
-export const createOrderApi = async (order: Order): Promise<Order> => {
-  const response = await axiosInstance.post("/order", order);
-  return response.data.order;
-};
-
-export const updateOrderApi = async (id: string, order: Order): Promise<Order> => {
-  const response = await axiosInstance.put(`/order/${id}`, order);
-  return response.data.order;
-};
-
-export const deleteOrderApi = async (id: string): Promise<void> => {
-  await axiosInstance.delete(`/order/${id}`);
 };

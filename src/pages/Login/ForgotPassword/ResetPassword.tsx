@@ -1,77 +1,106 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import grinderImage from "../../../../public/assets/images/coffee-grinder.png"; // Đảm bảo đúng path
 
 export default function ResetPassword() {
   const navigate = useNavigate();
-  const [password, setPassword] = useState('');
-  const [confirm, setConfirm] = useState('');
-  const [error, setError] = useState('');
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirm) {
-      setError('Mật khẩu xác nhận không khớp');
+      setError("Mật khẩu xác nhận không khớp");
       return;
     }
 
-    console.log('Resetting password to:', password);
-    navigate('/', {
-        replace: true,
-        state: {
-          resetSuccess: true
-        }
-      });
+    console.log("Resetting password to:", password);
+    navigate("/", {
+      replace: true,
+      state: {
+        resetSuccess: true,
+      },
+    });
   };
 
   return (
-    <div className="flex min-h-screen w-full bg-[#FCE2D1] items-center justify-center">
-      <div className="flex w-[900px] h-[600px] shadow-lg overflow-hidden rounded-lg">
-        {/* Left */}
-        <div className="w-1/2 p-10 bg-[#F1F2FE] flex flex-col justify-center relative">
-          <button onClick={() => navigate(-1)} className="absolute top-4 left-4 text-sm text-gray-500 hover:underline">
+    <div className="min-h-screen flex items-center justify-center bg-[#FCE2D1] px-4">
+      <div className="flex flex-col md:flex-row w-full max-w-6xl shadow-lg overflow-hidden bg-white rounded-lg">
+        {/* Left: Form */}
+        <div className="w-full md:w-1/2 p-8 md:p-14 flex flex-col justify-center bg-[#F1F2FE] relative">
+          <button
+            onClick={() => navigate(-1)}
+            className="absolute top-6 left-6 text-sm text-gray-600 hover:underline"
+          >
             &lt; Back
           </button>
 
-          <h2 className="text-2xl font-bold text-[#4B3B39] mb-2">Tạo mật khẩu mới</h2>
-          <p className="text-sm text-gray-600 mb-6">
-            Mật khẩu mới của bạn phải khác mật khẩu trước đó
-          </p>
+          <div className="mt-14">
+            <h2 className="text-3xl font-bold text-[#4B3B39] mb-4">
+              Tạo mật khẩu mới
+            </h2>
+            <p className="text-sm text-gray-600 mb-6">
+              Mật khẩu mới của bạn phải khác mật khẩu trước đó
+            </p>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#4B3B39]"
-              required
-            />
-            <input
-              type="password"
-              placeholder="Confirm password"
-              value={confirm}
-              onChange={(e) => setConfirm(e.target.value)}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#4B3B39]"
-              required
-            />
+            <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-md">
+              <div>
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Mật khẩu mới
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password"
+                  required
+                  className="w-full border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4B3B39]"
+                />
+              </div>
 
-            {error && <p className="text-red-500 text-sm">{error}</p>}
+              <div>
+                <label
+                  htmlFor="confirm"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Xác nhận mật khẩu mới
+                </label>
+                <input
+                  id="confirm"
+                  type="password"
+                  value={confirm}
+                  onChange={(e) => setConfirm(e.target.value)}
+                  placeholder="Confirm password"
+                  required
+                  className="w-full border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#4B3B39]"
+                />
+              </div>
 
-            <button
-              type="submit"
-              className="w-full py-2 bg-[#4B3B39] text-white rounded-lg text-sm font-medium hover:bg-[#3a2e2c] transition"
-            >
-              Đặt lại mật khẩu
-            </button>
-          </form>
+              {error && (
+                <p className="text-red-500 text-sm font-medium">{error}</p>
+              )}
+
+              <button
+                type="submit"
+                className="w-full py-2 bg-[#4B3B39] text-white rounded-full text-sm font-medium hover:bg-[#3a2e2c] transition"
+              >
+                Đặt lại mật khẩu
+              </button>
+            </form>
+          </div>
         </div>
 
         {/* Right: Image */}
-        <div className="w-1/2 bg-[#4B3B39] relative">
+        <div className="hidden md:block md:w-1/2 bg-[#4B3B39] relative">
           <img
-            src="/assets/images/coffee-grinder.png"
-            alt="coffee grinder"
-            className="absolute inset-0 w-full h-full object-contain"
+            src={grinderImage}
+            alt="Coffee Grinder"
+            className="w-full h-full object-contain"
           />
         </div>
       </div>

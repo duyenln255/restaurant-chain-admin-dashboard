@@ -14,17 +14,19 @@ import {
 import { getAllBrands } from "../../services/brand.service";
 import type { Brand } from "../../services/brand.service";
 import { useTranslation } from "react-i18next";
+import { format } from "date-fns"; // đảm bảo dòng này có
 
 interface FilterBarProps {
   onFilterChange: (filters: {
-    brandId: string;
+    name: string;
     status: string;
     dateAdded?: string;
   }) => void;
 }
 
+
 const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange }) => {
-  const [selectedBrand, setSelectedBrand] = useState("");
+  const [selectedBrandName, setSelectedBrandName] = useState("");
   const [status, setStatus] = useState("all");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [brands, setBrands] = useState<Brand[]>([]);
@@ -55,12 +57,13 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange }) => {
     <div className="bg-white p-4 rounded-lg shadow-md flex flex-col sm:flex-row flex-wrap gap-4 xs:max-w-screen xs:mx-auto">
       {/* Brand Combobox */}
       <ComboboxCustom
-        data={brands.map((b) => ({ value: b.id, label: b.name }))}
-        value={selectedBrand}
-        onChange={setSelectedBrand}
+        data={brands.map((b) => ({ value: b.name, label: b.name }))}
+        value={selectedBrandName}
+        onChange={setSelectedBrandName}
         placeholder={t("brand.search.placeholder")}
         className="w-full sm:flex-1 border border-neutral-300 focus-visible:ring-1 focus-visible:ring-blue-500"
       />
+
 
       {/* Status Select */}
       <Select value={status} onValueChange={setStatus}>
@@ -89,11 +92,12 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange }) => {
           className="bg-blue-500 text-white hover:bg-blue-600"
           onClick={() =>
             onFilterChange({
-              brandId: selectedBrand,
+              name: selectedBrandName,
               status,
-              dateAdded: selectedDate?.toISOString().split("T")[0],
+              dateAdded: selectedDate ? format(selectedDate, "yyyy-MM-dd") : undefined,
             })
           }
+
         >
           {t("common.search")}
         </Button>
@@ -102,10 +106,11 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange }) => {
           variant="outline"
           className="border-red-500 text-red-500 hover:bg-red-50"
           onClick={() => {
-            setSelectedBrand("");
+            setSelectedBrandName("");
             setStatus("all");
             setSelectedDate(undefined);
           }}
+
         >
           {t("common.reset")}
         </Button>

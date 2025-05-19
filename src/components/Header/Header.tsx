@@ -26,7 +26,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
           </button>
         </div>
         <div className="flex gap-7 items-center">
-          <FaBell className="w-6 h-6" />
+          {/* <FaBell className="w-6 h-6" /> */}
           {/* <LanguageSwitcher /> */}
           <LanguageSelector
             handleClick={handleSelectLangClick}

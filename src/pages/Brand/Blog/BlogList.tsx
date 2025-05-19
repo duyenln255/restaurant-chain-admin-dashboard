@@ -9,18 +9,7 @@ import { fetchBlogs } from "../../../redux/slices/blogSlice";
 import type { RootState } from "../../../redux/store";
 import type { BlogCardItem } from "../../../types/BlogCardItem";
 import type {BrandItem} from "../../../types/BrandItem";
-const mockBrand: BrandItem = {
-  id: "demo",
-  displayId: "000001",
-  name: "Demo Brand",
-  logo: "/default.png",
-  link: "https://example.com",
-  description: "This is a demo brand.",
-  status: "Active",
-  opening_hours: "08:00",
-  closed_hours: "22:00",
-  date_added: new Date().toISOString()
-};
+import { useTranslation } from "react-i18next";
 
 const BlogList: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -39,13 +28,14 @@ const BlogList: React.FC = () => {
         id: b.id,
         title: b.title,
         content: b.content,
-        photoUrl: b.photo,
+        photoUrl: Array.isArray(b.photo) ? b.photo : [b.photo],
         authorId: b.staff_id,
         status: b.status || "active",
         date: new Date(b.date_added).toLocaleDateString(),
       })),
     [rawBlogs]
   );
+
 
   const totalPages = Math.ceil(blogs.length / itemsPerPage);
   const paginatedBlogs = blogs.slice(

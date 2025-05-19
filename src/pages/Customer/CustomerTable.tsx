@@ -67,7 +67,7 @@ const CustomerTable: React.FC<CustomerTableProps> = ({
       label: t("customer.fullName"),
       render: (item) => (
         <div
-          className="max-w-28 font-semibold text-sm overflow-hidden whitespace-nowrap text-ellipsis"
+          className="w-fit font-semibold text-sm overflow-hidden whitespace-nowrap text-ellipsis"
           title={item.fullName}
         >
           {item.fullName}
@@ -79,7 +79,7 @@ const CustomerTable: React.FC<CustomerTableProps> = ({
       label: t("customer.email"),
       render: (item) => (
         <div
-          className="max-w-40 text-sm overflow-hidden whitespace-nowrap text-ellipsis"
+          className="w-fit text-sm overflow-hidden whitespace-nowrap text-ellipsis"
           title={item.email}
         >
           {item.email}

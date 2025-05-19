@@ -82,6 +82,7 @@
       "of": "trên"
     },
     "search": {
+      "allBrands": "Tất cả thương hiệu",
       "placeholder": "Tìm kiếm theo tên, email hoặc số điện thoại",
       "status": "Lọc theo trạng thái",
       "department": "Lọc theo phòng ban",
