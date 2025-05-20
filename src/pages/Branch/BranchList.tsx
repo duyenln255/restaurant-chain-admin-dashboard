@@ -42,7 +42,7 @@ const BranchList: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-gray-50 min-h-screen">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="space-y-6">
           <div className="flex justify-between items-center">

@@ -117,7 +117,7 @@ const Dashboard: React.FC = () => {
   const selectedBrandName = brands.find((b) => b.id === selectedBrandId)?.name || user.brand_name;
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-gray-50 min-h-screen">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="space-y-4">
           {/* Header */}
@@ -142,7 +142,14 @@ const Dashboard: React.FC = () => {
               </Select>
             )}
 
-            {normalizedRole === "BRAND_MANAGER" || normalizedRole === "BRANCH_MANAGER" && (
+            {normalizedRole === "BRAND_MANAGER" && (
+              <Select value={user.brand_id} disabled>
+                <SelectTrigger className="w-fit">
+                  <SelectValue>{user.brand_name}</SelectValue>
+                </SelectTrigger>
+              </Select>
+            )}
+            {normalizedRole === "BRANCH_MANAGER" && (
               <Select value={user.brand_id} disabled>
                 <SelectTrigger className="w-fit">
                   <SelectValue>{user.brand_name}</SelectValue>

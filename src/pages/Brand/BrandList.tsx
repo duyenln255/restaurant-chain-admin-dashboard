@@ -9,13 +9,14 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { getFilteredBrands } from "../../services/brand.service";
 import { useTranslation } from "react-i18next";
+import { useLoading } from "../../contexts/LoadingContext";
 
 const BrandList: React.FC = () => {
   const dispatch = useAppDispatch();
   const { items: rawBrands, loading, error } = useAppSelector((state: RootState) => state.brands);
   const navigate = useNavigate();
   const { t } = useTranslation();
-
+  const { setLoading } = useLoading();
   const brands = useMemo<BrandItem[]>(
     () =>
       rawBrands.map((b) => ({
@@ -34,7 +35,12 @@ const BrandList: React.FC = () => {
   );
 
   useEffect(() => {
-    dispatch(fetchBrands());
+    const fetchData = async () => {
+      setLoading(true);
+      await dispatch(fetchBrands());
+      setLoading(false);
+    };
+    fetchData();
   }, [dispatch]);
 
   const [filteredBrands, setFilteredBrands] = useState<BrandItem[]>([]);
@@ -50,6 +56,7 @@ const BrandList: React.FC = () => {
 
   const fetchFiltered = async () => {
     try {
+          setLoading(true); // thêm
       const data = await getFilteredBrands(filters);
       const mapped = data.map((b) => ({
         id: b.id,
@@ -66,6 +73,8 @@ const BrandList: React.FC = () => {
       setFilteredBrands(mapped);
     } catch (error) {
       console.error("Failed to filter brands", error);
+    } finally {
+      setLoading(false); // thêm
     }
   };
 
@@ -74,7 +83,7 @@ const BrandList: React.FC = () => {
   }, [filters]);
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-gray-50 min-h-screen">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="space-y-4">
           {/* Header */}
@@ -101,16 +110,18 @@ const BrandList: React.FC = () => {
           )}
 
           {/* Table */}
-          <BrandTable
-            items={
-              filteredBrands.length > 0 ||
-              filters.name ||
-              filters.status !== "all" ||
-              filters.dateAdded
-                ? filteredBrands
-                : brands
-            }
-          />
+            <BrandTable
+              items={
+                filteredBrands.length > 0 ||
+                filters.name ||
+                filters.status !== "all" ||
+                filters.dateAdded
+                  ? filteredBrands
+                  : brands
+              }
+              onDeleted={fetchFiltered}
+            />
+
         </div>
       </div>
     </div>

@@ -62,10 +62,11 @@ export const createBrand = async (formData: FormData): Promise<Brand> => {
 };
 
 
-export const updateBrand = async (id: string, brand: BrandInput): Promise<Brand> => {
-  const response = await axiosInstance.put<{ brand: Brand }>(`/brand/${id}`, {
-    ...brand,
-    id,
+export const updateBrand = async (id: string, formData: FormData): Promise<Brand> => {
+  const response = await axiosInstance.put<{ brand: Brand }>(`/brand/${id}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
   });
   return response.data.brand;
 };

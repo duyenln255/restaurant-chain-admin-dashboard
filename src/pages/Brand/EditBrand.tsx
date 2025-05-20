@@ -12,12 +12,13 @@ import { X } from "lucide-react";
 import { getBrandById, updateBrand } from "../../services/brand.service";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import { useLoading } from "../../contexts/LoadingContext";
 
 const EditBrand: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { t } = useTranslation();
-
+  const { setLoading } = useLoading();
   const [logo, setLogo] = useState<File | null>(null);
   const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const [name, setName] = useState("");
@@ -31,6 +32,7 @@ const EditBrand: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         if (!id) return;
         const brand = await getBrandById(id);
         setName(brand.name);
@@ -40,9 +42,13 @@ const EditBrand: React.FC = () => {
         setOpeningHour(brand.opening_hours?.slice(0, 5));
         setClosingHour(brand.closed_hours?.slice(0, 5));
         setLogoUrl(brand.logo_url || null);
-      } catch (err) {
+      } 
+      catch (err) {
         console.error("Failed to fetch brand details", err);
       }
+      finally {
+      setLoading(false);
+    }
     };
     fetchData();
   }, [id]);
@@ -62,25 +68,38 @@ const EditBrand: React.FC = () => {
     e.preventDefault();
     if (!validateForm() || !id) return;
 
-    const updatedBrand = {
-      name,
-      description,
-      opening_hours: openingHour,
-      closed_hours: closingHour,
-      logo_url: logoUrl || "",
-      website_url: link,
-      status,
-    };
-
     try {
-      await updateBrand(id, updatedBrand);
+      setLoading(true);
+      const formData = new FormData();
+
+      // Nếu người dùng chọn logo mới thì gửi file, nếu không thì giữ URL
+      if (logo) {
+        formData.append("logo_url", logo);
+      } else if (logoUrl) {
+        formData.append("logo_url", logoUrl); // URL string
+      }
+
+      formData.append("id", id);
+      formData.append("name", name);
+      formData.append("description", description);
+      formData.append("opening_hours", openingHour);
+      formData.append("closed_hours", closingHour);
+      formData.append("website_url", link);
+      formData.append("status", status);
+
+      // Gọi hàm từ service (đã hỗ trợ FormData)
+      await updateBrand(id, formData);
+
       toast.success(t("brand.brandUpdated"));
       navigate("/brand");
     } catch (err) {
       console.error("Failed to update brand", err);
       toast.error(t("brand.deleteError"));
+    } finally {
+      setLoading(false);
     }
   };
+
 
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {

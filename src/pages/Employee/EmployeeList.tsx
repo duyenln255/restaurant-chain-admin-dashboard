@@ -1,87 +1,68 @@
-import React, { useState, useEffect, useMemo } from "react";
-import EmployeeCard from "./EmployeeCard";
-import CustomPagination from "../../components/CustomPagination/CustomPagination";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { fetchEmployees } from "../../redux/slices/employeeSlice";
-import type { RootState } from "../../redux/store";
+import React, { useState, useEffect, useMemo } from "react"
+import EmployeeCard from "./EmployeeCard"
+import CustomPagination from "../../components/CustomPagination/CustomPagination"
+import { useAppDispatch, useAppSelector } from "../../redux/hooks"
+import { fetchEmployees } from "../../redux/slices/employeeSlice"
+import type { RootState } from "../../redux/store"
 import {
   Select,
   SelectTrigger,
   SelectValue,
   SelectContent,
   SelectItem,
-} from "../../components/ui/select";
-import { Button } from "../../components/ui/button";
-import { getAllBranches } from "../../services/branch.service";
-import type { Brand } from "../../services/brand.service";
-import type { Branch } from "../../services/branch.service";
-import { useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
+} from "../../components/ui/select"
+import { getAllBrands } from "../../services/brand.service"
+import { getAllBranches } from "../../services/branch.service"
+import type { Brand } from "../../services/brand.service"
+import type { Branch } from "../../services/branch.service"
+import { useNavigate } from "react-router-dom"
+import { useTranslation } from "react-i18next"
 
 const EmployeeList: React.FC = () => {
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const { t } = useTranslation();
+  const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+  const { t } = useTranslation()
 
   const { items: rawEmployees, loading, error } = useAppSelector(
     (state: RootState) => state.employees
-  );
-  const user = useAppSelector((state: RootState) => state.auth.user);
+  )
 
-  const userRole = user?.role?.toUpperCase() || "";
-  const userBrandId = user?.brand_id;
-  const userBrandName = user?.brand_name || "";
-  const userBranchId = user?.branch_id || "";
-
-  const [branches, setBranches] = useState<Branch[]>([]);
-  const [employeeBranch, setEmployeeBranch] = useState("all");
-  const [employeeBrand, setEmployeeBrand] = useState(userBrandName || "all");
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
+  const [brands, setBrands] = useState<Brand[]>([])
+  const [branches, setBranches] = useState<Branch[]>([])
+  const [employeeBranch, setEmployeeBranch] = useState("all")
+  const [employeeBrand, setEmployeeBrand] = useState("all")
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 8
 
   useEffect(() => {
-    const fetchBranches = async () => {
+    const fetchFilters = async () => {
       try {
-        const allBranches = await getAllBranches();
-        let filtered = allBranches;
-
-        if (userRole === "BRAND_MANAGER") {
-          filtered = allBranches.filter((b) => b.brand_id === userBrandId);
-        } else if (userRole === "BRANCH_MANAGER") {
-          filtered = allBranches.filter((b) => b.id === userBranchId);
-        }
-
-        setBranches(filtered);
+        const [brandData, branchData] = await Promise.all([
+          getAllBrands(),
+          getAllBranches(),
+        ])
+        setBrands(brandData)
+        setBranches(branchData)
       } catch (error) {
-        console.error("Failed to fetch branches:", error);
+        console.error("Failed to fetch brand or branch filters:", error)
       }
-    };
-
-    if (userBrandId) {
-      setEmployeeBrand(userBrandName);
-      fetchBranches();
     }
-  }, [userBrandId, userBranchId, userRole, userBrandName]);
+
+    fetchFilters()
+  }, [])
 
   useEffect(() => {
-    dispatch(fetchEmployees());
-  }, [dispatch]);
+    dispatch(fetchEmployees())
+  }, [dispatch])
 
   const employees = useMemo(
     () =>
       rawEmployees
-        .filter((e) => {
-          const matchBranch =
-            employeeBranch === "all" || e.branch_address === employeeBranch;
-          const matchBrand =
-            employeeBrand === "all" || e.brand_name === employeeBrand;
-          const matchBranchManager =
-            userRole === "BRANCH_MANAGER"
-              ? e.branch_id === userBranchId
-              : true;
-
-          return matchBranch && matchBrand && matchBranchManager;
-        })
+        .filter(
+          (e) =>
+            (employeeBranch === "all" || e.branch_address === employeeBranch) &&
+            (employeeBrand === "all" || e.brand_name === employeeBrand)
+        )
         .map((e) => ({
           id: e.id,
           name: e.full_name,
@@ -92,20 +73,14 @@ const EmployeeList: React.FC = () => {
           avatarUrl: e.avatar || null,
           brandLogo: e.logo_url || null,
         })),
-    [
-      rawEmployees,
-      employeeBranch,
-      employeeBrand,
-      userRole,
-      userBranchId
-    ]
-  );
+    [rawEmployees, employeeBranch, employeeBrand]
+  )
 
-  const totalPages = Math.ceil(employees.length / itemsPerPage);
+  const totalPages = Math.ceil(employees.length / itemsPerPage)
   const paginatedItems = employees.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
-  );
+  )
 
   return (
     <div className="bg-gray-50">
@@ -127,21 +102,19 @@ const EmployeeList: React.FC = () => {
 
             <div className="flex flex-wrap gap-4">
               {/* BRAND Select */}
-              <Select
-                value={employeeBrand}
-                onValueChange={setEmployeeBrand}
-                disabled={userRole === "BRAND_MANAGER" || userRole === "BRANCH_MANAGER"}
-              >
-                <SelectTrigger
-                  className={`w-full sm:w-56 border border-neutral-300 ${
-                    userRole !== "ADMIN" ? "bg-gray-100 cursor-not-allowed" : "bg-white"
-                  }`}
-                >
+              <Select value={employeeBrand} onValueChange={setEmployeeBrand}>
+                <SelectTrigger className="bg-white w-full sm:w-56 border border-neutral-300">
                   <SelectValue placeholder={t("employee.search.allBrands")} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">{t("employee.search.allBrands")}</SelectItem>
-                  <SelectItem value={userBrandName}>{userBrandName}</SelectItem>
+                  <SelectItem value="all">
+                    {t("employee.search.allBrands")}
+                  </SelectItem>
+                  {brands.map((b) => (
+                    <SelectItem key={b.id} value={b.name}>
+                      {b.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
 
@@ -161,27 +134,14 @@ const EmployeeList: React.FC = () => {
                   ))}
                 </SelectContent>
               </Select>
-
-              {/* RESET BUTTON */}
-              <Button
-                variant="outline"
-                className="border-red-500 text-red-500"
-                onClick={() => {
-                  setEmployeeBranch("all");
-                  if (userRole === "ADMIN") {
-                    setEmployeeBrand("all");
-                  }
-                  setCurrentPage(1);
-                }}
-              >
-                {t("common.reset")}
-              </Button>
             </div>
           </div>
 
           {/* Status */}
           {loading && <p className="text-sm">{t("common.loading")}</p>}
-          {error && <p className="text-sm text-red-500">{t("common.error")}</p>}
+          {error && (
+            <p className="text-sm text-red-500">{t("common.error")}</p>
+          )}
           {!loading && employees.length === 0 && (
             <p className="text-sm text-gray-500">
               {t("employee.noEmployeesFound")}
@@ -208,7 +168,7 @@ const EmployeeList: React.FC = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default EmployeeList;
+export default EmployeeList

@@ -109,8 +109,12 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange }) => {
             setSelectedBrandName("");
             setStatus("all");
             setSelectedDate(undefined);
+            onFilterChange({
+              name: "",
+              status: "all",
+              dateAdded: undefined,
+            });
           }}
-
         >
           {t("common.reset")}
         </Button>

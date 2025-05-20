@@ -11,6 +11,7 @@ import voucherReducer from "./slices/voucherSlice";
 import employeeReducer from "./slices/employeeSlice";
 import authReducer from "./slices/authSlice";
 import dashboardReducer from "./slices/dashboardSlice";
+import rcmsReducer from "./slices/rcmsSlice"; 
 
 export const store = configureStore({
   reducer: {
@@ -25,7 +26,8 @@ export const store = configureStore({
     blogs: blogReducer,
     vouchers: voucherReducer,
     employees: employeeReducer,
-    dashboard: dashboardReducer
+    dashboard: dashboardReducer,
+    rcms: rcmsReducer,
   },
 });
 

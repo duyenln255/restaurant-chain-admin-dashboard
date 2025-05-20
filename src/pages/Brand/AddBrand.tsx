@@ -12,11 +12,12 @@ import { X } from "lucide-react";
 import { createBrand } from "../../services/brand.service";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
+import { useLoading } from "../../contexts/LoadingContext";
 
 const AddBrand: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-
+  const { setLoading } = useLoading();
   const [logo, setLogo] = useState<File | null>(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -25,17 +26,6 @@ const AddBrand: React.FC = () => {
   const [openingHour, setOpeningHour] = useState("");
   const [closingHour, setClosingHour] = useState("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-  const convertToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        const result = reader.result as string;
-        resolve(result);
-      };
-      reader.onerror = (error) => reject(error);
-    });
-  };
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
@@ -54,6 +44,7 @@ const handleSubmit = async (e: React.FormEvent) => {
   if (!validateForm()) return;
 
   try {
+    setLoading(true);
     const formData = new FormData();
     if (logo) formData.append("logo_url", logo); // gửi file gốc
     formData.append("name", name);
@@ -69,6 +60,8 @@ const handleSubmit = async (e: React.FormEvent) => {
   } catch (err) {
     console.error("Error creating brand:", err);
     toast.error(t("brand.deleteError"));
+  } finally {
+    setLoading(false); // thêm
   }
 };
 
@@ -165,7 +158,7 @@ const handleSubmit = async (e: React.FormEvent) => {
             </div>
             <textarea
               placeholder={t("brand.description")}
-              className="text-sm w-full border border-neutral-300 rounded-md px-4 py-2 min-h-30"
+              className="text-sm w-full border border-neutral-300 rounded-md px-4 py-2"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
