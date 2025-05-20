@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "../../components/ui/button";
 import { CustomDatePicker } from "../../components/CustomDatePicker/CustomDatePicker";
 import {
@@ -11,6 +11,8 @@ import {
   SelectItem,
 } from "../../components/ui/select";
 import { ComboboxCustom } from "../../components/Combobox/Combobox";
+import { getAllCustomers } from "../../services/customer.service";
+import { useTranslation } from "react-i18next";
 
 interface FilterBarProps {
   onFilterChange: (filters: {
@@ -23,11 +25,28 @@ interface FilterBarProps {
 }
 
 const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange }) => {
+  const { t } = useTranslation();
   const [keyword, setKeyword] = useState("all");
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [status, setStatus] = useState("all");
   const [orderType, setOrderType] = useState("all");
   const [orderBranch, setOrderBranch] = useState("all");
+  const [customerList, setCustomerList] = useState<{ label: string; value: string }[]>([]);
+
+  // ✅ Fetch customer list on mount
+  useEffect(() => {
+    getAllCustomers()
+      .then((data) => {
+        const mapped = data.map((c) => ({
+          label: c.full_name,
+          value: c.full_name,
+        }));
+        setCustomerList(mapped);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch customers:", err);
+      });
+  }, []);
 
   const handleSearch = () => {
     const filters = {
@@ -46,17 +65,17 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange }) => {
     setStatus("all");
     setOrderType("all");
     setOrderBranch("all");
-    onFilterChange({}); // clear filters
+    onFilterChange({});
   };
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-md flex flex-col sm:flex-row flex-wrap gap-4">
       {/* Customer Keyword */}
       <ComboboxCustom
-        data={[]} // TODO: populate if needed
+        data={customerList}
         value={keyword}
         onChange={setKeyword}
-        placeholder="Search customer..."
+        placeholder={t("orders.searchCustomer") || "Search customer..."}
         className="w-full sm:flex-1 border border-neutral-300"
       />
 
@@ -92,7 +111,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange }) => {
           <SelectItem value="123 Main Street, Chicago, IL 60601">
             123 Main Street
           </SelectItem>
-          {/* TODO: Dynamically fetch if needed */}
+          {/* TODO: Dynamically fetch from API if needed */}
         </SelectContent>
       </Select>
 
@@ -118,14 +137,14 @@ const FilterBar: React.FC<FilterBarProps> = ({ onFilterChange }) => {
           className="bg-blue-500 text-white hover:bg-blue-600"
           onClick={handleSearch}
         >
-          Search
+          {t("common.search") || "Search"}
         </Button>
         <Button
           variant="outline"
           className="border-red-500 text-red-500 hover:bg-red-50"
           onClick={handleReset}
         >
-          Reset
+          {t("common.reset") || "Reset"}
         </Button>
       </div>
     </div>

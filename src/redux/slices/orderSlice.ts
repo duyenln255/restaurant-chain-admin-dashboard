@@ -11,6 +11,14 @@ import {
 import type { APIOrderResponse, OrderCreateRequest, OrderUpdateRequest } from '../../services/order.service.tsx';
 import type { OrderItem } from '../../types/OrderItem';
 
+export interface OrderFilters {
+  full_name?: string;
+  date_added?: string;
+  status?: string;
+  type?: string;
+  branch?: string;
+}
+
 
 interface OrdersState {
   items: OrderItem[];
@@ -26,46 +34,37 @@ const initialState: OrdersState = {
   error: null,
 };
 
-export const fetchOrders = createAsyncThunk<OrderItem[]>(
+export const fetchOrders = createAsyncThunk<OrderItem[], OrderFilters | undefined>(
   'orders/fetchOrders',
-  async () => {
-    const data = await fetchAllOrdersApi();
-    console.log("API response data:", data);
+  async (filters) => {
+    const data = await fetchAllOrdersApi(filters);
 
-    if (!data || data.length === 0) {
-      console.warn("No orders returned from API");
-      return [];
-    }
+    const mappedData: OrderItem[] = data.map((order) => ({
+      id: order.id,
+      displayId: order.display_id,
+      name: order.full_name ?? "Unknown User",
+      address: order.address ?? "Unknown Address",
+      date: new Date(order.date_added).toLocaleString(),
+      orderType: order.type || "AT STORE",
+      status: (order.status ?? 'Processing') as OrderItem["status"],
+      phone: order.phone || "",
+      email: order.email || "",
+      cart: {
+        items: order.cart?.items?.map((item) => ({
+          id: item.id,
+          name: item.name,
+          quantity: item.quantity,
+          photo: item.photo || "",
+          price: item.price || 0,
+          total_price: item.total_price || 0
+        })) || []
+      },
+      branch_address: order.branch_address,
+      brand_name: order.brand_name,
+      payment_method: order.payment_method,
+    }));
 
-    try {
-      const mappedData = data.map((order) => ({
-        id: order.id,
-        name: order.full_name ?? "Unknown User",
-        address: order.address ?? "Unknown Address",
-        date: new Date(order.date_added).toLocaleString(),
-        orderType: order.type || "AT STORE",
-        status: (order.status ?? 'Processing') as OrderItem["status"],
-        phone: order.phone || "",
-        email: order.email || "",
-
-        // ✅ Lưu cart.items vào luôn để dùng render
-        cart: {
-          items: order.cart?.items?.map((item) => ({
-            id: item.id,
-            name: item.name,
-            quantity: item.quantity,
-            photo: item.photo || "",
-            price: item.price || 0,
-            total_price: item.total_price || 0
-          })) || []
-        }
-      }));
-      console.log("Mapped orders:", mappedData);
-      return mappedData;
-    } catch (error) {
-      console.error("Error mapping orders:", error);
-      return [];
-    }
+    return mappedData;
   }
 );
 
@@ -170,8 +169,7 @@ const orderSlice = createSlice({
   reducers: {},
   extraReducers: (builder: ActionReducerMapBuilder<OrdersState>) => {
     builder
-      // Fetch all orders
-      .addCase(fetchOrders.pending, (state: OrdersState) => {
+      .addCase(fetchOrders.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
@@ -183,7 +181,6 @@ const orderSlice = createSlice({
         state.loading = false;
         state.error = action.error.message || 'Failed to fetch orders';
       })
-
       // Fetch order by ID
       .addCase(fetchOrderById.pending, (state: OrdersState) => {
         state.loading = true;

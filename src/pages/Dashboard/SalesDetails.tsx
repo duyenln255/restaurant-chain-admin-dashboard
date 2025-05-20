@@ -3,21 +3,59 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { useTranslation } from "react-i18next";
 import { getSaleReport } from "../../services/dashboard.service";
+import { normalizeRole } from "../../utils/normalizeRole";
 
-const SalesDetails: React.FC<{ brandName: string }> = ({ brandName }) => {
+interface Props {
+  brandId: string;
+  brandName: string;
+  branchId?: string;
+  role: string;
+}
+
+const SalesDetails: React.FC<Props> = ({ brandId, brandName, branchId, role }) => {
   const { t } = useTranslation();
   const [chartData, setChartData] = useState<number[]>([]);
+  const [subtitle, setSubtitle] = useState("");
 
   useEffect(() => {
-    getSaleReport().then((data) => {
-      const brand = data[0];
-      const sorted = [...brand.brand_data].sort((a, b) => a.month - b.month);
-      setChartData(sorted.map((d) => d.total_revenue / 1000));
-    });
-  }, []);
+    const fetchChartData = async () => {
+      try {
+        const response = await getSaleReport();
+        const brand = response.find((b) => b.brand_id === brandId);
+
+        if (!brand) return;
+
+        const roleNormalized = normalizeRole(role);
+
+        if (roleNormalized === "BRANCH_MANAGER" && branchId) {
+          // Lọc doanh thu theo branch_id qua từng tháng
+          const branchEntries = brand.branch_data
+            .filter((b) => b.branch_id === branchId)
+            .sort((a, b) => a.month - b.month);
+
+          const revenues = branchEntries.map((item) => item.total_revenue || 0);
+          setChartData(revenues);
+
+          const branchName = branchEntries[0]?.branch_address || "";
+          setSubtitle(`${brand.brand_name} - ${branchName}`);
+        } else {
+          // Lấy theo brand
+          const sorted = brand.brand_data.sort((a, b) => a.month - b.month);
+          setChartData(sorted.map((d) => d.total_revenue || 0));
+          setSubtitle(brand.brand_name);
+        }
+      } catch (error) {
+        console.error("Failed to load chart data:", error);
+      }
+    };
+
+    if (brandId && role) {
+      fetchChartData();
+    }
+  }, [brandId, branchId, role]);
 
   const chartOptions: Highcharts.Options = {
-    title: { text: `${brandName}` },
+    title: { text: subtitle },
     xAxis: {
       categories: [
         t("common.month.january"),
@@ -35,7 +73,9 @@ const SalesDetails: React.FC<{ brandName: string }> = ({ brandName }) => {
       ],
       title: { text: t("dashboard.month") },
     },
-    yAxis: { title: { text: t("dashboard.sales_vnd") } },
+    yAxis: {
+      title: { text: t("dashboard.sales_vnd") },
+    },
     series: [
       {
         type: "line",

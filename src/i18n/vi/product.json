@@ -1,10 +1,11 @@
 {
   "products": {
     "title": "Sản phẩm",
+    "deleteProduct": "Xoá sản phẩm",
     "productList": "Danh sách sản phẩm",
     "addProduct": "Thêm sản phẩm",
     "addNewProduct": "Thêm sản phẩm mới",
-    "editProduct": "Sửa sản phẩm",
+    "editProduct": "Chỉnh sửa sản phẩm",
     "productDetails": "Chi tiết sản phẩm",
     "name": "Tên",
     "productName": "Tên sản phẩm",
@@ -49,7 +50,7 @@
     "noProductsFound": "Không tìm thấy sản phẩm nào.",
     "search": {
       "allProducts": "Tất cả sản phẩm",
-      "placeholder": "Tìm kiếm theo tên hoặc mã SKU",
+      "placeholder": "Tìm kiếm sản phẩm",
       "status": "Lọc theo trạng thái",
       "category": "Lọc theo danh mục",
       "brand": "Lọc theo thương hiệu",

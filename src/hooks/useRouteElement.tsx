@@ -31,6 +31,9 @@ import EditBranch from "../pages/Branch/EditBranch";
 import AddVoucher from "../pages/Voucher/AddVoucher";
 import EditVoucher from "../pages/Voucher/EditVoucher";
 import ResetFlowContainer from "../pages/Login/ForgotPassword/ResetFlowContainer";
+import BrandManagerList from "../pages/BrandManager/BrandManagerList";
+import AddBrandManager from "../pages/BrandManager/AddBrandManager";
+import EditBrandManager from "../pages/BrandManager/EditBrandManager";
 
 
 export default function useRouteElement() {
@@ -79,6 +82,9 @@ export default function useRouteElement() {
         { path: "/feedback/edit/:id", element: <EditFeedback /> },
         // { path: "/branch/add", element: <AddBranch /> },
         // { path: "/branch/edit/:id", element: <EditBranch /> },
+        { path: "/brand-manager", element: <BrandManagerList /> },
+        { path: "/brand-manager/add", element: <AddBrandManager /> },
+        { path: "/brand-manager/edit/:id", element: <EditBrandManager /> }, 
         { path: "/voucher/add", element: <AddVoucher /> },
         { path: "/voucher/edit/:id", element: <EditVoucher /> },
       ],

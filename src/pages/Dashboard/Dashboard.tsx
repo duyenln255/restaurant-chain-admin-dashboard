@@ -16,10 +16,14 @@ import {
   SelectContent,
   SelectItem,
 } from "../../components/ui/select";
+import { normalizeRole } from "../../utils/normalizeRole";
 
 const Dashboard: React.FC = () => {
   const { t } = useTranslation();
   const { setLoading } = useLoading();
+
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const normalizedRole = user?.role ? normalizeRole(user.role) : "";
 
   const [brands, setBrands] = useState<Brand[]>([]);
   const [selectedBrandId, setSelectedBrandId] = useState<string | undefined>();
@@ -76,10 +80,17 @@ const Dashboard: React.FC = () => {
         setLoading(true);
         const allBrands = await getAllBrands();
         setBrands(allBrands);
-        const defaultBrand = allBrands[0];
-        if (defaultBrand) {
-          setSelectedBrandId(defaultBrand.id);
-          const stats = await getDashboardStats(defaultBrand.id);
+
+        if (normalizedRole === "UTOPIA_MANAGER") {
+          const defaultBrand = allBrands[0];
+          if (defaultBrand) {
+            setSelectedBrandId(defaultBrand.id);
+            const stats = await getDashboardStats(defaultBrand.id);
+            updateStatCards(stats);
+          }
+        } else if (normalizedRole === "BRAND_MANAGER" || normalizedRole === "BRANCH_MANAGER") {
+          setSelectedBrandId(user.brand_id);
+          const stats = await getDashboardStats(user.brand_id);
           updateStatCards(stats);
         }
       } catch (error) {
@@ -88,6 +99,7 @@ const Dashboard: React.FC = () => {
         setLoading(false);
       }
     };
+
     fetchInitialData();
   }, []);
 
@@ -102,6 +114,8 @@ const Dashboard: React.FC = () => {
     }
   };
 
+  const selectedBrandName = brands.find((b) => b.id === selectedBrandId)?.name || user.brand_name;
+
   return (
     <div className="bg-gray-50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
@@ -112,18 +126,29 @@ const Dashboard: React.FC = () => {
               {t("dashboard.title")}
             </h1>
 
-            <Select value={selectedBrandId} onValueChange={handleBrandChange}>
-              <SelectTrigger className="w-[200px]">
-                <SelectValue placeholder={t("brand.select")} />
-              </SelectTrigger>
-              <SelectContent>
-                {brands.map((brand) => (
-                  <SelectItem key={brand.id} value={brand.id}>
-                    {brand.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {/* Role-based Select */}
+            {normalizedRole === "UTOPIA_MANAGER" && (
+              <Select value={selectedBrandId} onValueChange={handleBrandChange}>
+                <SelectTrigger className="w-fit">
+                  <SelectValue placeholder={t("brand.select")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {brands.map((brand) => (
+                    <SelectItem key={brand.id} value={brand.id}>
+                      {brand.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+
+            {normalizedRole === "BRAND_MANAGER" || normalizedRole === "BRANCH_MANAGER" && (
+              <Select value={user.brand_id} disabled>
+                <SelectTrigger className="w-fit">
+                  <SelectValue>{user.brand_name}</SelectValue>
+                </SelectTrigger>
+              </Select>
+            )}
           </div>
 
           {/* Stat Cards */}
@@ -135,8 +160,18 @@ const Dashboard: React.FC = () => {
 
           {/* Details Section */}
           <div className="space-y-6">
-            <SalesDetails brandName={brands.find(b => b.id === selectedBrandId)?.name || ""} />
-            <BranchRevenue />
+            <SalesDetails
+              brandId={selectedBrandId || ""}
+              brandName={selectedBrandName}
+              branchId={user.branch_id}
+              role={normalizedRole}
+            />
+
+            <BranchRevenue
+              brandId={selectedBrandId || ""}
+              branchId={user.branch_id}
+              role={normalizedRole}
+            />
           </div>
         </div>
       </div>

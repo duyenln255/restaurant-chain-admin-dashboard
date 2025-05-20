@@ -19,7 +19,8 @@ type BranchStat = {
   totalOrders: number;
 };
 
-const BranchRevenue: React.FC = () => {
+
+const BranchRevenue: React.FC<{ brandId: string; branchId?: string; role: string }> = ({ brandId, branchId, role }) => {
   const { t } = useTranslation();
   const [branches, setBranches] = useState<BranchStat[]>([]);
   const [selectedMonth, setSelectedMonth] = useState("5");
@@ -30,11 +31,18 @@ useEffect(() => {
     setLoading(true);
     try {
       const data = await getSaleReport();
-      const currentBrand = data[0];
+      const brand = data.find((b) => b.brand_id === brandId);
+      if (!brand) return;
 
-      const filtered = currentBrand.branch_data.filter(
+      // Lọc theo tháng (và có thể thêm lọc theo year nếu cần)
+      let filtered = brand.branch_data.filter(
         (b) => b.month.toString() === selectedMonth
       );
+
+      // Nếu là BRANCH_MANAGER → lọc đúng branch_id
+      if (role === "BRANCH_MANAGER" && branchId) {
+        filtered = filtered.filter((b) => b.branch_id === branchId);
+      }
 
       const transformed: BranchStat[] = filtered.map((item) => ({
         id: item.branch_id,
@@ -52,8 +60,9 @@ useEffect(() => {
     }
   };
 
-  fetchData();
-}, [selectedMonth]);
+  if (brandId && role) fetchData();
+}, [brandId, branchId, role, selectedMonth]);
+
 
   const columns: {
     key: keyof BranchStat | "action" | "_index";

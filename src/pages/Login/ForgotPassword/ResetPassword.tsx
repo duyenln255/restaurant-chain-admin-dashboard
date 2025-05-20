@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import grinderImage from "../../../../public/assets/images/coffee-grinder.png"; // Đảm bảo đúng path
-import { useSelector } from "react-redux";
-import type { RootState } from "../../../redux/store";
 import { resetPassword } from "../../../services/auth.service";
-
+import { toast } from "react-toastify";
 
 export default function ResetPassword({
   email,
@@ -23,11 +21,13 @@ export default function ResetPassword({
     e.preventDefault();
     if (password !== confirm) {
       setError("Mật khẩu xác nhận không khớp");
+      toast.error("Mật khẩu xác nhận không khớp");
       return;
     }
 
     try {
       await resetPassword(email, token, password, confirm);
+      toast.success("Đặt lại mật khẩu thành công!");
       navigate("/", {
         replace: true,
         state: {
@@ -36,6 +36,7 @@ export default function ResetPassword({
       });
     } catch (err) {
       setError("Đặt lại mật khẩu thất bại. Token không hợp lệ hoặc đã hết hạn.");
+      toast.error("Đặt lại mật khẩu thất bại. Token không hợp lệ hoặc đã hết hạn.");
     }
   };
 

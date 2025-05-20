@@ -22,7 +22,7 @@ export interface OrderItem {
   };
 
   // Các trường bổ sung từ API
-  display_id?: string;
+  displayId?: string;
   branch_name?: string;
   brand_address?: string;
   customer_id?: string;

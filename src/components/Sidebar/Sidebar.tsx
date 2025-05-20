@@ -15,7 +15,8 @@ import {
   Ticket,
   LogOut,
 } from "lucide-react";
-
+import { ROLES } from "../../constants/roles";
+import { canAccessRoute } from "../../constants/canAccess";
 import { logout } from "../../services/auth.service";
 
 // Sidebar items with translation keys
@@ -27,7 +28,8 @@ const sidebarItems = [
   { key: "feedback.title", icon: MessageSquare, link: "/feedback" },
   { key: "products.title", icon: Package, link: "/product" },
   { key: "brand.title", icon: LayoutGrid, link: "/brand" },
-  // { key: "branch.title", icon: Share2, link: "/branch" },
+  { key: "brandManager.title", icon: Users, link: "/brand-manager" },
+  { key: "branch.title", icon: Share2, link: "/branch" },
   { key: "employee.title", icon: Users, link: "/employee" },
   { key: "vouchers.title", icon: Ticket, link: "/voucher" },
 ];
@@ -41,7 +43,8 @@ const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
   const navigate = useNavigate();
   const isMobile = !!onClose;
   const { t } = useTranslation();
-
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const role = user.role;
   const handleLogout = () => {
     logout();
     navigate("/");
@@ -80,9 +83,11 @@ const Sidebar: React.FC<SidebarProps> = ({ onClose }) => {
 
       {/* Sidebar Item */}
       <nav className="flex flex-col items-start gap-3 pb-6 flex-grow">
-        {sidebarItems.map((item, index) => {
-          const Icon = item.icon;
-          const isActive = location.pathname === item.link;
+        {sidebarItems
+          .filter(item => canAccessRoute(role, item.link))
+          .map((item, index) => {
+            const Icon = item.icon;
+            const isActive = location.pathname === item.link;
           return (
             <Link
               key={index}

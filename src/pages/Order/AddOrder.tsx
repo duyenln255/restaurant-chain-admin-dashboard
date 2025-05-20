@@ -16,11 +16,14 @@ import {
   SelectContent,
   SelectItem,
 } from "../../components/ui/select";
+import { toast } from "react-toastify";
 
 interface CartItem {
   id: string;
   name: string;
   quantity: number;
+  price: number;
+  total_price: number;
 }
 
 const AddOrder: React.FC = () => {
@@ -69,8 +72,17 @@ const AddOrder: React.FC = () => {
     } else {
       const product = products.find((p) => p.id === selectedProduct);
       if (product) {
-        setCartItems([...cartItems, { id: product.id, name: product.name, quantity }]);
+        const price = product.price || 0;
+        const newItem = {
+          id: product.id,
+          name: product.name,
+          quantity,
+          price,
+          total_price: price * quantity,
+        };
+        setCartItems([...cartItems, newItem]);
       }
+
     }
     setSelectedProduct("");
     setQuantity(1);
@@ -84,23 +96,30 @@ const AddOrder: React.FC = () => {
       setLoading(true);
       const orderData: OrderCreateRequest = {
         customer_id: selectedCustomerId,
-        address,
-        type: orderType,
-        status,
-        preorder_time: preorderTime,
-        payment_method: "Cash",
         branch_id: branchId,
-        cart: { items: cartItems },
+        status,
+        type: orderType,
+        preorder_time: preorderTime ? new Date(preorderTime).toISOString() : undefined,
+        payment_method: "Cash",
+        other_address: address?.trim() ? address.trim() : undefined,
+        cart: {
+          items: cartItems.map(({ id, name, quantity }) => ({ id, name, quantity })),
+          total_price: totalPrice,
+        },
       };
+
       await dispatch(addOrder(orderData)).unwrap();
+      toast.success(t("orders.addSuccess")); // ✅ Hiển thị thông báo thành công
       navigate("/order-list");
-    } catch (error) {
-      console.error("Failed to create order:", error);
-      alert(t("orders.addError"));
-    } finally {
+      } 
+      catch (error) {
+      toast.error(t("orders.addError")); // ✅ Hiển thị thông báo lỗi
+    }
+ finally {
       setLoading(false);
     }
   };
+  const totalPrice = cartItems.reduce((sum, item) => sum + item.total_price, 0);
 
   return (
     <div className="p-6 mx-auto space-y-6">
@@ -191,7 +210,7 @@ const AddOrder: React.FC = () => {
             </div>
 
             {/* Status */}
-            <div>
+            {/* <div>
               <label className="text-sm font-medium block mb-1">{t("orders.status")}</label>
               <Select value={status} onValueChange={setStatus}>
                 <SelectTrigger className="w-full border border-neutral-300">
@@ -205,18 +224,20 @@ const AddOrder: React.FC = () => {
                   <SelectItem value="In Transit">{t("orders.inTransit")}</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
+            </div> */}
           </div>
 
           {/* Cart Section */}
+          {/* Cart Section */}
           <div className="space-y-3">
-            <label className="text-base font-semibold">{t("orders.cart")}</label>
+            <label className="text-base font-semibold mr-1">{t("orders.cart")}</label><span className="text-red-500">*</span>
 
-            <div className="flex flex-col md:flex-row md:items-end gap-4">
-              <div className="flex-1">
+            <div className="flex flex-col sm:flex-row sm:items-end gap-4 flex-wrap">
+              {/* Product select */}
+              <div className="flex-1 min-w-[200px]">
                 <label className="text-sm font-medium block mb-1">{t("orders.product")}</label>
                 <Select value={selectedProduct} onValueChange={setSelectedProduct}>
-                  <SelectTrigger className="w-full border border-neutral-300">
+                  <SelectTrigger className="w-full border border-neutral-300 h-10">
                     <SelectValue placeholder={t("products.selectProduct")} />
                   </SelectTrigger>
                   <SelectContent>
@@ -229,57 +250,71 @@ const AddOrder: React.FC = () => {
                 </Select>
               </div>
 
-              <div>
+              {/* Quantity input */}
+              <div className="min-w-[120px]">
                 <label className="text-sm font-medium block mb-1">{t("orders.quantity")}</label>
                 <input
                   type="number"
                   min={1}
                   value={quantity}
                   onChange={(e) => setQuantity(Number(e.target.value))}
-                  className="w-full border border-neutral-300 rounded-md px-4 py-2"
+                  className="w-full border border-neutral-300 rounded-md px-4 py-2 h-10"
                 />
               </div>
 
-              <button
-                type="button"
-                onClick={handleAddToCart}
-                className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md h-[42px]"
-              >
-                {t("orders.addProduct")}
-              </button>
+              {/* Add to cart button */}
+              <div className="min-w-[120px]">
+                <label className="invisible block mb-1">.</label>
+                <button
+                  type="button"
+                  onClick={handleAddToCart}
+                  className="w-full bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md h-10"
+                >
+                  {t("orders.addProduct")}
+                </button>
+              </div>
             </div>
 
+            {/* Cart Table */}
             {cartItems.length > 0 && (
-              <table className="w-full text-sm mt-4 border border-gray-200 rounded-md">
-                <thead className="bg-gray-100">
-                  <tr>
-                    <th className="text-left px-3 py-2">{t("orders.product")}</th>
-                    <th className="text-left px-3 py-2">{t("orders.quantity")}</th>
-                    <th className="text-center px-3 py-2">{t("common.action")}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {cartItems.map((item, idx) => (
-                    <tr key={idx} className="border-t border-gray-200">
-                      <td className="px-3 py-2">{item.name}</td>
-                      <td className="px-3 py-2">{item.quantity}</td>
-                      <td className="px-3 py-2 text-center">
-                        <button
-                          type="button"
-                          className="text-red-500 hover:underline text-xs"
-                          onClick={() => {
-                            const updated = cartItems.filter((_, i) => i !== idx);
-                            setCartItems(updated);
-                          }}
-                        >
-                          {t("common.remove")}
-                        </button>
-                      </td>
+              <div className="overflow-x-auto mt-4">
+                <table className="w-full text-sm border border-gray-200 rounded-md min-w-[600px]">
+                  <thead className="bg-gray-100">
+                    <tr>
+                      <th className="text-left px-3 py-2">{t("orders.product")}</th>
+                      <th className="text-left px-3 py-2">{t("orders.price")}</th>
+                      <th className="text-left px-3 py-2">{t("orders.quantity")}</th>
+                      <th className="text-left px-3 py-2">{t("orders.total")}</th>
+                      <th className="text-center px-3 py-2">{t("common.action")}</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {cartItems.map((item, idx) => (
+                      <tr key={idx} className="border-t border-gray-200">
+                        <td className="px-3 py-2">{item.name}</td>
+                        <td className="px-3 py-2">{item.price.toLocaleString()}₫</td>
+                        <td className="px-3 py-2">{item.quantity}</td>
+                        <td className="px-3 py-2">{item.total_price.toLocaleString()}₫</td>
+                        <td className="text-center px-3 py-2">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = [...cartItems];
+                              updated.splice(idx, 1);
+                              setCartItems(updated);
+                            }}
+                            className="text-red-500 hover:underline"
+                          >
+                            {t("common.remove")}
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             )}
+
             {errors.cart && <p className="text-red-500 text-xs">{errors.cart}</p>}
           </div>
 

@@ -81,5 +81,9 @@
     "reset": "Reset",
     "search": "Search"
   }
+},
+"brandManager": {
+  "title": "Brand Manager"
 }
+
 }

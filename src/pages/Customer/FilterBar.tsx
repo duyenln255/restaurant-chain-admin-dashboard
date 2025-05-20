@@ -12,12 +12,12 @@ import {
 } from "../../components/ui/select"
 import { ComboboxCustom } from "../../components/Combobox/Combobox"
 import type { ComboboxItem } from "../../components/Combobox/Combobox";
+import { useTranslation } from "react-i18next";
 
 interface FilterBarProps {
   onSearch: (params: { keyword?: string; status?: string; dateAdded?: string }) => void;
   keywordOptions: ComboboxItem[]; // ← sửa ở đây
 }
-
 
 const FilterBar: React.FC<FilterBarProps> = ({ onSearch, keywordOptions }) => {
   const [keyword, setKeyword] = useState("all")
@@ -26,6 +26,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ onSearch, keywordOptions }) => {
   const [customerType, setCustomerType] = useState("all")
   const [customerEmployee, setCustomerEmployee] = useState("all")
   const [customerBranch, setCustomerBranch] = useState("all")
+  const { t } = useTranslation();
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-md flex flex-col sm:flex-row flex-wrap gap-4">
@@ -67,22 +68,23 @@ const FilterBar: React.FC<FilterBarProps> = ({ onSearch, keywordOptions }) => {
 
       {/* Buttons */}
       <div className="flex gap-2 flex-wrap">
-        <Button
-          variant="outline"
-          className="bg-blue-500 text-white hover:bg-blue-600"
-          onClick={() =>
-            console.log({
-              keyword,
-              date,
-              status,
-              customerType,
-              customerEmployee,
-              customerBranch,
-            })
-          }
-        >
-          Search
-        </Button>
+      <Button
+        variant="outline"
+        className="bg-blue-500 text-white hover:bg-blue-600"
+        onClick={() =>
+          console.log({
+            keyword,
+            date,
+            status,
+            customerType,
+            customerEmployee,
+            customerBranch,
+          })
+        }
+      >
+        Search
+      </Button>
+
         <Button
           variant="outline"
           className="border-red-500 text-red-500 hover:bg-red-50"

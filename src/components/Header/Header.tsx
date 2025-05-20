@@ -25,7 +25,7 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar }) => {
             <Menu className="w-6 h-6" />
           </button>
         </div>
-        <div className="flex gap-7 items-center">
+        <div className="flex gap-4 md:gap-6 lg:gap-6 xl:gap-8 items-center">
           {/* <FaBell className="w-6 h-6" /> */}
           {/* <LanguageSwitcher /> */}
           <LanguageSelector

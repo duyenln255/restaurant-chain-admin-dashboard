@@ -3,24 +3,42 @@ import { LoginForm } from './LoginForm';
 import type { LoginFormData } from '../../types/AuthType';
 import { useNavigate } from "react-router-dom";
 import { login } from "../../services/auth.service";
+import { toast } from "react-toastify";
+import { normalizeRole } from "../../utils/normalizeRole";
 
 export const LoginContainer: React.FC = () => {
   const navigate = useNavigate(); // hook chuyển trang
 
-  const handleLogin = async (data: LoginFormData) => {
-    try {
-      console.log("Login attempt with:", data);
-      const result = await login(data.username, data.password);
+const handleLogin = async (data: LoginFormData) => {
+  try {
+    const result = await login(data.username, data.password);
+    toast.success("Đăng nhập thành công!");
 
-      console.log("Login success:", result);
+    const rawRole = result.user.role;
+    const role = normalizeRole(rawRole);
 
-      // Chuyển trang
-      navigate("/dashboard");
-    } catch (error) {
-      console.error("Login failed:", error);
-      alert("Login failed. Please check username/password.");
+    // Lưu role nếu muốn dùng toàn cục
+    localStorage.setItem("role", role);
+
+    switch (role) {
+      case "UTOPIA_MANAGER":
+      case "BRAND_MANAGER":
+      case "BRANCH_MANAGER":
+        navigate("/dashboard");
+        break;
+      case "BRANCH_EMPLOYEE":
+        navigate("/order-list");
+        break;
+      default:
+        toast.error("Không có quyền truy cập");
+        break;
     }
-  };
+
+  } catch (error) {
+    toast.error("Đăng nhập thất bại");
+  }
+};
+
 
   const handleSocialLogin = (provider: string) => {
     console.log(`${provider} login initiated`);

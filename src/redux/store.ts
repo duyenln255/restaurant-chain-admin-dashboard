@@ -10,6 +10,7 @@ import blogReducer from "./slices/blogSlice";
 import voucherReducer from "./slices/voucherSlice";
 import employeeReducer from "./slices/employeeSlice";
 import authReducer from "./slices/authSlice";
+import dashboardReducer from "./slices/dashboardSlice";
 
 export const store = configureStore({
   reducer: {
@@ -23,7 +24,8 @@ export const store = configureStore({
     branches: branchReducer, 
     blogs: blogReducer,
     vouchers: voucherReducer,
-    employees: employeeReducer
+    employees: employeeReducer,
+    dashboard: dashboardReducer
   },
 });
 

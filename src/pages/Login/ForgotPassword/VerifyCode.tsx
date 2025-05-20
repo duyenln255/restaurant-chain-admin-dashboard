@@ -6,6 +6,7 @@ import type { RootState } from "../../../redux/store";
 import { verifyResetCode } from "../../../services/auth.service";
 import { setResetToken } from "../../../redux/slices/authSlice";
 import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function VerifyCode({
   email,
@@ -20,11 +21,17 @@ export default function VerifyCode({
   const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
       const code = values.join("");
+      if (code.length !== 6) {
+        toast.warning("Vui lòng nhập đủ 6 chữ số mã xác minh.");
+        return;
+      }
+
       try {
         const res = await verifyResetCode(email, code);
-        onVerified(res.data.token); // Gửi token lên cha
+        toast.success("Xác minh thành công!");
+        onVerified(res.data.token);
       } catch {
-        alert("Sai mã xác minh");
+        toast.error("Mã xác minh không hợp lệ hoặc đã hết hạn.");
       }
     };
   const handleChange = (index: number, value: string) => {
@@ -92,8 +99,6 @@ export default function VerifyCode({
                 />
               ))}
             </div>
-
-
               <button
                 type="submit"
                 className="w-full max-w-md py-2 bg-[#4B3B39] text-white rounded-full text-sm font-medium hover:bg-[#3a2e2c] transition"

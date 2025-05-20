@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import grinderImage from "../../../../public/assets/images/coffee-grinder.png";
 import { forgotPassword } from "../../../services/auth.service"; // import API
+import { toast } from "react-toastify";
 
 
 export default function EmailInput({ onSuccess }: { onSuccess: (email: string) => void }) {
@@ -11,9 +12,10 @@ export default function EmailInput({ onSuccess }: { onSuccess: (email: string) =
     e.preventDefault();
     try {
       await forgotPassword(email);
+      toast.success("Đã gửi mã xác minh đến email.");
       onSuccess(email); // Gọi callback truyền lên
     } catch (err) {
-      alert("Email không hợp lệ hoặc không tồn tại");
+      toast.error("Email không hợp lệ hoặc không tồn tại. Vui lòng kiểm tra lại.");
     }
   };
 

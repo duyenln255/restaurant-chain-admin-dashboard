@@ -24,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue
 } from "../../components/ui/select";
+import { useTranslation } from "react-i18next";
 
 interface CustomDatePickerProps {
   value?: Date;
@@ -37,17 +38,28 @@ interface CustomDatePickerProps {
 export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   value,
   onChange,
-  placeholder = "Pick a date",
+  placeholder,
   className,
   startYear = getYear(new Date()) - 100,
   endYear = getYear(new Date()) + 20,
 }) => {
+  const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
   const [selectedDate, setSelectedDate] = React.useState<Date>(value || new Date());
 
   const months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+    t("datepicker.month") + " 1",
+    t("datepicker.month") + " 2",
+    t("datepicker.month") + " 3",
+    t("datepicker.month") + " 4",
+    t("datepicker.month") + " 5",
+    t("datepicker.month") + " 6",
+    t("datepicker.month") + " 7",
+    t("datepicker.month") + " 8",
+    t("datepicker.month") + " 9",
+    t("datepicker.month") + " 10",
+    t("datepicker.month") + " 11",
+    t("datepicker.month") + " 12"
   ];
 
   const years = Array.from(
@@ -64,7 +76,8 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
   };
 
   const handleMonthChange = (month: string) => {
-    const newDate = setMonth(selectedDate, months.indexOf(month));
+    const monthIndex = months.findIndex(m => m === month);
+    const newDate = setMonth(selectedDate, monthIndex);
     setSelectedDate(newDate);
   };
 
@@ -85,7 +98,7 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {value ? format(value, "yyyy-MM-dd") : <span>{placeholder}</span>}
+          {value ? format(value, "yyyy-MM-dd") : <span>{placeholder || t("datepicker.placeholder")}</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="center">
@@ -95,7 +108,7 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
             onValueChange={handleMonthChange}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Month" />
+              <SelectValue placeholder={t("datepicker.month")} />
             </SelectTrigger>
             <SelectContent>
               {months.map((month) => (
@@ -111,7 +124,7 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
             onValueChange={handleYearChange}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Year" />
+              <SelectValue placeholder={t("datepicker.year")} />
             </SelectTrigger>
             <SelectContent>
               {years.map((year) => (

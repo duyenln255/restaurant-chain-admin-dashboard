@@ -3,6 +3,8 @@
     "title": "Products",
     "productList": "Product Lists",
     "addProduct": "Add Product",
+    "deleteProduct": "Delete Product",
+    "selectProduct": "Select Product",
     "addNewProduct": "Add New Product",
     "editProduct": "Edit Product",
     "productDetails": "Product Details",
@@ -49,7 +51,7 @@
     "noProductsFound": "No products found.",
     "search": {
       "allProducts": "All Products",
-      "placeholder": "Search by name or SKU",
+      "placeholder": "Search product",
       "status": "Filter by status",
       "category": "Filter by category",
       "brand": "Filter by brand",

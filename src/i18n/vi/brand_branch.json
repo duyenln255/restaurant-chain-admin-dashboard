@@ -4,7 +4,7 @@
     "brandList": "Danh sách thương hiệu",
     "addBrand": "Thêm thương hiệu",
     "addNewBrand": "Thêm thương hiệu mới",
-    "editBrand": "Sửa thương hiệu",
+    "editBrand": "Chỉnh sửa thương hiệu",
     "brandDetails": "Chi tiết thương hiệu",
     "name": "Tên",
     "logo": "Logo",
@@ -40,7 +40,7 @@
     "branchList": "Danh sách chi nhánh",
     "addBranch": "Thêm chi nhánh",
     "addNewBranch": "Thêm chi nhánh mới",
-    "editBranch": "Sửa chi nhánh",
+    "editBranch": "Chỉnh sửa chi nhánh",
     "branchDetails": "Chi tiết chi nhánh",
     "name": "Tên",
     "address": "Địa chỉ",
@@ -79,5 +79,8 @@
       "reset": "Đặt lại",
       "search": "Tìm kiếm"
     }
-  }
+  },
+  "brandManager": {
+  "title": "Quản lý thương hiệu"
+}
 }

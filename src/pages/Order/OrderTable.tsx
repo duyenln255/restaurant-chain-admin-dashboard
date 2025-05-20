@@ -16,9 +16,12 @@ interface OrderTableProps {
   items: OrderItem[];
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
+  role: string;
+  branchId?: string;
 }
 
-const OrderTable: React.FC<OrderTableProps> = ({ items, onEdit, onDelete }) => {
+
+const OrderTable: React.FC<OrderTableProps> = ({ items, onEdit, onDelete, role, branchId }) => {
   const { t } = useTranslation();
   const renderOrderType = (orderType: OrderItem["orderType"]) => {
     return (
@@ -69,9 +72,9 @@ const OrderTable: React.FC<OrderTableProps> = ({ items, onEdit, onDelete }) => {
       render: (item) => (
         <div
           className="max-w-20 font-semibold text-sm overflow-hidden whitespace-nowrap text-ellipsis"
-          title={item.id}
+          title={item.displayId}
         >
-          {item.id}
+          {item.displayId}
         </div>
       ),
     },
@@ -168,27 +171,46 @@ const OrderTable: React.FC<OrderTableProps> = ({ items, onEdit, onDelete }) => {
       label: t("orders.status"),
       render: (item) => renderStatus(item.status),
     },
-    {
-      key: "action",
-      label: t("orders.action"),
-      align: "center",
-      render: (item) => (
-        <div className="flex justify-center space-x-4">
+{
+  key: "action",
+  label: t("orders.action"),
+  align: "center",
+  render: (item) => {
+    const isBranchEmployee = role === "BRANCH_EMPLOYEE";
+    const isBranchManager = role === "BRANCH_MANAGER";
+
+    // CHỈ branch manager có quyền xoá
+    const canDelete = isBranchManager;
+
+    // BRANCH_MANAGER được edit tất cả,
+    // BRANCH_EMPLOYEE chỉ edit order thuộc branch của họ
+    const canEdit = isBranchManager || isBranchEmployee;
+
+
+    return (
+      <div className="flex justify-center space-x-4">
+        {canEdit && (
           <button
             onClick={() => onEdit(item.id)}
             className="text-blue-500 hover:text-blue-700"
           >
             <FontAwesomeIcon icon={faPen} size="sm" />
           </button>
+        )}
+        {canDelete && (
           <button
             onClick={() => onDelete(item.id)}
             className="text-red-500 hover:text-red-700"
           >
             <FontAwesomeIcon icon={faTrash} size="sm" />
           </button>
-        </div>
-      ),
-    },
+        )}
+      </div>
+    );
+  },
+}
+
+
   ];
 
   // Debug: Log items

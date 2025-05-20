@@ -18,7 +18,7 @@ export interface APIOrderResponse {
     branch_id: string;
     status: string;
     type: string;
-    preorder_time: string;
+preorder_time?: string;
     late: boolean;
     resolved: boolean;
     payment_method: string;
@@ -37,35 +37,39 @@ export interface APIOrderResponse {
 }
 
 export interface OrderCreateRequest {
-  address: string;
   type: string;
   status: string;
-  preorder_time: string;
+  preorder_time?: string;
   payment_method: string;
   branch_id: string;
   customer_id: string;
+  other_address?: string;
   cart: {
-    items: {
-      id: string;
-      name: string;
-      quantity: number;
-    }[];
-  };
+  items: {
+    id: string;
+    name: string;
+    quantity: number;
+  }[];
+  total_price: number;
+};
 }
 
 export interface OrderUpdateRequest {
-  full_name?: string;
-  address?: string;
-  type?: string;
+  branch_id?: string;
   status?: string;
+  type?: string;
+  preorder_time?: string;
+  payment_method?: string;
   cart?: {
     items: {
       id: string;
       name: string;
       quantity: number;
     }[];
+    total_price: number;
   };
 }
+
 
 export const fetchAllOrdersApi = async (filters?: {
   full_name?: string;

@@ -2,6 +2,9 @@
   "common": {
     "no": "STT",
     "enter": "Nhập",
+    "remove": "Xoá",
+    "customer": "Khách hàng",
+    "selectCustomer": "Chọn khách hàng",
     "check": "Kiểm tra",
     "submit": "Gửi",
     "cancel": "Hủy",
@@ -13,7 +16,6 @@
     "actions": "Thao tác",
     "back": "Quay lại",
     "yes": "Có",
-    "no": "Không",
     "confirm": "Xác nhận",
     "close": "Đóng",
     "next": "Tiếp",
@@ -37,5 +39,16 @@
       "november": "Tháng Mười Một",
       "december": "Tháng Mười Hai"
     }
+  },
+  "datepicker": {
+    "month": "Tháng",
+    "day": "Ngày",
+    "year": "Năm",
+    "selectDate": "Chọn ngày",
+    "selectTime": "Chọn giờ",
+    "placeholder": "Chọn ngày tạo",
+    "cancel": "Hủy",
+    "clear": "Xoá",
+    "done": "Xong"
   }
 }

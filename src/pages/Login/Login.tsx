@@ -7,13 +7,30 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
+  const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const role = user?.role?.trim().toUpperCase().replace(/\s+/g, "_");
+
+  if (!token) {
+    navigate("/");
+    return;
+  }
+
+  switch (role) {
+    case "UTOPIA_MANAGER":
+    case "BRAND_MANAGER":
+    case "BRANCH_MANAGER":
       navigate("/dashboard");
-    } else {
-      navigate("/");
-    }
-  }, []);
+      break;
+    case "BRANCH_EMPLOYEE":
+      navigate("/order-list");
+      break;
+    default:
+      navigate("/unauthorized");
+      break;
+  }
+}, []);
+
 
   return (
     <div

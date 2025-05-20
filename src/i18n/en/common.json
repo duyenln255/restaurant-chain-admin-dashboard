@@ -2,6 +2,9 @@
   "common": {
     "no": "No",
     "reset": "Reset",
+    "remove": "Remove",
+    "customer": "Customer",
+    "selectCustomer": "Select Customer",
     "update": "Update",
     "action": "Action",
     "dashboard": "Dashboard",
@@ -51,5 +54,14 @@
     "october": "October",
     "november": "November",
     "december": "December"
+  },
+    "datepicker": {
+    "month": "Month",
+    "day": "Day",
+    "year": "Year",
+    "selectDate": "Select Created Date",
+    "selectTime": "Select Created Time",
+    "placeholder": "Select Created Date",
+    "cancel": "Cancel"
   }
 }
