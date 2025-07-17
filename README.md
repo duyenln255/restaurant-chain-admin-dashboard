@@ -1,54 +1,78 @@
 # React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# 🍽️ Restaurant Chain Management System - Admin Dashboard
 
-Currently, two official plugins are available:
+This is the **Admin Dashboard** of the **Restaurant Chain Management System (RCMS)** — a web application that allows **UTOPIA staff**, **Brand Managers**, and **Branch Managers** to manage brands, branches, staff, customers, orders, and more.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🚀 **Built with**: React, TypeScript, Vite, TailwindCSS, Shadcn/ui
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 📁 Project Structure
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+public/ # Static assets
+
+  src/ # Main source code
+
+│ ├── components/ # Shared reusable components
+
+│ ├── pages/ # Page views (AddOrder, EditOrder, Dashboard, etc.)
+
+│ ├── services/ # API services (GraphQL queries/mutations)
+
+│ ├── slices/ # Redux slices (orders, customers, etc.)
+
+│ ├── layouts/ # Layout wrappers
+
+│ └── utils/ # Utility functions & constants
+
+├── .env # Environment variables (e.g., VITE_API_URL)
+
+├── vite.config.ts # Vite configuration
+
+├── tailwind.config.js # Tailwind configuration
+
+└── tsconfig.*.json # TypeScript configurations
+
+
+---
+
+## ⚙️ Setup & Installation
+
+### 1. Clone the project
+
+```bash
+git clone https://github.com/your-username/coffee-shop-admin-dashboard.git
+cd coffee-shop-admin-dashboard
 ```
+### 2. Install dependencies
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+npm install
+# or
+yarn
 ```
+### 3. Set environment variables
+Create a .env file in the root directory
+
+###4. Run the project
+```bash
+npm run dev
+# or
+yarn dev
+```
+# ✅ Features
+## 🔐 Role-based login for UTOPIA Manager, Brand Manager, Branch Manager
+
+### 🏪 Brand & Branch management
+
+### 👥 Employee & Customer management
+
+### 🛒 Order & Reservation system
+
+### 📊 Sales reporting and dashboard analytics
+
+### 🌐 Responsive UI with TailwindCSS & Shadcn/ui
+
+### ⚡ Optimized for Vite + React + TypeScript
+
