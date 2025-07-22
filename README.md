@@ -14,25 +14,24 @@ public/ # Static assets
 
   src/ # Main source code
 
-│ ├── components/ # Shared reusable components
+     components/ # Shared reusable components
 
-│ ├── pages/ # Page views (AddOrder, EditOrder, Dashboard, etc.)
+     pages/ # Page views (AddOrder, EditOrder, Dashboard, etc.)
 
-│ ├── services/ # API services (GraphQL queries/mutations)
+     services/ # API services (GraphQL queries/mutations)
 
-│ ├── slices/ # Redux slices (orders, customers, etc.)
+     slices/ # Redux slices (orders, customers, etc.)
 
-│ ├── layouts/ # Layout wrappers
+     layouts/ # Layout wrappers
 
-│ └── utils/ # Utility functions & constants
+     utils/ # Utility functions & constants
+   .env # Environment variables (e.g., VITE_API_URL)
 
-├── .env # Environment variables (e.g., VITE_API_URL)
+  vite.config.ts # Vite configuration
 
-├── vite.config.ts # Vite configuration
+  tailwind.config.js # Tailwind configuration
 
-├── tailwind.config.js # Tailwind configuration
-
-└── tsconfig.*.json # TypeScript configurations
+  tsconfig.*.json # TypeScript configurations
 
 
 ---
@@ -62,7 +61,7 @@ npm run dev
 yarn dev
 ```
 # ✅ Features
-## 🔐 Role-based login for UTOPIA Manager, Brand Manager, Branch Manager
+### 🔐 Role-based login for UTOPIA Manager, Brand Manager, Branch Manager
 
 ### 🏪 Brand & Branch management
 
